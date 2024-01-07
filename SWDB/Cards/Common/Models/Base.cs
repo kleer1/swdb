@@ -8,8 +8,8 @@ namespace SWDB.Cards.Common.Models
         public int HitPoints { get; protected set; }
         public int CurrentDamage { get; set; }
 
-        protected Base(int id, Faction faction, String title, CardLocation location,
-                IList<Card> cardList, SWDBGame game, Player owner, int hitPoints) :
+        protected Base(int id, Faction faction, string title, CardLocation location,
+                IList<Card>? cardList, SWDBGame game, Player owner, int hitPoints) :
                  base(id, faction, title, true, location, cardList, game, owner) 
         {
             HitPoints = hitPoints;

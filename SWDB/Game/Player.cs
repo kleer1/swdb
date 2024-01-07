@@ -18,18 +18,21 @@ namespace SWDB.Game
         public Player? Opponent { get; internal set; }
         public SWDBGame? Game { get; internal set; }
 
-        public Player(Faction faction) {
+        public Player(Faction faction) 
+        {
             Faction = faction;
         }
 
-        public void AddResources(int amount) {
+        public void AddResources(int amount) 
+        {
             Resources += amount;
             if (Resources < 0) {
                 Resources = 0;
             }
         }
 
-        public void DrawCards(int amount) {
+        public void DrawCards(int amount) 
+        {
             if (amount > Deck.Count + Discard.Count) {
                 amount = Deck.Count + Discard.Count;
             }
@@ -58,7 +61,8 @@ namespace SWDB.Game
             DiscardList(Hand);
         }
 
-        public int GetAvailableAttack() {
+        public int GetAvailableAttack() 
+        {
             int attack = 0;
             foreach (Unit card in UnitsInPlay) {
                 if (card.AbleToAttack()) attack += card.Attack;
@@ -69,7 +73,8 @@ namespace SWDB.Game
             return attack;
         }
 
-        public void AddForce(int amount) {
+        public void AddForce(int amount) 
+        {
             if (Faction == Faction.empire) {
                 Game?.ForceBalance.DarkSideGainForce(amount);
             } else {
@@ -77,7 +82,16 @@ namespace SWDB.Game
             }
         }
 
-        public override string ToString() {
+        public bool IsForceWithPlayer() {
+        if (Faction == Faction.empire) {
+            return Game?.ForceBalance.DarkSideHasTheForce() ?? false;
+        } else {
+            return Game?.ForceBalance.LightSideHasTheForce() ?? false;
+        }
+    }
+
+        public override string ToString() 
+        {
             return "Player{" +
                     "faction=" + Faction +
                     "\n\thand=" + Hand +
@@ -92,7 +106,7 @@ namespace SWDB.Game
 
         private static void DiscardList(IList<PlayableCard> list)
         {
-             for (int i = list.Count - 1; i >= 0; i--) 
+            for (int i = list.Count - 1; i >= 0; i--) 
             {
                 PlayableCard card = list[i];
                 list.RemoveAt(i);

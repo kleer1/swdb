@@ -37,7 +37,7 @@ namespace SWDB.Cards.Common.Models
             return !AbilityUsed && this is IHasAbility;
         }
 
-        protected void ApplyAbility() {
+        public virtual void ApplyAbility() {
             AbilityUsed = true;
         }
 
