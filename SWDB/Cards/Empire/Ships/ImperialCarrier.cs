@@ -8,16 +8,19 @@ namespace SWDB.Cards.Empire.Ships
         public ImperialCarrier(int id, SWDBGame game) :
             base(id, 5, 0, 3, 0, "Imperial Carrier", game, 5) {} 
         
-        public void ApplyAtStartOfTurn() {
+        public void ApplyAtStartOfTurn() 
+        {
             Game.StaticEffects.Add(StaticEffect.CarrierEffect);
         }
 
-        public override void MoveToInPlay() {
+        public override void MoveToInPlay() 
+        {
             base.MoveToInPlay();
             Game.StaticEffects.Add(StaticEffect.CarrierEffect);
         }
 
-        public override void MoveToDiscard() {
+        public override void MoveToDiscard() 
+        {
             base.MoveToDiscard();
             Game.StaticEffects.Remove(StaticEffect.CarrierEffect);
         }

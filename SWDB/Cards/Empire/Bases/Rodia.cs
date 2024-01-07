@@ -12,7 +12,8 @@ namespace SWDB.Cards.Empire.Bases
                 game, game.Empire, 16) {}
         
 
-        public void ApplyOnReveal() {
+        public void ApplyOnReveal() 
+        {
             int numMatches = 0;
             for (int i = Game.GalaxyRow.Count - 1; i >= 0; i--)
             {
@@ -25,7 +26,8 @@ namespace SWDB.Cards.Empire.Bases
                 }
             }
             Game?.Rebel?.CurrentBase?.AddDamage(numMatches);
-            for (int i = 0; i < numMatches; i++) {
+            for (int i = 0; i < numMatches; i++) 
+            {
                 Game?.DrawGalaxyCard();
             }
         }

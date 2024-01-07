@@ -11,7 +11,8 @@ namespace SWDB.Cards.Empire.Bases
             base(id, Faction.empire, "Mustafar", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
                 game, game.Empire, 14) {}
         
-        public void ApplyOnReveal() {
+        public void ApplyOnReveal() 
+        {
             Game.Empire.AddForce(4);
         }
     }

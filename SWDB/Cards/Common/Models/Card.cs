@@ -33,11 +33,13 @@ namespace SWDB.Cards.Common.Models
             AbilityUsed = false;
         }
 
-        public virtual bool AbilityActive() {
+        public virtual bool AbilityActive() 
+        {
             return !AbilityUsed && this is IHasAbility;
         }
 
-        public virtual void ApplyAbility() {
+        public virtual void ApplyAbility() 
+        {
             AbilityUsed = true;
         }
 
@@ -47,8 +49,8 @@ namespace SWDB.Cards.Common.Models
             if ((obj == null) || ! this.GetType().Equals(obj.GetType()))
             {
                 return false;
-            }
-            else {
+            } else 
+            {
                 Card card = (Card) obj;
                 return Id == card.Id;
             }
@@ -56,23 +58,29 @@ namespace SWDB.Cards.Common.Models
 
         public override int GetHashCode() => HashCode.Combine(Id);
 
-        private int MaxNumExileAbility(Player player) {
-            if (player == null) {
+        private int MaxNumExileAbility(Player player) 
+        {
+            if (player == null) 
+            {
                 return 0;
             }
             return player.Hand.Count + player.Discard.Count;
         }
 
-        protected void AddExilePendingAction(Player player, int depth) {
+        protected void AddExilePendingAction(Player player, int depth) 
+        {
             depth = Math.Min(depth, MaxNumExileAbility(player));
-            if (depth < 1) {
+            if (depth < 1) 
+            {
                 return;
             }
             Game.PendingActions.Add(ExileActionRec(depth));
         }
 
-        private PendingAction ExileActionRec(int depth) {
-            if (depth == 1) {
+        private PendingAction ExileActionRec(int depth) 
+        {
+            if (depth == 1) 
+            {
                 return PendingAction.Of(Action.ExileCard);
             }
             return PendingAction.Of(Action.ExileCard, () => Game.PendingActions.Add(ExileActionRec(depth - 1)));

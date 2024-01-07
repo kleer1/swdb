@@ -9,8 +9,7 @@ namespace SWDB.Cards.Empire.Units
     public class AtAt : EmpireGalaxyUnit, IHasReturnToHandAbility
     {
         public AtAt(int id, SWDBGame game) :
-            base(id, 6, 6, 0, 0, "AT-AT", new List<Trait> { Trait.vehicle }, false, game)
-        { }
+            base(id, 6, 6, 0, 0, "AT-AT", new List<Trait> { Trait.vehicle }, false, game) {}
 
         public override bool AbilityActive()
         {

@@ -13,17 +13,20 @@ namespace SWDB.Cards.Empire.Bases
             base(id, Faction.empire, "Death Star", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
                 game, game.Empire, 16) {}
         
-        public override bool AbilityActive() {
+        public override bool AbilityActive() 
+        {
             return base.AbilityActive() && Location == CardLocation.EmpireCurrentBase && Owner?.Resources >= 4 &&
                     (!Game.Rebel.ShipsInPlay.Any() || Game.GalaxyRow.Where(c => c.GetType() == typeof(CapitalShip)).Any());
         }
 
-        public override void ApplyAbility() {
+        public override void ApplyAbility() 
+        {
             base.ApplyAbility();
             Game.PendingActions.Add(PendingAction.Of(Action.FireWhenReady));
         }
 
-        public void ApplyAtStartOfTurn() {
+        public void ApplyAtStartOfTurn() 
+        {
             AbilityUsed = false;
         }
     }

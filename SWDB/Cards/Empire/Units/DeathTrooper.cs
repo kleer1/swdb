@@ -19,11 +19,13 @@ namespace SWDB.Cards.Empire.Units
             }
         }
 
-        public override int GetTargetValue() {
+        public override int GetTargetValue() 
+        {
             return 3;
         }
 
-        public override void ApplyReward() {
+        public override void ApplyReward() 
+        {
             Game.ForceBalance.LightSideGainForce(2);
         }
     }

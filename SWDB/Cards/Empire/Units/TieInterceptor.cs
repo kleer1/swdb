@@ -20,7 +20,8 @@ namespace SWDB.Cards.Empire.Units
             base.ApplyAbility();
             PlayableCard card = Game.GalaxyDeck[0];
             Game.RevealTopCardOfDeck();
-            if (card.Faction == Faction.empire) {
+            if (card.Faction == Faction.empire) 
+            {
                 Owner?.DrawCards(1);
             } else if (card.Faction == Faction.rebellion) 
             {
@@ -29,11 +30,13 @@ namespace SWDB.Cards.Empire.Units
             }
         }
 
-        public override int GetTargetValue() {
+        public override int GetTargetValue() 
+        {
             return 3;
         }
 
-        public override void ApplyReward() {
+        public override void ApplyReward() 
+        {
             Game.Rebel.AddResources(3);
         }
     }

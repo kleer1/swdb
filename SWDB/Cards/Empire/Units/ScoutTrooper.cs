@@ -10,11 +10,13 @@ namespace SWDB.Cards.Empire.Units
         public ScoutTrooper(int id, SWDBGame game) :
             base(id, 2, 0, 2, 0, "Scout Trooper", new List<Trait>{ Trait.trooper }, false, game){}
 
-        public override bool AbilityActive() {
+        public override bool AbilityActive() 
+        {
             return base.AbilityActive() && Game.GalaxyDeck.Any();
         }
 
-        public override void ApplyAbility() {
+        public override void ApplyAbility() 
+        {
             base.ApplyAbility();
             PlayableCard card = Game.GalaxyDeck[0];
             Game.RevealTopCardOfDeck();
@@ -28,11 +30,13 @@ namespace SWDB.Cards.Empire.Units
             }
         }
 
-        public override int GetTargetValue() {
+        public override int GetTargetValue() 
+        {
             return 2;
         }
 
-        public override void ApplyReward() {
+        public override void ApplyReward() 
+        {
             AddExilePendingAction(Game.Rebel, 1);
         }
     }

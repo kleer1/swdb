@@ -13,11 +13,13 @@ namespace SWDB.Cards.Empire.Bases
             base(id, Faction.empire, "Endor", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
                 game, game.Empire, 16) {}
 
-        public void ApplyAtStartOfTurn() {
+        public void ApplyAtStartOfTurn() 
+        {
             Game.StaticEffects.Add(StaticEffect.EndorBonus);
         }
 
-        public void ApplyOnReveal() {
+        public void ApplyOnReveal() 
+        {
             Game.StaticEffects.Add(StaticEffect.EndorBonus);
         }
     }

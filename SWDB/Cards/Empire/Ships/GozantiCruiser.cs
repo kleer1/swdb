@@ -10,11 +10,13 @@ namespace SWDB.Cards.Empire.Ships
         public GozantiCruiser(int id, SWDBGame game) :
             base(id, 3, 0, 2, 0, "Gozanti Cruiser", game, 3) {}
         
-        public override bool AbilityActive() {
+        public override bool AbilityActive() 
+        {
             return base.AbilityActive() && (Owner?.Hand?.Any() ?? false);
         }
 
-        public override void ApplyAbility() {
+        public override void ApplyAbility() 
+        {
             base.ApplyAbility();
             Game.PendingActions.Add(PendingAction.Of(Action.DiscardFromHand, () => Owner?.DrawCards(1)));
         }

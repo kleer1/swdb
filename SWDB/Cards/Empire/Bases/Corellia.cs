@@ -13,7 +13,8 @@ namespace SWDB.Cards.Empire.Bases
         base(id, Faction.empire, "Corellia", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
                 game, game.Empire,10) {}
         
-        public void ApplyOnReveal() {
+        public void ApplyOnReveal() 
+        {
             Game.PendingActions.Add(PendingAction.Of(Action.PurchaseCard));
             Game.StaticEffects.Add(StaticEffect.NextFactionOrNeutralPurchaseIsFree);
             Game.StaticEffects.Add(StaticEffect.BuyNextToHand);

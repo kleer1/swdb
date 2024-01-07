@@ -19,11 +19,13 @@ namespace SWDB.Cards.Common
             CardLocation location, IList<Card> cardList, SWDBGame game) :
             base(id, 0, 0, 0, 0, faction, title, traits, false, owner, location, cardList, game) {}
         
-        public IList<PendingAction> GetActions() {
+        public IList<PendingAction> GetActions() 
+        {
             return new List<PendingAction>(){ PendingAction.Of(Action.ChooseStatBoost) };
         }
 
-        public void ApplyChoice(Stats statChoice) {
+        public void ApplyChoice(Stats statChoice) 
+        {
             Choice = statChoice;
             if (Choice == Stats.Resources) 
             {

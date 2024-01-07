@@ -23,31 +23,38 @@ namespace SWDB.Cards.Common.Models
             Traits = traits;
         }
 
-        public bool AbleToAttack() {
+        public bool AbleToAttack() 
+        {
             return Attack > 0 && CanAttack;
         }
 
-        public void SetAttacked() {
+        public void SetAttacked() 
+        {
             CanAttack = false;
         }
 
-        public void Buy(Player newOwner) {
+        public void Buy(Player newOwner) 
+        {
             Owner = newOwner;
             MoveToDiscard();
         }
 
-        public void BuyToTopOfDeck(Player newOwner) {
+        public void BuyToTopOfDeck(Player newOwner) 
+        {
             Owner = newOwner;
             MoveToTopOfDeck();
         }
 
-        public void BuyToHand(Player newOwner) {
+        public void BuyToHand(Player newOwner) 
+        {
             Owner = newOwner;
             MoveToHand();
         }
 
-        public virtual void MoveToDiscard() {
-            if (Owner == null) {
+        public virtual void MoveToDiscard() 
+        {
+            if (Owner == null) 
+            {
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             CardList?.Remove(this);
@@ -58,8 +65,10 @@ namespace SWDB.Cards.Common.Models
             AbilityUsed = false;
         }
 
-        public void MoveToTopOfDeck() {
-            if (Owner == null) {
+        public void MoveToTopOfDeck() 
+        {
+            if (Owner == null) 
+            {
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             CardList?.Remove(this);
@@ -68,8 +77,10 @@ namespace SWDB.Cards.Common.Models
             Location = CardLocationHelper.GetDeck(Owner.Faction);
         }
 
-        public void MoveToHand() {
-            if (Owner == null) {
+        public void MoveToHand() 
+        {
+            if (Owner == null) 
+            {
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             CardList?.Remove(this);
@@ -78,8 +89,10 @@ namespace SWDB.Cards.Common.Models
             Location = CardLocationHelper.GetHand(Owner.Faction);
         }
 
-        public void MoveToExile() {
-            if (Owner == null || Owner.Game == null) {
+        public void MoveToExile() 
+        {
+            if (Owner == null || Owner.Game == null) 
+            {
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             CardList?.Remove(this);
@@ -89,21 +102,26 @@ namespace SWDB.Cards.Common.Models
             CardList = (IList<Card>?) Game.ExiledCards;
         }
 
-        public virtual void MoveToInPlay() {
+        public virtual void MoveToInPlay() 
+        {
             CanAttack = true;
-            if (Owner == null || Owner.Game == null) {
+            if (Owner == null || Owner.Game == null) 
+            {
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             CardList?.Remove(this);
             Owner.AddResources(Resources);
-            if (Owner.Faction == Faction.empire) {
+            if (Owner.Faction == Faction.empire) 
+            {
                 Owner.Game.ForceBalance.DarkSideGainForce(Force);
-            } else {
+            } else 
+            {
                 Owner.Game.ForceBalance.LightSideGainForce(Force);
             }
         }
 
-        public void MoveToGalaxyDiscard() {
+        public void MoveToGalaxyDiscard() 
+        {
             CanAttack = false;
             Owner = null;
             CardList?.Remove(this);
@@ -112,7 +130,8 @@ namespace SWDB.Cards.Common.Models
             CardList = (IList<Card>?) Game.GalaxyDiscard;
         }
 
-        public void MoveToGalaxyRow() {
+        public void MoveToGalaxyRow() 
+        {
             CanAttack = false;
             Owner = null;
             CardList?.Remove(this);
@@ -121,7 +140,8 @@ namespace SWDB.Cards.Common.Models
             CardList = (IList<Card>?) Game.GalaxyRow;
         }
 
-        public void MoveToTopOfGalaxyDeck() {
+        public void MoveToTopOfGalaxyDeck() 
+        {
             CanAttack = false;
             Owner = null;
             CardList?.Remove(this);
@@ -130,17 +150,20 @@ namespace SWDB.Cards.Common.Models
             CardList = (IList<Card>?) Game.GalaxyDeck;
         }
 
-        protected bool IsInPlay() {
+        protected bool IsInPlay() 
+        {
             return Owner!= null &&
                     (Location == CardLocationHelper.GetUnitsInPlay(Owner.Faction) ||
                             Location == CardLocationHelper.GetShipsInPlay(Owner.Faction));
         }
 
-        public override bool AbilityActive() {
+        public override bool AbilityActive() 
+        {
             return base.AbilityActive() && IsInPlay();
         }
 
-        public override string ToString() {
+        public override string ToString() 
+        {
             return "PlayableCard{" +
                     "id=" + Id +
                     ", title='" + Title + '\'' +

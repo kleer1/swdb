@@ -11,7 +11,8 @@ namespace SWDB.Cards.Empire.Bases
             base(id, Faction.empire, "Kessel", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
                 game, game.Empire, 12) {}
         
-        public void ApplyOnReveal() {
+        public void ApplyOnReveal() 
+        {
             if (Owner == null)
             {
                 throw new ArgumentException("No owner to appy reveal for Kessel");

@@ -12,11 +12,13 @@ namespace SWDB.Cards.Empire.Units
         public GrandMoffTarkin(int id, SWDBGame game) :
             base(id, 6, 2, 2, 2, "Grand Moff Tarkin", new List<Trait>{ Trait.officer }, true, game) {}
 
-        public override bool AbilityActive() {
+        public override bool AbilityActive() 
+        {
             return base.AbilityActive() && Game.GalaxyRow.Where(pc => pc.Faction == Faction.empire).Any();
         }
 
-        public override void ApplyAbility() {
+        public override void ApplyAbility() 
+        {
             base.ApplyAbility();
             Game.PendingActions.Add(PendingAction.Of(Action.PurchaseCard));
             Game.StaticEffects.Add(StaticEffect.NextFactionPurchaseIsFree);
@@ -24,11 +26,13 @@ namespace SWDB.Cards.Empire.Units
             Game.StaticEffects.Add(StaticEffect.BuyNextToHand);
         }
 
-        public override int GetTargetValue() {
+        public override int GetTargetValue() 
+        {
             return 6;
         }
 
-        public override void ApplyReward() {
+        public override void ApplyReward() 
+        {
             Game.Rebel.AddResources(3);
             Game.Rebel.AddForce(3);
         }

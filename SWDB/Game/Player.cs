@@ -33,16 +33,20 @@ namespace SWDB.Game
 
         public void DrawCards(int amount) 
         {
-            if (amount > Deck.Count + Discard.Count) {
+            if (amount > Deck.Count + Discard.Count) 
+            {
                 amount = Deck.Count + Discard.Count;
             }
 
-            if (amount < 1) {
+            if (amount < 1) 
+            {
                 return;
             }
 
-            for (int i = 0; i < amount; i++) {
-                if (Deck.Count == 0) {
+            for (int i = 0; i < amount; i++) 
+            {
+                if (Deck.Count == 0) 
+                {
                     Deck = Discard;
                     Discard = new List<PlayableCard>();
                     Deck = Deck.OrderBy(x => Random.Shared.Next()).ToList();
@@ -82,10 +86,13 @@ namespace SWDB.Game
             }
         }
 
-        public bool IsForceWithPlayer() {
-        if (Faction == Faction.empire) {
+        public bool IsForceWithPlayer() 
+        {
+        if (Faction == Faction.empire) 
+        {
             return Game?.ForceBalance.DarkSideHasTheForce() ?? false;
-        } else {
+        } else 
+        {
             return Game?.ForceBalance.LightSideHasTheForce() ?? false;
         }
     }

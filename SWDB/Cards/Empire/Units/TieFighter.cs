@@ -20,11 +20,13 @@ namespace SWDB.Cards.Empire.Units
             Owner?.DrawCards(1);
         }
 
-        public override int GetTargetValue() {
+        public override int GetTargetValue() 
+        {
             return 1;
         }
 
-        public override void ApplyReward() {
+        public override void ApplyReward() 
+        {
             Game.Rebel.AddResources(1);
         }
     }

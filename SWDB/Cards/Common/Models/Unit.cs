@@ -9,8 +9,10 @@ namespace SWDB.Cards.Common.Models
                 bool isUnique, Player? owner, CardLocation location, IList<Card> cardList, SWDBGame game) :
                 base(id, faction, title, isUnique, location, cardList, game, owner, cost, attack, resources, force, traits){ }
         
-        public override void MoveToInPlay() {
-            if (Owner == null || Owner.Game == null) {
+        public override void MoveToInPlay() 
+        {
+            if (Owner == null || Owner.Game == null) 
+            {
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             base.MoveToInPlay();
@@ -25,7 +27,8 @@ namespace SWDB.Cards.Common.Models
             {
                 int _attack = base.Attack;
                 if (Faction == Faction.empire && Game.StaticEffects.Contains(StaticEffect.EndorBonus) &&
-                        (Traits.Contains(Trait.trooper) || Traits.Contains(Trait.vehicle))) {
+                        (Traits.Contains(Trait.trooper) || Traits.Contains(Trait.vehicle))) 
+                {
                     _attack++;
                 }
                 return _attack;    

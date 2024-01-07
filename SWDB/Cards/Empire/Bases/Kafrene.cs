@@ -11,11 +11,13 @@ namespace SWDB.Cards.Empire.Bases
             base(id, Faction.empire, "Kafrene", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
                     game, game.Empire, 14) {}
         
-        public void ApplyAtStartOfTurn() {
+        public void ApplyAtStartOfTurn() 
+        {
             Game.StaticEffects.Add(StaticEffect.DrawOnFirstNeutralCard);
         }
 
-        public void ApplyOnReveal() {
+        public void ApplyOnReveal() 
+        {
             Game.StaticEffects.Add(StaticEffect.DrawOnFirstNeutralCard);
         }
     }

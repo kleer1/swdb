@@ -8,21 +8,25 @@ namespace SWDB.Cards.Empire.Units
         public AdmiralPiett(int id, SWDBGame game) :
             base(id, 2, 0, 2, 0, "Admiral Piett", new List<Trait>{ Trait.officer }, true, game) {}
         
-        public override void MoveToInPlay() {
+        public override void MoveToInPlay() 
+        {
             base.MoveToInPlay();
             Game.StaticEffects.Add(StaticEffect.AdmiralPiettBonus);
         }
 
-        public override void MoveToDiscard() {
+        public override void MoveToDiscard() 
+        {
             base.MoveToDiscard();
             Game.StaticEffects.Remove(StaticEffect.AdmiralPiettBonus);
         }
 
-        public override int GetTargetValue() {
+        public override int GetTargetValue() 
+        {
             return 2;
         }
 
-        public override void ApplyReward() {
+        public override void ApplyReward() 
+        {
             Game.Rebel.AddForce(1);
         }
     }

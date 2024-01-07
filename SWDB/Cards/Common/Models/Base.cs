@@ -15,20 +15,25 @@ namespace SWDB.Cards.Common.Models
             HitPoints = hitPoints;
         }
 
-        public int HetRemainingHealth() {
+        public int HetRemainingHealth() 
+        {
             return HitPoints - CurrentDamage;
         }
 
-        public void AddDamage(int damage) {
+        public void AddDamage(int damage) 
+        {
             CurrentDamage += damage;
-            if (CurrentDamage >= HitPoints) {
+            if (CurrentDamage >= HitPoints) 
+            {
             DestroyBase();
-            } else if (CurrentDamage < 0) {
+            } else if (CurrentDamage < 0) 
+            {
                 CurrentDamage = 0;
             }
         }
 
-        protected void DestroyBase() {
+        protected void DestroyBase() 
+        {
             if (Owner == null)
             {
                 throw new ArgumentException("Could not destroy base with no owner.");
@@ -44,14 +49,18 @@ namespace SWDB.Cards.Common.Models
             Owner = Owner.Opponent;
         }
 
-        public void MakeCurrentBase() {
-            if (Owner == null) {
+        public void MakeCurrentBase() 
+        {
+            if (Owner == null) 
+            {
                 throw new ArgumentException("Setting new current base while there is no owner");
             }
-            if (Owner.CurrentBase != null) {
+            if (Owner.CurrentBase != null) 
+            {
                 throw new ArgumentException("Setting new current base while there is still a current base");
             }
-            if (Location != CardLocationHelper.GetAvailableBases(Owner.Faction)) {
+            if (Location != CardLocationHelper.GetAvailableBases(Owner.Faction)) 
+            {
                 throw new ArgumentException("Setting new current base for an unavailable base");
             }
             Owner.CurrentBase = this;
@@ -59,14 +68,17 @@ namespace SWDB.Cards.Common.Models
             Location = CardLocationHelper.GetCurrentBase(Owner.Faction);
         }
 
-        public override bool AbilityActive() {
-             if (Owner == null) {
+        public override bool AbilityActive() 
+        {
+            if (Owner == null) 
+            {
                 return false;
             }
             return base.AbilityActive() && Location == CardLocationHelper.GetCurrentBase(Owner.Faction);
         }
 
-        public override string ToString() {
+        public override string ToString() 
+        {
             return "Base{" +
                     "id=" + Id +
                     ", title='" + Title + '\'' +

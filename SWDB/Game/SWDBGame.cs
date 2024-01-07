@@ -47,7 +47,8 @@ namespace SWDB.Game
 
         public void DrawGalaxyCard() 
         {
-            if (!GalaxyDeck.Any()) {
+            if (!GalaxyDeck.Any()) 
+            {
                 GalaxyDeck = GalaxyDiscard;
                 GalaxyDiscard = new List<PlayableCard>();
                 GalaxyDeck = GalaxyDeck.OrderBy(x => Random.Shared.Next()).ToList();

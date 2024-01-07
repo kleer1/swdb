@@ -13,8 +13,10 @@ namespace SWDB.Cards.Empire.Bases
             base(id, Faction.empire, "Coruscant", CardLocation.EmpireAvailableBases,
                 (IList<Card>) game.Empire.AvailableBases, game, game.Empire, 16) {}
         
-        public void ApplyAtStartOfTurn() {
-            if (Game.GalaxyDeck.Count >= 2) {
+        public void ApplyAtStartOfTurn() 
+        {
+            if (Game.GalaxyDeck.Count >= 2) 
+            {
                 Game.KnowsTopCardOfDeck[Faction.empire] = 2;
                 Game.PendingActions.Add(PendingAction.Of(Action.GalacticRule));
             }

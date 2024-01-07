@@ -32,31 +32,38 @@ namespace SWDB.Common
             return faction == Faction.empire ? CardLocation.EmpireDeck : CardLocation.RebelDeck;
         }
 
-        public static CardLocation GetDiscard(Faction faction) {
+        public static CardLocation GetDiscard(Faction faction) 
+        {
             return faction == Faction.empire ? CardLocation.EmpireDiscard : CardLocation.RebelDiscard;
         }
 
-        public static CardLocation GetHand(Faction faction) {
+        public static CardLocation GetHand(Faction faction) 
+        {
             return faction == Faction.empire ? CardLocation.EmpireHand : CardLocation.RebelHand;
         }
 
-        public static CardLocation GetUnitsInPlay(Faction faction) {
+        public static CardLocation GetUnitsInPlay(Faction faction) 
+        {
             return faction == Faction.empire ? CardLocation.EmpireUnitInPlay : CardLocation.RebelUnitInPlay;
         }
 
-        public static CardLocation GetShipsInPlay(Faction faction) {
+        public static CardLocation GetShipsInPlay(Faction faction) 
+        {
             return faction == Faction.empire ? CardLocation.EmpireShipInPlay : CardLocation.RebelShipInPlay;
         }
 
-        public static CardLocation GetCurrentBase(Faction faction) {
+        public static CardLocation GetCurrentBase(Faction faction) 
+        {
             return faction == Faction.empire ? CardLocation.EmpireCurrentBase : CardLocation.RebelCurrentBase;
         }
 
-        public static CardLocation GetAvailableBases(Faction faction) {
+        public static CardLocation GetAvailableBases(Faction faction) 
+        {
             return faction == Faction.empire ? CardLocation.EmpireAvailableBases : CardLocation.RebelAvailableBases;
         }
 
-        public static CardLocation GetDestroyedBases(Faction faction) {
+        public static CardLocation GetDestroyedBases(Faction faction) 
+        {
             return faction == Faction.empire ? CardLocation.EmpireDestroyedBases : CardLocation.RebelDestroyedBases;
         }
     }

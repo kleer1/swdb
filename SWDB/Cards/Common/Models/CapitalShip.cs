@@ -19,15 +19,19 @@ namespace SWDB.Cards.Common.Models
             HitPoints = hitPoints;
         }
 
-        public void AddDamage(int damage) {
+        public void AddDamage(int damage) 
+        {
             CurrentDamage += damage;
-            if (CurrentDamage >= HitPoints) {
+            if (CurrentDamage >= HitPoints) 
+            {
                 MoveToDiscard();
             }
         }
 
-        public override void MoveToInPlay() {
-            if (Owner == null || Owner.Game == null) {
+        public override void MoveToInPlay() 
+        {
+            if (Owner == null || Owner.Game == null) 
+            {
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             base.MoveToInPlay();
@@ -37,12 +41,14 @@ namespace SWDB.Cards.Common.Models
             CurrentDamage = 0;
         }
 
-        public override void MoveToDiscard() {
+        public override void MoveToDiscard() 
+        {
             base.MoveToDiscard();
             CurrentDamage = 0;
         }
 
-        public int GetRemainingHealth() {
+        public int GetRemainingHealth() 
+        {
             return HitPoints - CurrentDamage;
         }
 
@@ -51,7 +57,8 @@ namespace SWDB.Cards.Common.Models
             get
             {
                 int attack =  base.Attack;
-                if (Owner != null && Owner.Faction == Faction.empire && Game.StaticEffects.Contains(StaticEffect.AdmiralPiettBonus)) {
+                if (Owner != null && Owner.Faction == Faction.empire && Game.StaticEffects.Contains(StaticEffect.AdmiralPiettBonus)) 
+                {
                     attack++;
                 }
                 return attack;
