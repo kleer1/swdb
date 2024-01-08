@@ -2,6 +2,7 @@ using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 using SWDB.Game.Common.Utils;
 using SWDB.Game.Actions;
+using SWDB.Cards.Utils;
 
 namespace SWDB.Game
 {
@@ -36,6 +37,10 @@ namespace SWDB.Game
             Empire.Game = this;
             Rebel.Opponent = Empire;
             Rebel.Game = this;
+            CardMap = SetupUtils.Setup(this);
+            DrawGalaxyCard(6);
+            Empire.DrawCards(5);
+            Rebel.DrawCards(5);
         }
 
         public Player GetCurrentPlayer() => CurrentPlayersTurn == Faction.empire ? Empire : Rebel;
@@ -44,30 +49,33 @@ namespace SWDB.Game
 
         private void PassCurrentAction() => CurrentPlayersAction = CurrentPlayersAction == Faction.empire ? Faction.rebellion : Faction.empire;
 
-        public void DrawGalaxyCard() 
+        public void DrawGalaxyCard(int num = 1) 
         {
-            if (!GalaxyDeck.Any()) 
+            for (int i = 0; i < num; i++)
             {
-                GalaxyDeck = GalaxyDiscard;
-                GalaxyDiscard = new List<PlayableCard>();
-                GalaxyDeck = GalaxyDeck.OrderBy(x => Random.Shared.Next()).ToList();
-                foreach (PlayableCard c in GalaxyDeck) 
+                if (!GalaxyDeck.Any()) 
                 {
-                    c.Location = CardLocation.GalaxyDeck;
-                    c.CardList = (IList<Card>?) GalaxyDeck;
-                };
-            }
-            PlayableCard card = GalaxyDeck.Pop();
-            GalaxyRow.Add(card);
-            card.Location = CardLocation.GalaxyRow;
-            card.CardList = (IList<Card>?) GalaxyRow;
-            foreach (KeyValuePair<Faction, int> entry in KnowsTopCardOfDeck) 
-            {
-                if (entry.Value > 0) 
-                {
-                    KnowsTopCardOfDeck[entry.Key] = entry.Value - 1;
+                    GalaxyDeck = GalaxyDiscard;
+                    GalaxyDiscard = new List<PlayableCard>();
+                    GalaxyDeck.Shuffle();
+                    foreach (PlayableCard c in GalaxyDeck) 
+                    {
+                        c.Location = CardLocation.GalaxyDeck;
+                        c.CardList = (IList<Card>?) GalaxyDeck;
+                    };
                 }
-            }
+                PlayableCard card = GalaxyDeck.Pop();
+                GalaxyRow.Add(card);
+                card.Location = CardLocation.GalaxyRow;
+                card.CardList = (IList<Card>?) GalaxyRow;
+                foreach (KeyValuePair<Faction, int> entry in KnowsTopCardOfDeck) 
+                {
+                    if (entry.Value > 0) 
+                    {
+                        KnowsTopCardOfDeck[entry.Key] = entry.Value - 1;
+                    }
+                }
+            }  
         }
 
         public void LookAtTopCardOfDeck(Faction faction) 
@@ -95,7 +103,7 @@ namespace SWDB.Game
             }
         }
 
-        public void AssignDamageToBase(int damageDealt, Player player) 
+        public static void AssignDamageToBase(int damageDealt, Player player) 
         {
             int remainingDamage = damageDealt;
             if (player.ShipsInPlay.Any()) 

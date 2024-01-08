@@ -1,4 +1,5 @@
 using SWDB.Game.Cards.Common.Models;
+using SWDB.Game.Common.Utils;
 
 namespace SWDB.Game.Common
 {
@@ -48,7 +49,7 @@ namespace SWDB.Game.Common
                 {
                     Deck = Discard;
                     Discard = new List<PlayableCard>();
-                    Deck = Deck.OrderBy(x => Random.Shared.Next()).ToList();
+                    Deck.Shuffle();
                 }
                 Deck.First().MoveToHand();
             }
