@@ -1,8 +1,12 @@
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
-using SWDB.Game.Common.Utils;
+using SWDB.Game.Utils;
 using SWDB.Game.Actions;
 using SWDB.Cards.Utils;
+using Action = SWDB.Game.Actions.Action;
+using Game.Utils;
+using static SWDB.Game.Actions.Action;
+using SWDB.Game.Cards.Common.Models.Interface;
 
 namespace SWDB.Game
 {
@@ -17,19 +21,20 @@ namespace SWDB.Game
         public IList<PlayableCard> OuterRimPilots { get; } = new List<PlayableCard>();
         public IList<PlayableCard> ExiledCards { get; } = new List<PlayableCard>();
         public IDictionary<int, Card> CardMap { get; } = new Dictionary<int, Card>();
-        private Faction CurrentPlayersAction { get; set; } = Faction.empire;
+        internal Faction CurrentPlayersAction { get; private set; } = Faction.empire;
         private Faction CurrentPlayersTurn {get; set; } = Faction.empire;
         internal IList<StaticEffect> StaticEffects { get; } = new List<StaticEffect>();
         internal IList<PendingAction> PendingActions { get; } = new List<PendingAction>();
         private Card? LastCardPlayed { get; set; }
-        private Card? LastCardActivated { get; set; }
+        internal Card? LastCardActivated { get; private set; }
         internal IDictionary<Faction, int> KnowsTopCardOfDeck { get; } = new Dictionary<Faction, int>{ {Faction.empire, 0}, {Faction.rebellion, 0} };
-        private IList<PlayableCard> Attackers { get; } = new List<PlayableCard>();
+        internal IList<PlayableCard> Attackers { get; } = new List<PlayableCard>();
         internal Card? AttackTarget { get; private set; }
         public bool CanSeeOpponentsHand {get; private set; }
         private List<PlayableCard> ExileAtEndOfTurn { get; } = new List<PlayableCard>();
-        private PlayableCard? ANewHope1 { get; set; } = null;
+        internal PlayableCard? ANewHope1Card { get; private set; } = null;
         private ISet<int> AvailableActions { get; } = new HashSet<int>();
+        private bool GameComplete { get; set; } = false;
 
         public SWDBGame()
         {
@@ -132,6 +137,178 @@ namespace SWDB.Game
                 }
             }
             
+        }
+
+        public void ApplyAction(Action action, int? cardId = null, Stats? stats = null, ResourceOrRepair? resourceOrRepair = null)
+        {
+            if (GameComplete) return;
+
+            Card? card = null;
+            if (cardId != null && !CardMap.TryGetValue(cardId.Value, out card))
+            {
+                return;
+            }
+
+            if (!ValidActionUtil.IsValidAction(action, card, this, stats, resourceOrRepair))
+            {
+                return;
+            }
+
+            PlayableCard? playableCard = null;
+            Base? _base = null;
+            Player currentPlayer = GetCurrentPlayer();
+            if (card is PlayableCard card1) 
+            {
+                playableCard = card1;
+            } else if (card is Base @base) 
+            {
+                _base = @base;
+            }
+            bool isPendingAction = PendingActions.Any();
+            bool endedTurn = false;
+
+            switch(action)
+            {
+                case PlayCard:
+                    break;
+                case PurchaseCard:
+                    break;
+                case UseCardAbility:
+                    break;
+                case AttackCenterRow:
+                case AttackBase:
+                    break;
+                case SelectAttacker:
+                    break;
+                case DiscardFromHand:
+                case DurosDiscard:
+                case BWingDiscard:
+                    break;
+                case DiscardCardFromCenter:
+                    break;
+                case ExileCard:
+                case JabbaExile:
+                    break;
+                case ReturnCardToHand:
+                    break;
+                case ChooseNextBase:
+                    break;
+                case SwapTopCardOfDeck:
+                    break;
+                case FireWhenReady:
+                    break;
+                case GalacticRule:
+                    break;
+                case ANewHope1:
+                    break;
+                case ANewHope2:
+                    break;
+                case JynErsoTopDeck:
+                    break;
+                case LukeDestroyShip:
+                    break;
+                case HammerHeadAway:
+                    break;
+                case PassTurn:
+                    break;
+                case DeclineAction:
+                    // To Nothing
+                    break;
+                case ChooseStatBoost:
+                    break;
+                case ChooseResourceOrRepair:
+                    break;
+                case AttackNeutralCard:
+                    break;
+                case ConfirmAttackers:
+                    break;
+                
+            }
+
+            PendingAction? pendingAction = null;
+            if (isPendingAction)
+            {
+                pendingAction = PendingActions.Pop();
+                if (action != Action.DeclineAction)
+                {
+                    pendingAction.ExecuteCallback();
+                }
+            }
+
+            if (endedTurn) 
+            {
+                EndTurn(currentPlayer);
+                StartTurn(currentPlayer?.Opponent);
+            }
+
+            if (pendingAction != null && pendingAction.ShouldPassAction) 
+            {
+                PassCurrentAction();
+            }
+
+            if (PendingActions.Any() && PendingActions.First().ShouldPassAction) 
+            {
+                PassCurrentAction();
+            }
+        }
+
+        private void EndTurn(Player player) 
+        {
+            foreach (PlayableCard card in ExileAtEndOfTurn) 
+            {
+                if (card.Location != CardLocation.Exile) 
+                {
+                    card.MoveToExile();
+                }
+            }
+            ExileAtEndOfTurn.Clear();
+            player.DiscardUnits();
+            player.DiscardHand();
+            player.DrawCards(5);
+            player.Resources = 0;
+            StaticEffects.Clear();
+            CurrentPlayersTurn = CurrentPlayersTurn == Faction.empire ? Faction.rebellion : Faction.empire;
+            CurrentPlayersAction = CurrentPlayersTurn;
+            PendingActions.Clear();
+            CanSeeOpponentsHand = false;
+            LastCardActivated = null;
+        }
+
+        private void StartTurn(Player? player) 
+        {
+            if (player == null)
+            {
+                throw new ArgumentException("Can not start a new turn. Player has no opponent");
+            }
+
+            // The only thing that need to happen at the start of turn is queueing up any start of turn pending actions.
+            if (player.CurrentBase == null) 
+            {
+                // Start with choosing a new base
+                PendingActions.Add(PendingAction.Of(Action.ChooseNextBase));
+            } else 
+            {
+                // Check for start of turn base abilities
+                if (player.CurrentBase is IHasAtStartOfTurn startOfTurn) 
+                {
+                    startOfTurn.ApplyAtStartOfTurn();
+                }
+            }
+
+            // Add capital ship resources
+            foreach (CapitalShip ship in player.ShipsInPlay)
+            {
+                player.AddResources(ship.Resources);
+                if (ship is IHasAtStartOfTurn startOfTurn) 
+                {
+                    startOfTurn.ApplyAtStartOfTurn();
+                }
+            }
+
+            if (player.DoesPlayerHaveFullForce()) 
+            {
+                player.AddResources(1);
+            }
         }
     }
 }

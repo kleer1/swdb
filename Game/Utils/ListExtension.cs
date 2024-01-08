@@ -1,4 +1,4 @@
-namespace SWDB.Game.Common.Utils
+namespace SWDB.Game.Utils
 {
     public static class ListExtension
     {

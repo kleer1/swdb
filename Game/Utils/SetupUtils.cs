@@ -10,7 +10,7 @@ using SWDB.Game.Cards.Rebellion.Bases;
 using SWDB.Game.Cards.Rebellion.Ships;
 using SWDB.Game.Cards.Rebellion.Units;
 using SWDB.Game.Cards.Rebellion.Units.Starter;
-using SWDB.Game.Common.Utils;
+using SWDB.Game.Utils;
 
 namespace SWDB.Cards.Utils
 {

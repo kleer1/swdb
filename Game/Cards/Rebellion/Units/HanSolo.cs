@@ -12,7 +12,7 @@ namespace SWDB.Game.Cards.Rebellion.Units
         public override void ApplyAbility() 
         {
             base.ApplyAbility();
-            if (Owner?.UnitsInPlay.Where(u => u.GetType() == typeof(MillenniumFalcon)).Any() ?? false) 
+            if (Owner?.UnitsInPlay.Where(u => u is MillenniumFalcon).Any() ?? false) 
             {
                 Owner?.DrawCards(2);
             } else 

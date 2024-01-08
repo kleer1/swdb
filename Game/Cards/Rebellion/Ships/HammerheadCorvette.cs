@@ -17,7 +17,7 @@ namespace SWDB.Game.Cards.Rebellion.Ships
                 throw new ArgumentException("HammerheadCorvette cannot check if ability is active. It has no owner or opponent");
             }
             return base.AbilityActive() && (Owner.Opponent.ShipsInPlay.Any() ||
-                Game.GalaxyRow.Where(pc => pc.GetType() == typeof(CapitalShip) && pc.Faction == Owner.Opponent.Faction).Any());
+                Game.GalaxyRow.Where(pc => pc is CapitalShip && pc.Faction == Owner.Opponent.Faction).Any());
         }
 
         public override void ApplyAbility() 

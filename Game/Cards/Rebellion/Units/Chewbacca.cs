@@ -11,7 +11,7 @@ namespace SWDB.Game.Cards.Rebellion.Units
         public override bool AbilityActive() 
         {
             return base.AbilityActive() && 
-                (Owner?.UnitsInPlay.Where(c => !(c.GetType() != typeof(Chewbacca) && c.IsUnique)).Any() ?? false);
+                (Owner?.UnitsInPlay.Where(c => c is not Chewbacca && c.IsUnique).Any() ?? false);
         }
 
         public override void ApplyAbility() 

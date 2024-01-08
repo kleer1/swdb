@@ -33,6 +33,14 @@ namespace SWDB.Game.Actions
     public static class GameActions
     {
         private static readonly ISet<Action> Values = Enum.GetValues(typeof(Action)).Cast<Action>().ToHashSet();
+        public static IReadOnlyCollection<Action> NonCardActions { get; } = new HashSet<Action> {
+            Action.PassTurn,
+            Action.DeclineAction,
+            Action.ChooseStatBoost,
+            Action.ChooseResourceOrRepair,
+            Action.AttackNeutralCard,
+            Action.ConfirmAttackers
+        };
 
         public static ISet<CardLocation> DefaultLocations(this Action a)
         {

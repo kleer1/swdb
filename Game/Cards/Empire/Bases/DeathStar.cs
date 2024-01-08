@@ -15,7 +15,7 @@ namespace SWDB.Game.Cards.Empire.Bases
         public override bool AbilityActive() 
         {
             return base.AbilityActive() && Location == CardLocation.EmpireCurrentBase && Owner?.Resources >= 4 &&
-                    (!Game.Rebel.ShipsInPlay.Any() || Game.GalaxyRow.Where(c => c.GetType() == typeof(CapitalShip)).Any());
+                    (!Game.Rebel.ShipsInPlay.Any() || Game.GalaxyRow.Where(c => c is CapitalShip).Any());
         }
 
         public override void ApplyAbility() 

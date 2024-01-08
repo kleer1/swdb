@@ -13,7 +13,7 @@ namespace SWDB.Game.Cards.Empire.Units
         {
             base.ApplyAbility();
             int amountToDraw = 1;
-            if (Owner?.CurrentBase?.GetType() == typeof(DeathStar)) 
+            if (Owner?.CurrentBase is DeathStar) 
             {
                 amountToDraw = 2;
             }
