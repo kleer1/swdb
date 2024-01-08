@@ -25,7 +25,7 @@ namespace SWDB.Game
         private Card? LastCardActivated { get; set; }
         internal IDictionary<Faction, int> KnowsTopCardOfDeck { get; } = new Dictionary<Faction, int>{ {Faction.empire, 0}, {Faction.rebellion, 0} };
         private IList<PlayableCard> Attackers { get; } = new List<PlayableCard>();
-        private Card? AttackTarget { get; set; }
+        internal Card? AttackTarget { get; private set; }
         public bool CanSeeOpponentsHand {get; private set; }
         private List<PlayableCard> ExileAtEndOfTurn { get; } = new List<PlayableCard>();
         private PlayableCard? ANewHope1 { get; set; } = null;

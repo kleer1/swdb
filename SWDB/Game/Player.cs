@@ -88,14 +88,25 @@ namespace SWDB.Game
 
         public bool IsForceWithPlayer() 
         {
-        if (Faction == Faction.empire) 
-        {
-            return Game?.ForceBalance.DarkSideHasTheForce() ?? false;
-        } else 
-        {
-            return Game?.ForceBalance.LightSideHasTheForce() ?? false;
+            if (Faction == Faction.empire) 
+            {
+                return Game?.ForceBalance.DarkSideHasTheForce() ?? false;
+            } else 
+            {
+                return Game?.ForceBalance.LightSideHasTheForce() ?? false;
+            }
         }
-    }
+
+        public bool DoesPlayerHaveFullForce() 
+        {
+            if (Game == null) return false;
+            
+            if (Faction == Faction.empire) {
+                return Game.ForceBalance.DarkSideFull();
+            } else {
+                return Game.ForceBalance.LightSideFull();
+            }
+        }
 
         public override string ToString() 
         {

@@ -11,7 +11,7 @@ using Action = SWDB.Game.Actions.Action;
 
 namespace SWDB.Cards.Common
 {
-    public class TempleInquisitor : Unit, IHasOnPlayAction, IHasChooseStats
+    public class TempleInquisitor : Unit, IHasChooseStats
     {
         public Stats? Choice { get; protected set; } = null;
 
