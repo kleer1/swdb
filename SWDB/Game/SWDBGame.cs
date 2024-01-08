@@ -95,5 +95,36 @@ namespace SWDB.Game
                 }
             }
         }
+
+        public void AssignDamageToBase(int damageDealt, Player player) 
+        {
+            int remainingDamage = damageDealt;
+            if (player.ShipsInPlay.Any()) 
+            {
+                player.ShipsInPlay = player.ShipsInPlay.OrderBy(s => s.GetRemainingHealth()).Reverse().ToList();
+                for (int i = player.ShipsInPlay.Count - 1; i >= 0; i--)
+                {
+                    CapitalShip ship = player.ShipsInPlay[i];
+                    if (ship.GetRemainingHealth() <= remainingDamage) 
+                    {
+                        remainingDamage -= ship.GetRemainingHealth();
+                        player.ShipsInPlay.RemoveAt(i);
+                        ship.MoveToDiscard();
+                    }
+                }
+            }
+
+            if (remainingDamage > 0)
+            {
+                if (player.ShipsInPlay.Any()) 
+                {
+                    player.ShipsInPlay.Last().AddDamage(remainingDamage);
+                } else if (player.CurrentBase != null) 
+                {
+                    player.CurrentBase.AddDamage(remainingDamage);
+                }
+            }
+            
+        }
     }
 }

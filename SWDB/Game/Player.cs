@@ -13,7 +13,7 @@ namespace SWDB.Game
         public IList<Base> AvailableBases { get; } = new List<Base>();
         public IList<Base> DestroyedBases { get; } = new List<Base>();
         public IList<Unit> UnitsInPlay { get; } = new List<Unit>();
-        public IList<CapitalShip> ShipsInPlay { get; } = new List<CapitalShip>();
+        public IList<CapitalShip> ShipsInPlay { get; internal set; } = new List<CapitalShip>();
         public int Resources { get; private set; } = 0;
         public Player? Opponent { get; internal set; }
         public SWDBGame? Game { get; internal set; }
