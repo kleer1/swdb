@@ -20,7 +20,7 @@ namespace SWDB.Cards.Common.Models
             return HitPoints - CurrentDamage;
         }
 
-        public void AddDamage(int damage) 
+        public virtual void AddDamage(int damage) 
         {
             CurrentDamage += damage;
             if (CurrentDamage >= HitPoints) 
