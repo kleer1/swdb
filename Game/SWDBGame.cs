@@ -5,7 +5,6 @@ using SWDB.Game.Actions;
 using SWDB.Cards.Utils;
 using Action = SWDB.Game.Actions.Action;
 using Game.Utils;
-using static SWDB.Game.Actions.Action;
 using SWDB.Game.Cards.Common.Models.Interface;
 
 namespace SWDB.Game
@@ -34,7 +33,7 @@ namespace SWDB.Game
         private List<PlayableCard> ExileAtEndOfTurn { get; } = new List<PlayableCard>();
         internal PlayableCard? ANewHope1Card { get; private set; } = null;
         private ISet<int> AvailableActions { get; } = new HashSet<int>();
-        private bool GameComplete { get; set; } = false;
+        public bool IsGameOver { get; private set; } = false;
 
         public SWDBGame()
         {
@@ -139,9 +138,14 @@ namespace SWDB.Game
             
         }
 
+        private void UpdateGameComplete() 
+        {
+            IsGameOver = Empire.DestroyedBases.Count >= 4 || Rebel.DestroyedBases.Count >= 4;
+        }
+
         public void ApplyAction(Action action, int? cardId = null, Stats? stats = null, ResourceOrRepair? resourceOrRepair = null)
         {
-            if (GameComplete) return;
+            if (IsGameOver) return;
 
             Card? card = null;
             if (cardId != null && !CardMap.TryGetValue(cardId.Value, out card))
@@ -169,60 +173,107 @@ namespace SWDB.Game
 
             switch(action)
             {
-                case PlayCard:
+                case Action.PlayCard:
+                    PlayCard(playableCard, currentPlayer);
                     break;
-                case PurchaseCard:
+                case Action.PurchaseCard:
+                    PurchaseCard(playableCard, currentPlayer);
                     break;
-                case UseCardAbility:
+                case Action.UseCardAbility:
+                    UseCardAbility(card);
                     break;
-                case AttackCenterRow:
-                case AttackBase:
+                case Action.AttackCenterRow:
+                case Action.AttackBase:
+                    AttackTarget = card;
+                    PendingActions.Add(PendingAction.Of(Action.SelectAttacker));
                     break;
-                case SelectAttacker:
+                case Action.SelectAttacker:
+                    SelectAttacker(playableCard);
                     break;
-                case DiscardFromHand:
-                case DurosDiscard:
-                case BWingDiscard:
+                case Action.DiscardFromHand:
+                case Action.DurosDiscard:
+                case Action.BWingDiscard:
+                    DiscardAction(playableCard);
                     break;
-                case DiscardCardFromCenter:
+                case Action.DiscardCardFromCenter:
+                    DiscardCardFromCenter(playableCard, currentPlayer);
                     break;
-                case ExileCard:
-                case JabbaExile:
+                case Action.ExileCard:
+                case Action.JabbaExile:
+                    playableCard?.MoveToExile();
                     break;
-                case ReturnCardToHand:
+                case Action.ReturnCardToHand:
+                    playableCard?.MoveToHand();
                     break;
-                case ChooseNextBase:
+                case Action.ChooseNextBase:
+                    _base?.MakeCurrentBase();
+                    if (_base is IHasOnReveal hasOnReveal) 
+                    {
+                        hasOnReveal.ApplyOnReveal();
+                    }
                     break;
-                case SwapTopCardOfDeck:
+                case Action.SwapTopCardOfDeck:
+                    GalaxyDeck.First().MoveToGalaxyRow();
+                    playableCard?.MoveToTopOfGalaxyDeck();
+                    RevealTopCardOfDeck();
                     break;
-                case FireWhenReady:
+                case Action.FireWhenReady:
+                    FireWhenReady(playableCard, currentPlayer);
                     break;
-                case GalacticRule:
+                case Action.GalacticRule:
+                    playableCard?.MoveToGalaxyDiscard();
+                    KnowsTopCardOfDeck[Faction.empire] = 1;
                     break;
-                case ANewHope1:
+                case Action.ANewHope1:
+                    ANewHope1Card = playableCard;
+                    PendingActions.Add(PendingAction.Of(Action.ANewHope2));
                     break;
-                case ANewHope2:
+                case Action.ANewHope2:
+                    playableCard?.MoveToGalaxyDiscard();
+                    ANewHope1Card?.MoveToGalaxyRow();
+                    ANewHope1Card = null;
+                    Rebel.AddResources(1);
                     break;
-                case JynErsoTopDeck:
+                case Action.JynErsoTopDeck:
+                    playableCard?.MoveToTopOfDeck();
+                    RevealTopCardOfDeck();
                     break;
-                case LukeDestroyShip:
+                case Action.LukeDestroyShip:
+                    playableCard?.MoveToDiscard();
                     break;
-                case HammerHeadAway:
+                case Action.HammerHeadAway:
+                    if (playableCard?.Location == CardLocation.GalaxyRow) 
+                    {
+                        playableCard.MoveToGalaxyDiscard();
+                        DrawGalaxyCard();
+                    } else {
+                        playableCard?.MoveToDiscard();
+                    }
                     break;
-                case PassTurn:
+                case Action.PassTurn:
+                    endedTurn = true;
                     break;
-                case DeclineAction:
+                case Action.DeclineAction:
                     // To Nothing
                     break;
-                case ChooseStatBoost:
+                case Action.ChooseStatBoost:
+                    if (LastCardPlayed is IHasChooseStats hasChooseStats && stats != null) 
+                    {
+                        hasChooseStats.ApplyChoice(stats.Value);
+                    }
                     break;
-                case ChooseResourceOrRepair:
+                case Action.ChooseResourceOrRepair:
+                    if (LastCardActivated is IHasChooseResourceOrRepair hasChooseResourceOrRepair && resourceOrRepair != null) 
+                    {
+                        hasChooseResourceOrRepair.ApplyChoice(resourceOrRepair.Value);
+                    }
                     break;
-                case AttackNeutralCard:
+                case Action.AttackNeutralCard:
+                    PendingActions.Add(PendingAction.Of(Action.AttackCenterRow));
                     break;
-                case ConfirmAttackers:
+                case Action.ConfirmAttackers:
+                    ConfirmAttackers(currentPlayer);
                     break;
-                
             }
 
             PendingAction? pendingAction = null;
@@ -233,6 +284,12 @@ namespace SWDB.Game
                 {
                     pendingAction.ExecuteCallback();
                 }
+            }
+
+            UpdateGameComplete();
+            if (IsGameOver)
+            {
+                return;
             }
 
             if (endedTurn) 
@@ -309,6 +366,202 @@ namespace SWDB.Game
             {
                 player.AddResources(1);
             }
+        }
+
+        private void PlayCard(PlayableCard? card, Player currentPlayer)
+        {
+            if (card == null)
+            {
+                throw new ArgumentException("Can not play card. Playable card is null");
+            }
+
+            if (StaticEffects.Contains(StaticEffect.DrawOnFirstNeutralCard)) 
+            {
+                if (card.Faction == Faction.neutral) 
+                {
+                    currentPlayer.DrawCards(1);
+                    StaticEffects.RemoveAll(StaticEffect.DrawOnFirstNeutralCard);
+                }
+            }
+
+            card.MoveToInPlay();
+            if (card is IHasOnPlayAction onPlay) 
+            {
+                PendingActions.AddRange(onPlay.GetActions());
+            }
+            
+            LastCardPlayed = card;
+        }
+
+        private void PurchaseCard(PlayableCard? card, Player currentPlayer)
+        {
+            if (card == null)
+            {
+                throw new ArgumentException("Can not purchase card. Playable card is null");
+            }
+
+            if (StaticEffects.Contains(StaticEffect.BuyNextToHand)) 
+            {
+                card.BuyToHand(currentPlayer);
+            } 
+            else if (StaticEffects.Contains(StaticEffect.BuyNextNeutralToHand) && card.Faction == Faction.neutral) 
+            {
+                card.BuyToHand(currentPlayer);
+            } 
+            else if (StaticEffects.Contains(StaticEffect.BuyNextToTopOfDeck)) 
+            {
+                card.BuyToTopOfDeck(currentPlayer);
+            } 
+            else 
+            {
+                card.Buy(currentPlayer);
+            }
+
+            StaticEffects.RemoveAll(new List<StaticEffect>{ StaticEffect.BuyNextToTopOfDeck, StaticEffect.BuyNextToHand });
+            if (card.Faction == Faction.neutral) 
+            {
+                StaticEffects.RemoveAll(StaticEffect.BuyNextNeutralToHand);
+            }
+
+            if (!StaticEffects.Contains(StaticEffect.NextFactionPurchaseIsFree) && !StaticEffects.Contains(StaticEffect.NextFactionOrNeutralPurchaseIsFree)) 
+            {
+                currentPlayer.AddResources(-card.Cost);
+            } 
+            else 
+            {
+                StaticEffects.RemoveAll(new List<StaticEffect> { StaticEffect.NextFactionPurchaseIsFree, StaticEffect.NextFactionOrNeutralPurchaseIsFree });
+            }
+
+            if (StaticEffects.Contains(StaticEffect.ExileNextFactionPurchase) && card.Faction == CurrentPlayersAction) 
+            {
+                StaticEffects.RemoveAll(StaticEffect.ExileNextFactionPurchase);
+                ExileAtEndOfTurn.Add(card);
+            } 
+            else if (StaticEffects.Contains(StaticEffect.ExileNextNeutralPurchase) && card.Faction == Faction.neutral) 
+            {
+                StaticEffects.RemoveAll(StaticEffect.ExileNextNeutralPurchase);
+                ExileAtEndOfTurn.Add(card);
+            }
+
+            if (StaticEffects.Contains(StaticEffect.PurchaseFromDiscard)) 
+            {
+                StaticEffects.RemoveAll(StaticEffect.PurchaseFromDiscard);
+            }
+
+            if (card is IHasPurchaseAction purchaseAction) 
+            {
+                purchaseAction.ApplyPurchaseAction();
+            }
+            
+            if (card.Location == CardLocation.GalaxyRow) 
+            {
+                DrawGalaxyCard();
+            }
+        }
+
+        private void UseCardAbility(Card? card)
+        {
+            if (card == null || card is not IHasAbility) 
+            {
+                throw new ArgumentException("Can not use card ablity. Card is null or has no ability");
+
+            }
+            ((IHasAbility) card).ApplyAbility();
+            LastCardActivated = card;
+        }
+
+        private void SelectAttacker(PlayableCard? card)
+        {
+            if (card == null) 
+            {
+                throw new ArgumentException("Can not set as attacker. Card is null");
+
+            }
+            card.SetAttacked();
+            Attackers.Add(card);
+            PendingActions.Add(PendingAction.Of(Action.SelectAttacker));
+        }
+
+        private void DiscardAction(PlayableCard? card)
+        {
+            if (card == null) 
+            {
+                throw new ArgumentException("Cannot discard card. Card is null");
+
+            }
+            card.MoveToDiscard();
+            if (StaticEffects.Contains(StaticEffect.Yavin4Effect) && CurrentPlayersAction == Faction.empire) 
+            {
+                Empire.CurrentBase?.AddDamage(2);
+            }
+        }
+
+        private void DiscardCardFromCenter(PlayableCard? card, Player currentPlayer)
+        {
+            if (card == null) 
+            {
+                throw new ArgumentException("Cannot discard card from center. Card is null");
+
+            }
+            card.MoveToGalaxyDiscard();
+            DrawGalaxyCard();
+        }
+
+        private void FireWhenReady(PlayableCard? card, Player currentPlayer)
+        {
+            if (card == null) 
+            {
+                throw new ArgumentException("Cannot fire hwne ready. Card is null");
+
+            }
+            currentPlayer.AddResources(-4);
+            if (card.Location == CardLocation.GalaxyRow) 
+            {
+                card.MoveToGalaxyDiscard();
+                DrawGalaxyCard();
+            } else {
+                card.MoveToDiscard();
+            }
+        }
+
+        private void ConfirmAttackers(Player currentPlayer)
+        {
+            if (AttackTarget is PlayableCard playableCardAttackTarget) 
+            {
+                    // Attack center row
+                    if (playableCardAttackTarget is ITargetable targetable) 
+                    {
+                        targetable.ApplyReward();
+                    } 
+                    else 
+                    {
+                        currentPlayer.AddResources(playableCardAttackTarget.Cost);
+                        StaticEffects.Remove(StaticEffect.CanBountyOneNeutral);
+                    }
+
+                    foreach (PlayableCard attacker in Attackers)
+                    {
+                        if (attacker is IBountyHunter bountyHunter) 
+                        {
+                            bountyHunter.ReceiveBounty();
+                        }
+                    }
+
+                    playableCardAttackTarget.MoveToGalaxyDiscard();
+                    DrawGalaxyCard();
+                } 
+                else if (AttackTarget is Base) 
+                {
+                    if (currentPlayer.Opponent == null)
+                    {
+                        throw new ArgumentException("Can not attack base. Opponent is null");
+                    }
+                    // Attack base
+                    int totalAttack = Attackers.Sum(a => a.Attack);
+                    AssignDamageToBase(totalAttack, currentPlayer.Opponent);
+                }
+                AttackTarget = null;
+                Attackers.Clear();
         }
     }
 }

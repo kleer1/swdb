@@ -29,5 +29,50 @@ namespace SWDB.Game.Utils
                 (list[n], list[k]) = (list[k], list[n]);
             }
         }
+
+        public static void RemoveAll<T>(this IList<T> list, IList<T> remove)
+        {
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                if (remove.Contains(list[i]))
+                {
+                    list.RemoveAt(i);
+                }
+            }
+        }
+
+        public static void RemoveAll<T>(this IList<T> list,T remove)
+        {
+            if (remove == null)
+            {
+                return;
+            }
+
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                if (remove.Equals(list[i]))
+                {
+                    list.RemoveAt(i);
+                }
+            }
+        }
+
+        public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
+        {
+            if (list == null) throw new ArgumentNullException(nameof(list));
+            if (items == null) throw new ArgumentNullException(nameof(items));
+
+            if (list is List<T> asList)
+            {
+                asList.AddRange(items);
+            }
+            else
+            {
+                foreach (var item in items)
+                {
+                    list.Add(item);
+                }
+            }
+        }
     }
 }
