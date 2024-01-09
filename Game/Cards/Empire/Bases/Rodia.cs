@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Empire.Bases
     public class Rodia : Base, IHasOnReveal
     {
         public Rodia(int id, SWDBGame game) :
-            base(id, Faction.empire, "Rodia", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
+            base(id, Faction.empire, "Rodia", CardLocation.EmpireAvailableBases, game.Empire.AvailableBases,
                 game, game.Empire, 16) {}
         
 
@@ -16,7 +16,7 @@ namespace SWDB.Game.Cards.Empire.Bases
             int numMatches = 0;
             for (int i = Game.GalaxyRow.Count - 1; i >= 0; i--)
             {
-                PlayableCard card = Game.GalaxyRow[i];
+                PlayableCard card = Game.GalaxyRow.BaseList[i];
                 if (card.Faction == Faction.rebellion) 
                 {
                     Game.GalaxyRow.RemoveAt(i);

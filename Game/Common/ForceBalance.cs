@@ -2,7 +2,7 @@ namespace SWDB.Game.Common
 {
     public class ForceBalance
     {
-        private int Position { get; set; } = 6;
+        public int Position { get; private set; } = 6;
 
          public void DarkSideGainForce(int amount) 
          {

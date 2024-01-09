@@ -1,6 +1,7 @@
 using SWDB.Game.Cards.Common;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
+using SWDB.Game.Utils;
 
 namespace SWDB.Game.Cards.Empire.Units.Starter
 {
@@ -8,6 +9,6 @@ namespace SWDB.Game.Cards.Empire.Units.Starter
     {
         public Inquisitor(int id, SWDBGame game) :
             base(id,  Faction.empire, "Inquisitor", Array.Empty<Trait>(), game.Empire, 
-                CardLocation.EmpireDeck, (IList<Card>) game.Empire.Deck, game) {}
+                CardLocation.EmpireDeck, game.Empire.Deck, game) {}
     }
 }

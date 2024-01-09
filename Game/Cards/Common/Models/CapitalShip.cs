@@ -33,7 +33,7 @@ namespace SWDB.Game.Cards.Common.Models
             base.MoveToInPlay();
             Owner.ShipsInPlay.Add(this);
             Location = Owner.Faction == Faction.empire ? CardLocation.EmpireShipInPlay : CardLocation.RebelShipInPlay;
-            CardList = (IList<Card>?) Owner.ShipsInPlay;
+            CardList = Owner.ShipsInPlay;
             CurrentDamage = 0;
         }
 

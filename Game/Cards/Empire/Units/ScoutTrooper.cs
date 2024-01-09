@@ -17,7 +17,7 @@ namespace SWDB.Game.Cards.Empire.Units
         public override void ApplyAbility() 
         {
             base.ApplyAbility();
-            PlayableCard card = Game.GalaxyDeck[0];
+            PlayableCard card = Game.GalaxyDeck.BaseList[0];
             Game.RevealTopCardOfDeck();
             if (card.Faction == Faction.empire) 
             {

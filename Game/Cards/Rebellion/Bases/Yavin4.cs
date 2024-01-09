@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Rebellion.Bases
     public class Yavin4 : Base, IHasAtStartOfTurn, IHasOnReveal
     {
         public Yavin4(int id, SWDBGame game) :
-            base(id, Faction.rebellion, "Yavin 4", CardLocation.RebelAvailableBases, (IList<Card>) game.Rebel.AvailableBases,
+            base(id, Faction.rebellion, "Yavin 4", CardLocation.RebelAvailableBases, game.Rebel.AvailableBases,
                 game, game.Rebel, 16) {}
 
         public void ApplyAtStartOfTurn() 

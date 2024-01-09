@@ -10,7 +10,7 @@ namespace SWDB.Game.Cards.Empire.Bases
     {
         public Coruscant(int id, SWDBGame game) :
             base(id, Faction.empire, "Coruscant", CardLocation.EmpireAvailableBases,
-                (IList<Card>) game.Empire.AvailableBases, game, game.Empire, 16) {}
+                game.Empire.AvailableBases, game, game.Empire, 16) {}
         
         public void ApplyAtStartOfTurn() 
         {

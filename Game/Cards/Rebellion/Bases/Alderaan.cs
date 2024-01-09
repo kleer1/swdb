@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Rebellion.Bases
     public class Alderaan : Base, IHasOnReveal
     {
         public Alderaan(int id, SWDBGame game) :
-            base(id, Faction.rebellion, "Alderaan", CardLocation.RebelAvailableBases, (IList<Card>) game.Rebel.AvailableBases,
+            base(id, Faction.rebellion, "Alderaan", CardLocation.RebelAvailableBases, game.Rebel.AvailableBases,
                 game, game.Rebel, 14) {}
 
         public void ApplyOnReveal() 

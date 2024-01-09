@@ -12,7 +12,7 @@ namespace SWDB.Game.Cards.Empire.Units
 
         public override bool AbilityActive()
         {
-            return base.AbilityActive() && (Owner?.Discard.Where(c => c.Traits.Contains(Trait.trooper)).Any() ?? false);
+            return base.AbilityActive() && (Owner?.Discard.BaseList.Where(c => c.Traits.Contains(Trait.trooper)).Any() ?? false);
         }
 
         public override void ApplyAbility()

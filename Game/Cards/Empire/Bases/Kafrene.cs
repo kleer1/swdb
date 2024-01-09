@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Empire.Bases
     public class Kafrene : Base, IHasAtStartOfTurn, IHasOnReveal
     {
         public Kafrene(int id, SWDBGame game) :
-            base(id, Faction.empire, "Kafrene", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
+            base(id, Faction.empire, "Kafrene", CardLocation.EmpireAvailableBases, game.Empire.AvailableBases,
                     game, game.Empire, 14) {}
         
         public void ApplyAtStartOfTurn() 

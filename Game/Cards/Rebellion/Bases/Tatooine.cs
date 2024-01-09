@@ -9,7 +9,7 @@ namespace SWDB.Game.Cards.Rebellion.Bases
     public class Tatooine : Base, IHasOnReveal
     {
         public Tatooine(int id, SWDBGame game) :
-            base(id, Faction.rebellion, "Tatooine", CardLocation.RebelAvailableBases, (IList<Card>) game.Rebel.AvailableBases,
+            base(id, Faction.rebellion, "Tatooine", CardLocation.RebelAvailableBases, game.Rebel.AvailableBases,
                 game, game.Rebel, 14) {}
 
         public void ApplyOnReveal() 

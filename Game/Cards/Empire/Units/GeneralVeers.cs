@@ -21,7 +21,7 @@ namespace SWDB.Game.Cards.Empire.Units
         public override bool AbilityActive() 
         {
             return base.AbilityActive() && 
-                (Owner?.UnitsInPlay.Where(c => c.Traits.Contains(Trait.trooper) || c.Traits.Contains(Trait.vehicle)).Any() ?? false);
+                (Owner?.UnitsInPlay.BaseList.Where(c => c.Traits.Contains(Trait.trooper) || c.Traits.Contains(Trait.vehicle)).Any() ?? false);
         }
 
         public override void ApplyAbility() 

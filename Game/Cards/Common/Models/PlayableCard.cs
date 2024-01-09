@@ -1,4 +1,5 @@
 using SWDB.Game.Common;
+using SWDB.Game.Utils;
 
 namespace SWDB.Game.Cards.Common.Models
 {
@@ -58,7 +59,7 @@ namespace SWDB.Game.Cards.Common.Models
             }
             CardList?.Remove(this);
             Owner.Discard.Add(this);
-            CardList = (IList<Card>?)Owner.Discard;
+            CardList = Owner.Discard;
             CanAttack = false;
             Location = CardLocationHelper.GetDiscard(Owner.Faction);
             AbilityUsed = false;
@@ -72,7 +73,7 @@ namespace SWDB.Game.Cards.Common.Models
             }
             CardList?.Remove(this);
             Owner.Deck.Add(this);
-            CardList = (IList<Card>?)Owner.Deck;
+            CardList = Owner.Deck;
             Location = CardLocationHelper.GetDeck(Owner.Faction);
         }
 
@@ -84,7 +85,7 @@ namespace SWDB.Game.Cards.Common.Models
             }
             CardList?.Remove(this);
             Owner.Hand.Add(this);
-            CardList = (IList<Card>?)Owner.Hand;
+            CardList = Owner.Hand;
             Location = CardLocationHelper.GetHand(Owner.Faction);
         }
 
@@ -98,7 +99,7 @@ namespace SWDB.Game.Cards.Common.Models
             Owner.Game.ExiledCards.Add(this);
             Owner = null;
             Location = CardLocation.Exile;
-            CardList = (IList<Card>?) Game.ExiledCards;
+            CardList = Game.ExiledCards;
         }
 
         public virtual void MoveToInPlay() 
@@ -126,7 +127,7 @@ namespace SWDB.Game.Cards.Common.Models
             CardList?.Remove(this);
             Location = CardLocation.GalaxyDiscard;
             Game.GalaxyDiscard.Add(this);
-            CardList = (IList<Card>?) Game.GalaxyDiscard;
+            CardList = Game.GalaxyDiscard;
         }
 
         public void MoveToGalaxyRow() 
@@ -136,7 +137,7 @@ namespace SWDB.Game.Cards.Common.Models
             CardList?.Remove(this);
             Location = CardLocation.GalaxyRow;
             Game.GalaxyRow.Add(this);
-            CardList = (IList<Card>?) Game.GalaxyRow;
+            CardList = Game.GalaxyRow;
         }
 
         public void MoveToTopOfGalaxyDeck() 
@@ -146,7 +147,7 @@ namespace SWDB.Game.Cards.Common.Models
             CardList?.Remove(this);
             Location = CardLocation.GalaxyDeck;
             Game.GalaxyDeck.Add(this);
-            CardList = (IList<Card>?) Game.GalaxyDeck;
+            CardList = Game.GalaxyDeck;
         }
 
         protected bool IsInPlay() 

@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Empire.Bases
     public class Mustafar : Base, IHasOnReveal
     {
         public Mustafar(int id, SWDBGame game) :
-            base(id, Faction.empire, "Mustafar", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
+            base(id, Faction.empire, "Mustafar", CardLocation.EmpireAvailableBases, game.Empire.AvailableBases,
                 game, game.Empire, 14) {}
         
         public void ApplyOnReveal() 

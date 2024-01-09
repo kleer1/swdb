@@ -7,6 +7,6 @@ namespace SWDB.Game.Cards.Empire.Units.Starter
     {
         public ImperialShuttle(int id, SWDBGame game) :
             base(id, 0, 0, 1, 0, Faction.empire, "Imperial Shuttle", new List<Trait>{ Trait.transport },
-                false, game.Empire, CardLocation.EmpireDeck, (IList<Card>) game.Empire.Deck, game) {}
+                false, game.Empire, CardLocation.EmpireDeck, game.Empire.Deck, game) {}
     }
 }

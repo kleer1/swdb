@@ -22,7 +22,7 @@ namespace SWDB.Game.Cards.Rebellion.Units
 
             if (Owner?.IsForceWithPlayer() ?? false) 
             {
-                Owner.Opponent.Hand[Random.Shared.Next(0, Owner.Opponent.Hand.Count - 1)].MoveToDiscard();
+                Owner.Opponent.Hand.BaseList[Random.Shared.Next(0, Owner.Opponent.Hand.Count - 1)].MoveToDiscard();
                 if (Game.StaticEffects.Contains(StaticEffect.Yavin4Effect) && Owner.Opponent.CurrentBase != null) 
                 {
                     Owner.Opponent.CurrentBase.AddDamage(2);

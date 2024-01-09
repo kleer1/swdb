@@ -9,7 +9,7 @@ namespace SWDB.Game.Cards.Empire.Bases
     public class Corellia : Base, IHasOnReveal
     {
         public Corellia(int id, SWDBGame game) :
-        base(id, Faction.empire, "Corellia", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
+        base(id, Faction.empire, "Corellia", CardLocation.EmpireAvailableBases, game.Empire.AvailableBases,
                 game, game.Empire,10) {}
         
         public void ApplyOnReveal() 

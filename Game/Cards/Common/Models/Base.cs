@@ -1,4 +1,5 @@
 using SWDB.Game.Common;
+using SWDB.Game.Utils;
 
 namespace SWDB.Game.Cards.Common.Models
 {
@@ -9,7 +10,7 @@ namespace SWDB.Game.Cards.Common.Models
 
         protected Base(int id, Faction faction, string title, CardLocation location,
                 IList<Card>? cardList, SWDBGame game, Player owner, int hitPoints) :
-                 base(id, faction, title, true, location, cardList, game, owner) 
+                base(id, faction, title, true, location, cardList, game, owner) 
         {
             HitPoints = hitPoints;
         }
@@ -44,7 +45,7 @@ namespace SWDB.Game.Cards.Common.Models
             Owner.CurrentBase = null;
             Owner.Opponent.DestroyedBases.Add(this);
             Location = CardLocationHelper.GetDestroyedBases(Owner.Opponent.Faction);
-            CardList = (IList<Card>?) Owner.Opponent.DestroyedBases;
+            CardList = Owner.Opponent.DestroyedBases;
             Owner = Owner.Opponent;
         }
 

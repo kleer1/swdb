@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Empire.Bases
     public class Endor : Base, IHasAtStartOfTurn, IHasOnReveal
     {
         public Endor(int id, SWDBGame game) :
-            base(id, Faction.empire, "Endor", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
+            base(id, Faction.empire, "Endor", CardLocation.EmpireAvailableBases, game.Empire.AvailableBases,
                 game, game.Empire, 16) {}
 
         public void ApplyAtStartOfTurn() 

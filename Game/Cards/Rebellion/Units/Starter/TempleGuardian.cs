@@ -8,6 +8,6 @@ namespace SWDB.Game.Cards.Rebellion.Units.Starter
     {
         public TempleGuardian(int id, SWDBGame game) :
             base(id, Faction.rebellion, "Temple Guardian", Array.Empty<Trait>(), game.Rebel,
-                CardLocation.RebelDeck, (IList<Card>) game.Rebel.Deck,  game) {}
+                CardLocation.RebelDeck, game.Rebel.Deck,  game) {}
     }
 }

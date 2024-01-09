@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Rebellion.Bases
     public class Dagobah : Base, IHasOnReveal
     {
         public Dagobah(int id, SWDBGame game) :
-            base(id, Faction.rebellion, "Dagobah", CardLocation.RebelAvailableBases, (IList<Card>) game.Rebel.AvailableBases,
+            base(id, Faction.rebellion, "Dagobah", CardLocation.RebelAvailableBases, game.Rebel.AvailableBases,
                 game, game.Rebel, 12) {}
         public void ApplyOnReveal() 
         {

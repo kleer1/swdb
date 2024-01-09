@@ -9,7 +9,7 @@ namespace SWDB.Game.Cards.Empire.Bases
     public class DeathStar : Base, IHasAbility, IHasAtStartOfTurn
     {
         public DeathStar(int id, SWDBGame game) :
-            base(id, Faction.empire, "Death Star", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
+            base(id, Faction.empire, "Death Star", CardLocation.EmpireAvailableBases, game.Empire.AvailableBases,
                 game, game.Empire, 16) {}
         
         public override bool AbilityActive() 

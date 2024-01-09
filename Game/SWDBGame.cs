@@ -6,6 +6,7 @@ using SWDB.Cards.Utils;
 using Action = SWDB.Game.Actions.Action;
 using Game.Utils;
 using SWDB.Game.Cards.Common.Models.Interface;
+using static SWDB.Game.Utils.ListExtension;
 
 namespace SWDB.Game
 {
@@ -14,16 +15,16 @@ namespace SWDB.Game
         public Player Empire { get; } = new Player(Faction.empire);
         public Player Rebel { get; } = new Player(Faction.rebellion);
         public ForceBalance ForceBalance { get; } = new ForceBalance();
-        public IList<PlayableCard> GalaxyDeck { get; private set; } = new List<PlayableCard>();
-        public IList<PlayableCard> GalaxyRow { get; private set; } = new List<PlayableCard>();
-        public IList<PlayableCard> GalaxyDiscard { get; private set; } = new List<PlayableCard>();
-        public IList<PlayableCard> OuterRimPilots { get; } = new List<PlayableCard>();
-        public IList<PlayableCard> ExiledCards { get; } = new List<PlayableCard>();
+        public CastedList<Card, PlayableCard> GalaxyDeck { get; private set; } = new CastedList<Card, PlayableCard>();
+        public CastedList<Card, PlayableCard> GalaxyRow { get; private set; } = new CastedList<Card, PlayableCard>();
+        public CastedList<Card, PlayableCard> GalaxyDiscard { get; private set; } = new CastedList<Card, PlayableCard>();
+        public CastedList<Card, PlayableCard> OuterRimPilots { get; } = new CastedList<Card, PlayableCard>();
+        public CastedList<Card, PlayableCard> ExiledCards { get; } = new CastedList<Card, PlayableCard>();
         public IDictionary<int, Card> CardMap { get; } = new Dictionary<int, Card>();
-        internal Faction CurrentPlayersAction { get; private set; } = Faction.empire;
-        private Faction CurrentPlayersTurn {get; set; } = Faction.empire;
-        internal IList<StaticEffect> StaticEffects { get; } = new List<StaticEffect>();
-        internal IList<PendingAction> PendingActions { get; } = new List<PendingAction>();
+        public Faction CurrentPlayersAction { get; private set; } = Faction.empire;
+        public Faction CurrentPlayersTurn {get; private set; } = Faction.empire;
+        public IList<StaticEffect> StaticEffects { get; } = new List<StaticEffect>();
+        public IList<PendingAction> PendingActions { get; } = new List<PendingAction>();
         private Card? LastCardPlayed { get; set; }
         internal Card? LastCardActivated { get; private set; }
         internal IDictionary<Faction, int> KnowsTopCardOfDeck { get; } = new Dictionary<Faction, int>{ {Faction.empire, 0}, {Faction.rebellion, 0} };
@@ -32,7 +33,6 @@ namespace SWDB.Game
         public bool CanSeeOpponentsHand {get; private set; }
         private List<PlayableCard> ExileAtEndOfTurn { get; } = new List<PlayableCard>();
         internal PlayableCard? ANewHope1Card { get; private set; } = null;
-        private ISet<int> AvailableActions { get; } = new HashSet<int>();
         public bool IsGameOver { get; private set; } = false;
 
         public SWDBGame()
@@ -59,19 +59,19 @@ namespace SWDB.Game
             {
                 if (!GalaxyDeck.Any()) 
                 {
-                    GalaxyDeck = GalaxyDiscard;
-                    GalaxyDiscard = new List<PlayableCard>();
+                    GalaxyDeck = new CastedList<Card, PlayableCard>(GalaxyDiscard.BaseList);
+                    GalaxyDiscard = new CastedList<Card, PlayableCard>(new List<PlayableCard>());
                     GalaxyDeck.Shuffle();
                     foreach (PlayableCard c in GalaxyDeck) 
                     {
                         c.Location = CardLocation.GalaxyDeck;
-                        c.CardList = (IList<Card>?) GalaxyDeck;
+                        c.CardList = GalaxyDeck;
                     };
                 }
-                PlayableCard card = GalaxyDeck.Pop();
+                PlayableCard card = GalaxyDeck.BaseList.Pop();
                 GalaxyRow.Add(card);
                 card.Location = CardLocation.GalaxyRow;
-                card.CardList = (IList<Card>?) GalaxyRow;
+                card.CardList = GalaxyRow;
                 foreach (KeyValuePair<Faction, int> entry in KnowsTopCardOfDeck) 
                 {
                     if (entry.Value > 0) 
@@ -107,19 +107,19 @@ namespace SWDB.Game
             }
         }
 
-        public static void AssignDamageToBase(int damageDealt, Player player) 
+        public void AssignDamageToBase(int damageDealt, Player player) 
         {
             int remainingDamage = damageDealt;
             if (player.ShipsInPlay.Any()) 
             {
-                player.ShipsInPlay = player.ShipsInPlay.OrderBy(s => s.GetRemainingHealth()).Reverse().ToList();
-                for (int i = player.ShipsInPlay.Count - 1; i >= 0; i--)
+                IEnumerable<CapitalShip> temp = player.ShipsInPlay.BaseList.OrderBy(s => s.GetRemainingHealth()).Reverse();
+                for (int i = temp.Count() - 1; i >= 0; i--)
                 {
-                    CapitalShip ship = player.ShipsInPlay[i];
+                    CapitalShip ship = temp.ElementAt(i);
                     if (ship.GetRemainingHealth() <= remainingDamage) 
                     {
                         remainingDamage -= ship.GetRemainingHealth();
-                        player.ShipsInPlay.RemoveAt(i);
+                        player.ShipsInPlay.Remove(ship);
                         ship.MoveToDiscard();
                     }
                 }
@@ -129,7 +129,7 @@ namespace SWDB.Game
             {
                 if (player.ShipsInPlay.Any()) 
                 {
-                    player.ShipsInPlay.Last().AddDamage(remainingDamage);
+                    player.ShipsInPlay.BaseList.Last().AddDamage(remainingDamage);
                 } else 
                 {
                     player.CurrentBase?.AddDamage(remainingDamage);
@@ -213,7 +213,7 @@ namespace SWDB.Game
                     }
                     break;
                 case Action.SwapTopCardOfDeck:
-                    GalaxyDeck.First().MoveToGalaxyRow();
+                    GalaxyDeck.BaseList.First().MoveToGalaxyRow();
                     playableCard?.MoveToTopOfGalaxyDeck();
                     RevealTopCardOfDeck();
                     break;

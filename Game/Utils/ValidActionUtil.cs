@@ -65,11 +65,11 @@ namespace Game.Utils
                 case ChooseNextBase:
                     return card != null && CanChooseNewBase(card, game.GetCurrentPlayer(), game.PendingActions);
                 case SwapTopCardOfDeck:
-                    return card != null && CanSwapTopCardOfDeck(card, game.PendingActions, game.GalaxyDeck);
+                    return card != null && CanSwapTopCardOfDeck(card, game.PendingActions, game.GalaxyDeck.BaseList);
                 case FireWhenReady:
                     return card != null && CanFireWhenReady(card, game.GetCurrentPlayer());
                 case GalacticRule:
-                    return card != null && CanGalacticRule(card, game.GetCurrentPlayer(), game.GalaxyDeck);
+                    return card != null && CanGalacticRule(card, game.GetCurrentPlayer(), game.GalaxyDeck.BaseList);
                 case ANewHope1:
                     return card != null && game.PendingActions.Any() && game.PendingActions.First().Action == ANewHope1 &&
                         card.Location == CardLocation.GalaxyDiscard && card is PlayableCard &&
@@ -100,7 +100,7 @@ namespace Game.Utils
                     {
                         return false;
                     }
-                    return game.GalaxyRow.Where(pc => pc is Unit && pc.Faction == Faction.neutral &&
+                    return game.GalaxyRow.BaseList.Where(pc => pc is Unit && pc.Faction == Faction.neutral &&
                         pc.Cost <= game.GetCurrentPlayer().GetAvailableAttack()).Any();
                 case ConfirmAttackers :
                     return CanConfirmAttackers(game.PendingActions, game.AttackTarget, game.Attackers);

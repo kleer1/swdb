@@ -19,7 +19,7 @@ namespace SWDB.Game.Cards.Neutral.Units
             }
             if (!Game.GalaxyDiscard.Any()) return false;
 
-            var tempList = Game.GalaxyDiscard.Where(pc => pc.Faction == Owner?.Faction || pc.Faction == Faction.neutral).ToList();
+            var tempList = Game.GalaxyDiscard.BaseList.Where(pc => pc.Faction == Owner?.Faction || pc.Faction == Faction.neutral).ToList();
             if (!tempList.Any()) return false;
 
             int minValue = tempList.Min(pc => pc.Cost);

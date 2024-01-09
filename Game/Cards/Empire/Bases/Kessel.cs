@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Empire.Bases
     public class Kessel : Base, IHasOnReveal
     {
         public Kessel(int id, SWDBGame game) :
-            base(id, Faction.empire, "Kessel", CardLocation.EmpireAvailableBases, (IList<Card>) game.Empire.AvailableBases,
+            base(id, Faction.empire, "Kessel", CardLocation.EmpireAvailableBases, game.Empire.AvailableBases,
                 game, game.Empire, 12) {}
         
         public void ApplyOnReveal() 

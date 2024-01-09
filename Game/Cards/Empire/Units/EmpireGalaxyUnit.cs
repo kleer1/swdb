@@ -9,7 +9,7 @@ namespace SWDB.Game.Cards.Empire.Units
         protected EmpireGalaxyUnit(int id, int cost, int attack, int resources, int force, string title, List<Trait> traits, 
                 bool isUnique, SWDBGame game) : 
             base(id, cost, attack, resources, force, Faction.empire, title, traits, isUnique, null, 
-                CardLocation.GalaxyDeck, (IList<Card>) game.GalaxyDeck, game) {}
+                CardLocation.GalaxyDeck, game.GalaxyDeck, game) {}
 
         public abstract void ApplyReward();
         public abstract int GetTargetValue();

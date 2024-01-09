@@ -7,7 +7,7 @@ namespace SWDB.Game.Cards.Rebellion.Bases
     public class Bespin : Base, IHasOnReveal, IHasAtStartOfTurn
     {
         public Bespin(int id, SWDBGame game) :
-            base(id, Faction.rebellion, "Bespin", CardLocation.RebelAvailableBases, (IList<Card>) game.Rebel.AvailableBases,
+            base(id, Faction.rebellion, "Bespin", CardLocation.RebelAvailableBases, game.Rebel.AvailableBases,
                     game, game.Rebel, 14) {}
 
         public void ApplyAtStartOfTurn() 

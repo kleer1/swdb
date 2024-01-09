@@ -12,7 +12,7 @@ namespace SWDB.Game.Cards.Neutral.Units
 
         public override bool AbilityActive() 
         {
-            return base.AbilityActive() && (Owner?.Discard.Where(pc => pc.Traits.Contains(Trait.bountyHunter)).Any() ?? false);
+            return base.AbilityActive() && (Owner?.Discard.BaseList.Where(pc => pc.Traits.Contains(Trait.bountyHunter)).Any() ?? false);
         }
 
         public override void ApplyAbility() 

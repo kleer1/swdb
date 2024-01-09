@@ -9,7 +9,7 @@ namespace SWDB.Game.Cards.Rebellion.Bases
     public class MonCala : Base, IHasOnReveal
     {
         public MonCala(int id, SWDBGame game) :
-            base(id, Faction.rebellion, "Mon Cala", CardLocation.RebelAvailableBases, (IList<Card>) game.Rebel.AvailableBases,
+            base(id, Faction.rebellion, "Mon Cala", CardLocation.RebelAvailableBases, game.Rebel.AvailableBases,
                 game, game.Rebel, 10) {}
 
         public void ApplyOnReveal() 

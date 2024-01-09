@@ -8,7 +8,7 @@ namespace SWDB.Game.Cards.Neutral.Units
     {
         public OuterRimPilot(int id, SWDBGame game) :
             base(id, 2, 0, 2, 0, Faction.neutral, "Outer Rim Pilot", Array.Empty<Trait>(), false,
-                null, CardLocation.OuterRimPilots, (IList<Card>) game.OuterRimPilots, game) {}
+                null, CardLocation.OuterRimPilots, game.OuterRimPilots, game) {}
 
         public override bool AbilityActive() 
         {

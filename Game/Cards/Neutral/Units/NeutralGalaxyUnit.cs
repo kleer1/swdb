@@ -8,6 +8,6 @@ namespace SWDB.Game.Cards.Neutral.Units
         protected NeutralGalaxyUnit(int id, int cost, int attack, int resources, int force,
                 string title, IList<Trait> traits, bool isUnique, SWDBGame game) :
             base(id, cost, attack, resources, force, Faction.neutral, title, traits, isUnique, null,
-                CardLocation.GalaxyDeck, (IList<Card>) game.GalaxyDeck, game) {}
+                CardLocation.GalaxyDeck, game.GalaxyDeck, game) {}
     }
 }

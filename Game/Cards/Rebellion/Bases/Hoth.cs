@@ -8,7 +8,7 @@ namespace SWDB.Game.Cards.Rebellion.Bases
     {
         private int damageTakenThisTurn;
         public Hoth(int id, SWDBGame game) :
-            base(id, Faction.rebellion, "Hoth", CardLocation.RebelAvailableBases, (IList<Card>) game.Rebel.AvailableBases, 
+            base(id, Faction.rebellion, "Hoth", CardLocation.RebelAvailableBases, game.Rebel.AvailableBases, 
                 game, game.Rebel, 14)
         {
             damageTakenThisTurn = 0;
