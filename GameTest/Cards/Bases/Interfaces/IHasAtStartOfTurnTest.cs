@@ -3,13 +3,13 @@ namespace GameTest.Cards.Bases.Interfaces
     public interface IHasAtStartOfTurnTest : IAvailableBaseCard
     {
         [Test]
-        void TestAtStartOfTurn() 
+        public void TestAtStartOfTurn() 
         {
             TriggerStartOfTurn();
             AssertAfterStartOfTurn();
         }
 
-        void TriggerStartOfTurn()
+        public void TriggerStartOfTurn()
         {
             Base.MakeCurrentBase();
             Assert.Multiple(() =>

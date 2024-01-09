@@ -4,6 +4,7 @@ using SWDB.Game.Common;
 
 namespace GameTest.Cards.Empire.Bases
 {
+    [TestFixture]
     public class CoruscantTest : EmpireAvailableBaseTest, IHasAtStartOfTurnTest
     {
         public override int Id => 129;

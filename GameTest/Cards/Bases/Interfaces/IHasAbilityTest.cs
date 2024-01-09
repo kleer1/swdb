@@ -1,5 +1,4 @@
 using SWDB.Game.Cards.Common.Models;
-using static NUnit.Framework.Assert;
 
 namespace GameTest.Cards.Bases.Interfaces
 {

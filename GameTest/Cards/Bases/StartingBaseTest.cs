@@ -1,11 +1,9 @@
-using System.Data.Common;
 using GameTest.Cards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Bases
 {
-    [TestFixture]
     public abstract class StartingBaseTest : BaseTest, IHasId, IHasPlayer
     {
         public virtual int Id => throw new NotImplementedException();

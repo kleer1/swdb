@@ -4,7 +4,6 @@ using SWDB.Game.Common;
 
 namespace GameTest.Cards.PlayableCards
 {
-    [TestFixture]
     public abstract class PlayableCardTest : BaseTest, IBasePlayableCard
     {
         public virtual int Id => throw new NotImplementedException();

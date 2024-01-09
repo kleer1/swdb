@@ -1,7 +1,6 @@
 using GameTest.Cards.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
-using static NUnit.Framework.Assert;
 
 namespace GameTest.Cards.PlayableCards.Interfaces
 {
