@@ -1,8 +1,6 @@
 using GameTest.Cards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
-using Action = SWDB.Game.Actions.Action;
-using static NUnit.Framework.Assert;
 
 namespace GameTest.Cards.PlayableCards
 {

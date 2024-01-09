@@ -27,7 +27,7 @@ namespace SWDB.Game
         public IList<PendingAction> PendingActions { get; } = new List<PendingAction>();
         private Card? LastCardPlayed { get; set; }
         internal Card? LastCardActivated { get; private set; }
-        internal IDictionary<Faction, int> KnowsTopCardOfDeck { get; } = new Dictionary<Faction, int>{ {Faction.empire, 0}, {Faction.rebellion, 0} };
+        public IDictionary<Faction, int> KnowsTopCardOfDeck { get; } = new Dictionary<Faction, int>{ {Faction.empire, 0}, {Faction.rebellion, 0} };
         internal IList<PlayableCard> Attackers { get; } = new List<PlayableCard>();
         internal Card? AttackTarget { get; private set; }
         public bool CanSeeOpponentsHand {get; private set; }
