@@ -101,66 +101,52 @@ namespace SWDB.Game.Utils
             public int Count { get { return BaseList.Count; } }
             public bool IsReadOnly { get { return BaseList.IsReadOnly; } }
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8604 // Possible null reference argument.
             public void Add(TTo item) { BaseList.Add((TFrom)(object)item); }
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             public void Clear() { BaseList.Clear(); }
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8604 // Possible null reference argument.
             public bool Contains(TTo item) { return BaseList.Contains((TFrom)(object)item); }
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             public void CopyTo(TTo[] array, int arrayIndex) { BaseList.CopyTo((TFrom[])(object)array, arrayIndex); }
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8604 // Possible null reference argument.
             public bool Remove(TTo item) { return BaseList.Remove((TFrom)(object)item); }
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8603 // Possible null reference return.
             public TTo Pop() { return (TTo)(object)BaseList.Pop(); }
 #pragma warning restore CS8603 // Possible null reference return.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             // IList
             public TTo this[int index]
             {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8603 // Possible null reference return.
                 get { return (TTo)(object)BaseList[index]; }
 #pragma warning restore CS8603 // Possible null reference return.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                set { BaseList[index] = (TFrom)(object)value; }
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8601 // Possible null reference assignment.
+                set => BaseList[index] = (TFrom)(object)value;
+#pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8604 // Possible null reference argument.
             public int IndexOf(TTo item) { return BaseList.IndexOf((TFrom)(object)item); }
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8604 // Possible null reference argument.
             public void Insert(int index, TTo item) { BaseList.Insert(index, (TFrom)(object)item); }
 #pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             public void RemoveAt(int index) { BaseList.RemoveAt(index); }
         }
@@ -186,11 +172,9 @@ namespace SWDB.Game.Utils
 
             // IEnumerator<>
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8603 // Possible null reference return.
             public TTo Current { get { return (TTo)(object)BaseEnumerator.Current; } }
 #pragma warning restore CS8603 // Possible null reference return.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         }
 
