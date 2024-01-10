@@ -4,6 +4,7 @@ using SWDB.Game.Common;
 
 namespace GameTest.Cards.Empire.Bases
 {
+    [TestFixture]
     public class RodiaTest : EmpireAvailableBaseTest, IHasOnRevealTest
     {
         private PlayableCard? rebel1;

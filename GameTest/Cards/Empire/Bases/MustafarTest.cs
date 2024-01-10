@@ -2,6 +2,7 @@ using GameTest.Cards.Bases.Interfaces;
 
 namespace GameTest.Cards.Empire.Bases
 {
+    [TestFixture]
     public class MustafarTest : EmpireAvailableBaseTest, IHasOnRevealTest
     {
         public override int Id => 122;

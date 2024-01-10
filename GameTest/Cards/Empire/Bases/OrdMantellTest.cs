@@ -6,6 +6,7 @@ using SWDB.Game.Common;
 
 namespace GameTest.Cards.Empire.Bases
 {
+    [TestFixture]
     public class OrdMantellTest : EmpireAvailableBaseTest, IHasOnRevealTest, IHasAtStartOfTurnTest
     {
         public override int Id => 127;

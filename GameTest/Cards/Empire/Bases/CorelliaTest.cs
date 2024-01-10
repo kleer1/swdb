@@ -1,6 +1,5 @@
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game;
-using SWDB.Game.Actions;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 

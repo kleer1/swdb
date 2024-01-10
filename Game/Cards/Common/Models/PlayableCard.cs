@@ -58,7 +58,7 @@ namespace SWDB.Game.Cards.Common.Models
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             CardList?.Remove(this);
-            Owner.Discard.Add(this);
+            Owner.Discard.Insert(0, this);
             CardList = Owner.Discard;
             CanAttack = false;
             Location = CardLocationHelper.GetDiscard(Owner.Faction);
@@ -72,7 +72,7 @@ namespace SWDB.Game.Cards.Common.Models
                 throw new ArgumentException("Can not move a card into play with no owner");
             }
             CardList?.Remove(this);
-            Owner.Deck.Add(this);
+            Owner.Deck.Insert(0, this);
             CardList = Owner.Deck;
             Location = CardLocationHelper.GetDeck(Owner.Faction);
         }
@@ -126,7 +126,7 @@ namespace SWDB.Game.Cards.Common.Models
             Owner = null;
             CardList?.Remove(this);
             Location = CardLocation.GalaxyDiscard;
-            Game.GalaxyDiscard.Add(this);
+            Game.GalaxyDiscard.Insert(0, this);
             CardList = Game.GalaxyDiscard;
         }
 
@@ -146,7 +146,7 @@ namespace SWDB.Game.Cards.Common.Models
             Owner = null;
             CardList?.Remove(this);
             Location = CardLocation.GalaxyDeck;
-            Game.GalaxyDeck.Add(this);
+            Game.GalaxyDeck.Insert(0, this);
             CardList = Game.GalaxyDeck;
         }
 

@@ -3,7 +3,6 @@ using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Ships;
 using SWDB.Game.Cards.Rebellion.Units;
 using SWDB.Game.Common;
-using SWDB.Game.Utils;
 
 namespace GameTest.Cards.PlayableCards.Interfaces
 {

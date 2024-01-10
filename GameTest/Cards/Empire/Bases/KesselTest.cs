@@ -4,6 +4,7 @@ using SWDB.Game.Common;
 
 namespace GameTest.Cards.Empire.Bases
 {
+    [TestFixture]
     public class KesselTest : EmpireAvailableBaseTest, IHasOnRevealTest
     {
         public override int Id => 124;
