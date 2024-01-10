@@ -14,7 +14,7 @@ namespace GameTest.Cards.Bases
         public void TestStartingBase()
         {
             Base _base = (Base) Game.CardMap[Id];
-            Assert.Multiple(() =>
+            Multiple(() =>
             {
                 That(_base.Location, Is.EqualTo(CardLocationHelper.GetCurrentBase(GetPlayer().Faction)));
                 That(GetPlayer().CurrentBase, Is.EqualTo(_base));

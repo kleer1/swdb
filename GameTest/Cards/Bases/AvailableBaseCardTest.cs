@@ -40,6 +40,8 @@ namespace GameTest.Cards.Bases
                 That(GetPlayer().CurrentBase, Is.Null);
                 That(Game.ForceBalance.Position, Is.EqualTo(3));
             });
+
+            int i = Id;
             
         }
     }

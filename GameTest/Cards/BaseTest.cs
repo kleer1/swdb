@@ -27,13 +27,15 @@ namespace GameTest.Cards
             Game = new SWDBGame();
         }
 
-        public IList<PlayableCard> MoveToInPlay(Type type, Player player) 
+        public IList<PlayableCard> MoveToInPlay(Type type, Player? player) 
         {
             return MoveToInPlay(type, player, 1);
         }
 
-        public IList<PlayableCard> MoveToInPlay(Type type, Player player, int amount) 
+        public IList<PlayableCard> MoveToInPlay(Type type, Player? player, int amount) 
         {
+            if (player == null) return new List<PlayableCard>();
+
             IList<PlayableCard> cards = new List<PlayableCard>();
             foreach (Card card in Game.CardMap.Values) 
             {

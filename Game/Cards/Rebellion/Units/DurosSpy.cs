@@ -19,7 +19,7 @@ namespace SWDB.Game.Cards.Rebellion.Units
         public override void ApplyAbility() 
         {
             base.ApplyAbility();
-            if (Owner?.Opponent?.Hand.Any() ?? false) 
+            if (!Owner?.Opponent?.Hand.Any() ?? false) 
             {
                 Owner?.AddForce(1);
             } else if (Owner?.DoesPlayerHaveFullForce() ?? false) 

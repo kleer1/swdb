@@ -18,9 +18,9 @@ namespace GameTest.Cards.PlayableCards.Interfaces
         
         void UseCardAbility(SWDBGame game, PlayableCard card) 
         {
-            card.MoveToInPlay();
-            game.ApplyAction(SWDB.Game.Actions.Action.UseCardAbility, card.Id);
-            That(card.AbilityActive(), Is.False);
+            Card.MoveToInPlay();
+            Game.ApplyAction(SWDB.Game.Actions.Action.UseCardAbility, Card.Id);
+            That(Card.AbilityActive(), Is.False);
         }
 
         void SetupAbility() 

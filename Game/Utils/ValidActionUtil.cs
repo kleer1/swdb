@@ -34,7 +34,11 @@ namespace Game.Utils
                     return card != null && CanUseCardAbility(card, game.GetCurrentPlayer());
                 case AttackCenterRow:
                     // temporarily set target for cards that care about it
-                    return card != null && CanAttackCardInCenter(card, game.GetCurrentPlayer(), game.StaticEffects);
+                    var temp = game.AttackTarget;
+                    game.AttackTarget = card;
+                    var validAttack = card != null && CanAttackCardInCenter(card, game.GetCurrentPlayer(), game.StaticEffects);
+                    game.AttackTarget = temp;
+                    return validAttack;
                 case AttackBase:
                     return game.GetCurrentPlayer().GetAvailableAttack() > 0 &&
                         (game.GetCurrentPlayer().Opponent?.CurrentBase != null ||
@@ -55,7 +59,7 @@ namespace Game.Utils
                 case DiscardFromHand:
                 case DurosDiscard:
                 case BWingDiscard:
-                    return card != null && CanDiscardFromHand(card, game.GetCurrentPlayer(), game.PendingActions);
+                    return card != null && CanDiscardFromHand(card, game.CurrentPlayersAction, game.PendingActions);
                 case DiscardCardFromCenter:
                     return card != null && CanDiscardFromCenter(card, game.PendingActions);
                 case ExileCard:
@@ -194,10 +198,10 @@ namespace Game.Utils
             return card is ITargetable || (staticEffects.Contains(StaticEffect.CanBountyOneNeutral) && card.Faction == Faction.neutral);
         }
 
-        private static bool CanDiscardFromHand(Card card, Player player, IList<PendingAction> pendingActions) 
+        private static bool CanDiscardFromHand(Card card, Faction faction, IList<PendingAction> pendingActions) 
         {
             return pendingActions.Any() && DiscardActions.Contains(pendingActions.First().Action) &&
-                card.Location == CardLocationHelper.GetHand(player.Faction);
+                card.Location == CardLocationHelper.GetHand(faction);
         }
 
         private static bool CanDiscardFromCenter(Card card, IList<PendingAction> pendingActions) 
