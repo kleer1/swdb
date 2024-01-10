@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -12,7 +13,7 @@ namespace GameTest.Cards.Empire.Units
 
         public void SetupAbility() 
         {
-            PlayableCard dv = (PlayableCard) Game.CardMap[32];
+            IPlayableCard dv = (IPlayableCard) Game.CardMap[32];
             dv.MoveToGalaxyRow();
         }
 
@@ -41,7 +42,7 @@ namespace GameTest.Cards.Empire.Units
             }));
 
             Game.ApplyAction(Action.PurchaseCard, 32);
-            PlayableCard dv = (PlayableCard) Game.CardMap[32];
+            IPlayableCard dv = (IPlayableCard) Game.CardMap[32];
             That(dv.Location, Is.EqualTo(CardLocation.EmpireHand));
 
             Game.ApplyAction(Action.PassTurn);

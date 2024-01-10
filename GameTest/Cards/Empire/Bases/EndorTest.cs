@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -16,7 +17,7 @@ namespace GameTest.Cards.Empire.Bases
             That(Game.StaticEffects, Has.Count.EqualTo(1));
             That(Game.StaticEffects.ElementAt(0), Is.EqualTo(StaticEffect.EndorBonus));
 
-            PlayableCard stormtrooper = MoveToInPlay(typeof(Stormtrooper), GetPlayer()).ElementAt(0);
+            IPlayableCard stormtrooper = MoveToInPlay(typeof(Stormtrooper), GetPlayer()).ElementAt(0);
             That(GetPlayer().GetAvailableAttack(), Is.EqualTo(3));
             stormtrooper.MoveToDiscard();
 

@@ -2,7 +2,7 @@ using SWDB.Game.Cards.Empire.Units;
 
 namespace GameTest.Cards.Empire.Ships
 {
-    public class ImperialCarrierTest : EmpirePlayableCardTest
+    public class ImperialCarrierTest : EmpireIPlayableCardTest
     {
         public override int Id => 36;
 

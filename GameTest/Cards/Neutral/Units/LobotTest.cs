@@ -5,7 +5,7 @@ using SWDB.Game.Common;
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class LobotTest : NeutralPlayableCardTest
+    public class LobotTest : NeutralIPlayableCardTest
     {
         public override int Id => 106;
 

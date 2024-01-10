@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Ships;
 using SWDB.Game.Common;
@@ -40,7 +41,7 @@ namespace GameTest.Cards.Rebellion.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.LukeDestroyShip));
 
-            CapitalShip? card1 = GetPlayer().Opponent?.ShipsInPlay.BaseList.ElementAt(0);
+            ICapitalShip? card1 = GetPlayer().Opponent?.ShipsInPlay.BaseList.ElementAt(0);
             Game.ApplyAction(Action.LukeDestroyShip, card1?.Id);
 
             That(Game.PendingActions, Has.Count.EqualTo(0));

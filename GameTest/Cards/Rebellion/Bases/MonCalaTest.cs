@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -20,8 +21,8 @@ namespace GameTest.Cards.Rebellion.Bases
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.PurchaseCard));
 
-            PlayableCard card = Game.GalaxyRow.BaseList.ElementAt(0);
-            PlayableCard rebel = (PlayableCard) Game.CardMap[BaseTest.REBEL_GALAXY_CARD];
+            IPlayableCard card = Game.GalaxyRow.BaseList.ElementAt(0);
+            IPlayableCard rebel = (IPlayableCard) Game.CardMap[BaseTest.REBEL_GALAXY_CARD];
             if (rebel.Location != CardLocation.GalaxyRow) {
                 card.MoveToTopOfGalaxyDeck();
                 rebel.MoveToGalaxyRow();
@@ -47,8 +48,8 @@ namespace GameTest.Cards.Rebellion.Bases
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.PurchaseCard));
 
-            PlayableCard card = Game.GalaxyRow.BaseList.ElementAt(0);
-            PlayableCard neutral = (PlayableCard) Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD];
+            IPlayableCard card = Game.GalaxyRow.BaseList.ElementAt(0);
+            IPlayableCard neutral = (IPlayableCard) Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD];
             if (neutral.Location != CardLocation.GalaxyRow) {
                 card.MoveToTopOfGalaxyDeck();
                 neutral.MoveToGalaxyRow();

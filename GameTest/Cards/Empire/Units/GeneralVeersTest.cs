@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
@@ -13,7 +14,7 @@ namespace GameTest.Cards.Empire.Units
 
         public void SetupAbility() 
         {
-            PlayableCard vehicle = (PlayableCard) Game.CardMap[VEHICLE_Id];
+            IPlayableCard vehicle = (IPlayableCard) Game.CardMap[VEHICLE_Id];
             vehicle.BuyToHand(GetPlayer());
             vehicle.MoveToInPlay();
         }

@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -22,7 +23,7 @@ namespace GameTest.Cards.Rebellion.Bases
             That(Game.StaticEffects, Has.Count.EqualTo(1));
             That(Game.StaticEffects, Does.Contain(StaticEffect.BuyNextToTopOfDeck));
 
-            PlayableCard luke = MoveToGalaxyRow(typeof(LukeSkywalker)).ElementAt(0);
+            IPlayableCard luke = MoveToGalaxyRow(typeof(LukeSkywalker)).ElementAt(0);
             GetPlayer().AddResources(9);
 
             Game.ApplyAction(Action.PurchaseCard, luke.Id);

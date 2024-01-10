@@ -1,10 +1,10 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class BosskTest : NeutralPlayableCardTest, IBountyHunterCardTest
+    public class BosskTest : NeutralIPlayableCardTest, IBountyHunterCardTest
     {
         public override int Id => 107;
 

@@ -1,11 +1,12 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class JabbaTheHuttTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class JabbaTheHuttTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
         public override int Id => 112;
         public override void AssertAfterPlay()
@@ -25,8 +26,8 @@ namespace GameTest.Cards.Neutral.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.JabbaExile));
 
-            PlayableCard card1 = GetPlayer().Hand.BaseList.ElementAt(0);
-            PlayableCard card2 = GetPlayer().Deck.BaseList.ElementAt(0);
+            IPlayableCard card1 = GetPlayer().Hand.BaseList.ElementAt(0);
+            IPlayableCard card2 = GetPlayer().Deck.BaseList.ElementAt(0);
 
             Game.ApplyAction(Action.JabbaExile, card1.Id);
 
@@ -44,9 +45,9 @@ namespace GameTest.Cards.Neutral.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.JabbaExile));
 
-            PlayableCard card1 = GetPlayer().Hand.BaseList.ElementAt(0);
-            PlayableCard card2 = GetPlayer().Deck.BaseList.ElementAt(0);
-            PlayableCard card3 = GetPlayer().Deck.BaseList.ElementAt(1);
+            IPlayableCard card1 = GetPlayer().Hand.BaseList.ElementAt(0);
+            IPlayableCard card2 = GetPlayer().Deck.BaseList.ElementAt(0);
+            IPlayableCard card3 = GetPlayer().Deck.BaseList.ElementAt(1);
 
             Game.ApplyAction(Action.JabbaExile, card1.Id);
 

@@ -1,10 +1,10 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Rebellion.Ships
 {
     [TestFixture]
-    public class RebelTransportTest : RebelPlayableCardTest, IHasAbilityCardTest
+    public class RebelTransportTest : RebelIPlayableCardTest, IHasAbilityCardTest
     {
         public override int Id => 74;
 

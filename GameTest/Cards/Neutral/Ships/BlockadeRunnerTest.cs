@@ -1,7 +1,7 @@
 namespace GameTest.Cards.Neutral.Ships
 {
     [TestFixture]
-    public class BlockadeRunnerTest : NeutralPlayableCardTest
+    public class BlockadeRunnerTest : NeutralIPlayableCardTest
     {
         public override int Id => 115;
 

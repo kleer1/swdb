@@ -1,4 +1,4 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Rebellion.Units;
 using SWDB.Game.Common;
 

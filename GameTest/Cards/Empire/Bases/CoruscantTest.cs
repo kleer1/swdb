@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -16,8 +17,8 @@ namespace GameTest.Cards.Empire.Bases
             That(Game.KnowsTopCardOfDeck[Faction.empire], Is.EqualTo(2));
             That(Game.KnowsTopCardOfDeck[Faction.rebellion], Is.EqualTo(0));
 
-            PlayableCard card1 = Game.GalaxyDeck.BaseList.ElementAt(0);
-            PlayableCard card2 = Game.GalaxyDeck.BaseList.ElementAt(1);
+            IPlayableCard card1 = Game.GalaxyDeck.BaseList.ElementAt(0);
+            IPlayableCard card2 = Game.GalaxyDeck.BaseList.ElementAt(1);
 
             Game.ApplyAction(Action.GalacticRule, card1.Id);
             That(Game.PendingActions, Has.Count.EqualTo(0));
@@ -34,8 +35,8 @@ namespace GameTest.Cards.Empire.Bases
             That(Game.KnowsTopCardOfDeck[Faction.empire], Is.EqualTo(2));
             That(Game.KnowsTopCardOfDeck[Faction.rebellion], Is.EqualTo(0));
 
-            PlayableCard card1 = Game.GalaxyDeck.BaseList.ElementAt(0);
-            PlayableCard card2 = Game.GalaxyDeck.BaseList.ElementAt(1);
+            IPlayableCard card1 = Game.GalaxyDeck.BaseList.ElementAt(0);
+            IPlayableCard card2 = Game.GalaxyDeck.BaseList.ElementAt(1);
 
             Game.ApplyAction(Action.GalacticRule, card2.Id);
             That(Game.PendingActions, Has.Count.EqualTo(0));

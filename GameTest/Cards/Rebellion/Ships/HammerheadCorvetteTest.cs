@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Ships;
 using SWDB.Game.Common;
@@ -6,9 +7,9 @@ using SWDB.Game.Common;
 namespace GameTest.Cards.Rebellion.Ships
 {
     [TestFixture]
-    public class HammerheadCorvetteTest : RebelPlayableCardTest, IHasAbilityCardTest
+    public class HammerheadCorvetteTest : RebelIPlayableCardTest, IHasAbilityCardTest
     {
-        private PlayableCard? empShip;
+        private IPlayableCard? empShip;
 
         public override int Id => 76;
 

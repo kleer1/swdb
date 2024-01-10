@@ -1,9 +1,9 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Common;
-using SWDB.Game.Utils;
 
 namespace SWDB.Game.Cards.Common.Models
 {
-    public class PlayableCard : Card
+    public class PlayableCard : Card, IPlayableCard
     {
         public int Cost { get; protected set; }
         public virtual int Attack { get; protected set; }
@@ -13,7 +13,7 @@ namespace SWDB.Game.Cards.Common.Models
         protected bool CanAttack { get; set; } = true;
 
         protected PlayableCard(int id, Faction faction, string title, bool isUnique, CardLocation location,
-            IList<Card> cardList, SWDBGame game, Player? owner, int cost, int attack, int resources,
+            IList<ICard> cardList, SWDBGame game, Player? owner, int cost, int attack, int resources,
             int force, IList<Trait> traits) : base(id, faction, title, isUnique, location, cardList, game, owner)
         {
             Cost = cost;
@@ -77,7 +77,7 @@ namespace SWDB.Game.Cards.Common.Models
             Location = CardLocationHelper.GetDeck(Owner.Faction);
         }
 
-        public void MoveToHand() 
+        public virtual void MoveToHand() 
         {
             if (Owner == null) 
             {

@@ -1,4 +1,4 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Empire.Ships;
 
 namespace GameTest.Cards.Empire.Units

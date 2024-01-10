@@ -1,9 +1,9 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class DengarTest : NeutralPlayableCardTest, IBountyHunterCardTest
+    public class DengarTest : NeutralIPlayableCardTest, IBountyHunterCardTest
     {
         public override int Id => 108;
 

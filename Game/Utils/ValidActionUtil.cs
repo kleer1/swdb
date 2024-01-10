@@ -6,6 +6,7 @@ using SWDB.Game.Cards.Empire.Bases;
 using SWDB.Game.Common;
 using Action = SWDB.Game.Actions.Action;
 using static SWDB.Game.Actions.Action;
+using Game.Cards.Common.Models.Interface;
 
 namespace Game.Utils
 {
@@ -284,7 +285,7 @@ namespace Game.Utils
             return ((IHasReturnToHandAbility) lastCardActivated).IsValidTarget((PlayableCard) card);
         }
 
-        private static bool CanSwapTopCardOfDeck(Card card, IList<PendingAction> pendingActions, IList<PlayableCard> galaxyDeck) 
+        private static bool CanSwapTopCardOfDeck(Card card, IList<PendingAction> pendingActions, IList<IPlayableCard> galaxyDeck) 
         {
             if (!pendingActions.Any() || pendingActions.First().Action != Action.SwapTopCardOfDeck) 
             {
@@ -314,7 +315,7 @@ namespace Game.Utils
             return card.Location == CardLocation.GalaxyRow || card.Location == CardLocationHelper.GetShipsInPlay(Faction.rebellion);
         }
 
-        private static bool CanGalacticRule(Card card, Player player, IList<PlayableCard> galaxyDeck) 
+        private static bool CanGalacticRule(Card card, Player player, IList<IPlayableCard> galaxyDeck) 
         {
             if (player.Faction != Faction.empire || player.CurrentBase is not Coruscant)
             {
@@ -352,7 +353,7 @@ namespace Game.Utils
             return card.Location == CardLocation.GalaxyRow || card.Location == CardLocation.EmpireShipInPlay;
         }
 
-        private static bool CanConfirmAttackers(IList<PendingAction> pendingActions, Card? attackTarget, IList<PlayableCard> attackers) 
+        private static bool CanConfirmAttackers(IList<PendingAction> pendingActions, Card? attackTarget, IList<IPlayableCard> attackers) 
         {
             if (!pendingActions.Any() || pendingActions.First().Action != Action.SelectAttacker) 
             {

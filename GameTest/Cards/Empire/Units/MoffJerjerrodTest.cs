@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
@@ -11,9 +12,9 @@ namespace GameTest.Cards.Empire.Units
 
         public void SetupAbility() 
         {
-            PlayableCard card1 = (PlayableCard) Game.CardMap[29];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[29];
             card1.MoveToGalaxyRow();
-            PlayableCard card2 = (PlayableCard) Game.CardMap[30];
+            IPlayableCard card2 = (IPlayableCard) Game.CardMap[30];
             card2.MoveToTopOfGalaxyDeck();
             GetPlayer().AddForce(1);
         }
@@ -37,12 +38,12 @@ namespace GameTest.Cards.Empire.Units
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.SwapTopCardOfDeck));
 
             Game.ApplyAction(Action.SwapTopCardOfDeck, 29);
-            PlayableCard card1 = (PlayableCard) Game.CardMap[29];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[29];
             That(card1.Location, Is.EqualTo(CardLocation.GalaxyDeck));
             That(card1.CardList, Is.EqualTo(Game.GalaxyDeck));
             That(card1, Is.EqualTo(Game.GalaxyDeck.ElementAt(0)));
 
-            PlayableCard card2 = (PlayableCard) Game.CardMap[30];
+            IPlayableCard card2 = (IPlayableCard) Game.CardMap[30];
             That(card2.Location, Is.EqualTo(CardLocation.GalaxyRow));
             That(card2.CardList, Is.EqualTo(Game.GalaxyRow));
             That(Game.GalaxyRow, Does.Contain(card2));

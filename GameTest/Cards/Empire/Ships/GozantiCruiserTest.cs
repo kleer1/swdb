@@ -1,10 +1,10 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Empire.Ships
 {
-    public class GozantiCruiserTest : EmpirePlayableCardTest, IHasAbilityCardTest
+    public class GozantiCruiserTest : EmpireIPlayableCardTest, IHasAbilityCardTest
     {
         int handCard = -1;
         int deckCard = -1;

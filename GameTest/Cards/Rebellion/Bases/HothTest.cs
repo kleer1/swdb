@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Units;
@@ -14,10 +15,10 @@ namespace GameTest.Cards.Rebellion.Bases
         public void AssertAfterStartOfTurn()
         {
             Player player = GetPlayer();
-            PlayableCard rebelTransport = MoveToInPlay(typeof(RebelTransport), player).ElementAt(0);
+            IPlayableCard rebelTransport = MoveToInPlay(typeof(RebelTransport), player).ElementAt(0);
             Game.ApplyAction(Action.PassTurn);
 
-            PlayableCard deathTrooper = MoveToInPlay(typeof(DeathTrooper), player.Opponent).ElementAt(0);
+            IPlayableCard deathTrooper = MoveToInPlay(typeof(DeathTrooper), player.Opponent).ElementAt(0);
             Game.ApplyAction(SWDB.Game.Actions.Action.AttackBase, Base.Id);
             Game.ApplyAction(SWDB.Game.Actions.Action.SelectAttacker, deathTrooper.Id);
             Game.ApplyAction(Action.ConfirmAttackers);
@@ -25,7 +26,7 @@ namespace GameTest.Cards.Rebellion.Bases
             That(rebelTransport.Location, Is.EqualTo(CardLocation.RebelDiscard));
             That(Base.CurrentDamage, Is.EqualTo(0));
 
-            PlayableCard intercept = MoveToInPlay(typeof(TieInterceptor), GetPlayer().Opponent).ElementAt(0);
+            IPlayableCard intercept = MoveToInPlay(typeof(TieInterceptor), GetPlayer().Opponent).ElementAt(0);
             Game.ApplyAction(SWDB.Game.Actions.Action.AttackBase, Base.Id);
             Game.ApplyAction(SWDB.Game.Actions.Action.SelectAttacker, intercept.Id);
             Game.ApplyAction(Action.ConfirmAttackers);

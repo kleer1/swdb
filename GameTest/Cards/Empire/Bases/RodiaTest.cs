@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -7,27 +8,27 @@ namespace GameTest.Cards.Empire.Bases
     [TestFixture]
     public class RodiaTest : EmpireAvailableBaseTest, IHasOnRevealTest
     {
-        private PlayableCard? rebel1;
-        private PlayableCard? rebel2;
-        private PlayableCard? empire1;
-        private PlayableCard? empire2;
-        private PlayableCard? neutral1;
-        private PlayableCard? neutral2;
+        private IPlayableCard? rebel1;
+        private IPlayableCard? rebel2;
+        private IPlayableCard? empire1;
+        private IPlayableCard? empire2;
+        private IPlayableCard? neutral1;
+        private IPlayableCard? neutral2;
 
         public override int Id => 126;
 
         public void PreChooseBaseSetup() 
         {
-            rebel1 = (PlayableCard) Game.CardMap[BaseTest.REBEL_GALAXY_CARD];
-            rebel2 = (PlayableCard) Game.CardMap[BaseTest.REBEL_GALAXY_CARD + 1];
-            empire1 = (PlayableCard) Game.CardMap[BaseTest.EMPIRE_GALAXY_CARD];
-            empire2 = (PlayableCard) Game.CardMap[BaseTest.EMPIRE_GALAXY_CARD + 1];
-            neutral1 = (PlayableCard) Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD];
-            neutral2 = (PlayableCard) Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD + 1];
+            rebel1 = (IPlayableCard) Game.CardMap[BaseTest.REBEL_GALAXY_CARD];
+            rebel2 = (IPlayableCard) Game.CardMap[BaseTest.REBEL_GALAXY_CARD + 1];
+            empire1 = (IPlayableCard) Game.CardMap[BaseTest.EMPIRE_GALAXY_CARD];
+            empire2 = (IPlayableCard) Game.CardMap[BaseTest.EMPIRE_GALAXY_CARD + 1];
+            neutral1 = (IPlayableCard) Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD];
+            neutral2 = (IPlayableCard) Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD + 1];
 
             for (int i = Game.GalaxyRow.BaseList.Count - 1; i >= 0; i--)
             {
-                PlayableCard card = Game.GalaxyRow.BaseList[i];
+                IPlayableCard card = Game.GalaxyRow.BaseList[i];
                 Game.GalaxyRow.RemoveAt(i);
                 card.MoveToTopOfGalaxyDeck();
             }

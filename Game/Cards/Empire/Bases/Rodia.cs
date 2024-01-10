@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Common.Models.Interface;
 using SWDB.Game.Common;
@@ -16,7 +17,7 @@ namespace SWDB.Game.Cards.Empire.Bases
             int numMatches = 0;
             for (int i = Game.GalaxyRow.Count - 1; i >= 0; i--)
             {
-                PlayableCard card = Game.GalaxyRow.BaseList[i];
+                IPlayableCard card = Game.GalaxyRow.BaseList[i];
                 if (card.Faction == Faction.rebellion) 
                 {
                     Game.GalaxyRow.RemoveAt(i);

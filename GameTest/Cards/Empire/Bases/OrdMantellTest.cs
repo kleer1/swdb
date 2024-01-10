@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -16,10 +17,10 @@ namespace GameTest.Cards.Empire.Bases
             That(Game.StaticEffects.ElementAt(0), Is.EqualTo(StaticEffect.CanBountyOneNeutral));
 
             // Confirm we can attack a neutral card
-            PlayableCard neutral = (PlayableCard) Game.CardMap[NEUTRAL_GALAXY_CARD];
+            IPlayableCard neutral = (IPlayableCard) Game.CardMap[NEUTRAL_GALAXY_CARD];
             neutral.MoveToGalaxyRow();
 
-            PlayableCard stormtrooper = MoveToInPlay(typeof(Stormtrooper), GetPlayer()).ElementAt(0);
+            IPlayableCard stormtrooper = MoveToInPlay(typeof(Stormtrooper), GetPlayer()).ElementAt(0);
 
             Game.ApplyAction(Action.AttackNeutralCard);
             That(Game.PendingActions, Has.Count.EqualTo(1));

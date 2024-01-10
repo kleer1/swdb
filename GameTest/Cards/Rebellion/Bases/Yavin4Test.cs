@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -25,17 +26,17 @@ namespace GameTest.Cards.Rebellion.Bases
 
             // set up rebel commando random discard
             GetPlayer().AddForce(1);
-            PlayableCard rc = MoveToInPlay(typeof(RebelCommando), GetPlayer()).ElementAt(0);
+            IPlayableCard rc = MoveToInPlay(typeof(RebelCommando), GetPlayer()).ElementAt(0);
             Game.ApplyAction(Action.UseCardAbility, rc.Id);
 
             That(GetPlayer().Opponent?.Hand, Has.Count.EqualTo(4));
             That(GetPlayer().Opponent?.CurrentBase?.CurrentDamage, Is.EqualTo(2));
 
             // do it again with snow speeder to test both paths
-            PlayableCard snow = MoveToInPlay(typeof(Snowspeeder), GetPlayer()).ElementAt(0);
+            IPlayableCard snow = MoveToInPlay(typeof(Snowspeeder), GetPlayer()).ElementAt(0);
             Game.ApplyAction(Action.UseCardAbility, snow.Id);
 
-            PlayableCard? card1 = GetPlayer().Opponent?.Hand.BaseList.ElementAt(0);
+            IPlayableCard? card1 = GetPlayer().Opponent?.Hand.BaseList.ElementAt(0);
             Game.ApplyAction(Action.DiscardFromHand, card1?.Id);
 
             That(GetPlayer().Opponent?.Hand, Has.Count.EqualTo(3));

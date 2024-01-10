@@ -1,15 +1,16 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Common;
 
 
 namespace SWDB.Game.Cards.Common.Models
 {
-    public class CapitalShip : PlayableCard
+    public class CapitalShip : PlayableCard, ICapitalShip
     {
         public int HitPoints { get; protected set; }
         public int CurrentDamage { get; set; } = 0;
 
         protected CapitalShip(int id, int cost, int attack, int resources, int force, Faction faction, string title, IList<Trait> traits,
-                       bool isUnique, Player? owner, CardLocation location, IList<Card> cardList, SWDBGame game, int hitPoints) :
+                       bool isUnique, Player? owner, CardLocation location, IList<ICard> cardList, SWDBGame game, int hitPoints) :
                        base(id, faction, title, isUnique, location, cardList, game, owner, cost, attack, resources, force, traits) {
     
             HitPoints = hitPoints;

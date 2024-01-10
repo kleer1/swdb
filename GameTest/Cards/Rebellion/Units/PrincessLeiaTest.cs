@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Rebellion.Units;
@@ -9,7 +10,7 @@ namespace GameTest.Cards.Rebellion.Units
     [TestFixture]
     public class PrincessLeiaTest : RebelTargetableCardTest, IHasAbilityCardTest
     {
-        private PlayableCard? luke;
+        private IPlayableCard? luke;
 
         public override int Id => 71;
 

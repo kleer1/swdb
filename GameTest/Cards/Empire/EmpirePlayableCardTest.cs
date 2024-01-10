@@ -1,9 +1,9 @@
-using GameTest.Cards.PlayableCards;
+using GameTest.Cards.IPlayableCards;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Empire
 {
-    public abstract class EmpirePlayableCardTest : PlayableCardTest
+    public abstract class EmpireIPlayableCardTest : IPlayableCardTest
     {
         public override Player GetPlayer()
         {

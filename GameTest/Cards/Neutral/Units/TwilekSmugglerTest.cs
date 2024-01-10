@@ -1,10 +1,10 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class TwilekSmugglerTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class TwilekSmugglerTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
         public override int Id => 98;
 

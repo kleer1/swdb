@@ -1,8 +1,8 @@
 using GameTest.Cards.Interfaces;
 
-namespace GameTest.Cards.PlayableCards.Interfaces
+namespace GameTest.Cards.IPlayableCards.Interfaces
 {
-    public interface IHasOnPurchaseTest : IBasePlayableCard
+    public interface IHasOnPurchaseTest : IBaseIPlayableCard
     {
         [Test]
         void TestOnPurchase()

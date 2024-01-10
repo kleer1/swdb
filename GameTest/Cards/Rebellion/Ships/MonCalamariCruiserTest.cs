@@ -1,7 +1,7 @@
 namespace GameTest.Cards.Rebellion.Ships
 {
     [TestFixture]
-    public class MonCalamariCruiserTest : RebelPlayableCardTest
+    public class MonCalamariCruiserTest : RebelIPlayableCardTest
     {
         public override int Id => 78;
 

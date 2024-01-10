@@ -7,6 +7,7 @@ using Action = SWDB.Game.Actions.Action;
 using Game.Utils;
 using SWDB.Game.Cards.Common.Models.Interface;
 using static SWDB.Game.Utils.ListExtension;
+using Game.Cards.Common.Models.Interface;
 
 namespace SWDB.Game
 {
@@ -14,12 +15,12 @@ namespace SWDB.Game
     {
         public Player Empire { get; } = new Player(Faction.empire);
         public Player Rebel { get; } = new Player(Faction.rebellion);
-        public ForceBalance ForceBalance { get; } = new ForceBalance();
-        public CastedList<Card, PlayableCard> GalaxyDeck { get; private set; } = new CastedList<Card, PlayableCard>();
-        public CastedList<Card, PlayableCard> GalaxyRow { get; private set; } = new CastedList<Card, PlayableCard>();
-        public CastedList<Card, PlayableCard> GalaxyDiscard { get; private set; } = new CastedList<Card, PlayableCard>();
-        public CastedList<Card, PlayableCard> OuterRimPilots { get; } = new CastedList<Card, PlayableCard>();
-        public CastedList<Card, PlayableCard> ExiledCards { get; } = new CastedList<Card, PlayableCard>();
+        public virtual ForceBalance ForceBalance { get; } = new ForceBalance();
+        public CastedList<ICard, IPlayableCard> GalaxyDeck { get; private set; } = new CastedList<ICard, IPlayableCard>();
+        public CastedList<ICard, IPlayableCard> GalaxyRow { get; private set; } = new CastedList<ICard, IPlayableCard>();
+        public CastedList<ICard, IPlayableCard> GalaxyDiscard { get; private set; } = new CastedList<ICard, IPlayableCard>();
+        public CastedList<ICard, IPlayableCard> OuterRimPilots { get; } = new CastedList<ICard, IPlayableCard>();
+        public CastedList<ICard, IPlayableCard> ExiledCards { get; } = new CastedList<ICard, IPlayableCard>();
         public IDictionary<int, Card> CardMap { get; } = new Dictionary<int, Card>();
         public Faction CurrentPlayersAction { get; private set; } = Faction.empire;
         public Faction CurrentPlayersTurn {get; private set; } = Faction.empire;
@@ -28,11 +29,11 @@ namespace SWDB.Game
         private Card? LastCardPlayed { get; set; }
         internal Card? LastCardActivated { get; private set; }
         public IDictionary<Faction, int> KnowsTopCardOfDeck { get; } = new Dictionary<Faction, int>{ {Faction.empire, 0}, {Faction.rebellion, 0} };
-        internal IList<PlayableCard> Attackers { get; } = new List<PlayableCard>();
+        internal IList<IPlayableCard> Attackers { get; } = new List<IPlayableCard>();
         internal Card? AttackTarget { get; set; }
         public bool CanSeeOpponentsHand {get; private set; }
-        private List<PlayableCard> ExileAtEndOfTurn { get; } = new List<PlayableCard>();
-        internal PlayableCard? ANewHope1Card { get; private set; } = null;
+        private List<IPlayableCard> ExileAtEndOfTurn { get; } = new List<IPlayableCard>();
+        internal IPlayableCard? ANewHope1Card { get; private set; } = null;
         public bool IsGameOver { get; private set; } = false;
 
         public SWDBGame()
@@ -59,8 +60,8 @@ namespace SWDB.Game
             {
                 if (!GalaxyDeck.Any()) 
                 {
-                    GalaxyDeck = new CastedList<Card, PlayableCard>(GalaxyDiscard.BaseList);
-                    GalaxyDiscard = new CastedList<Card, PlayableCard>(new List<PlayableCard>());
+                    GalaxyDeck = new CastedList<ICard, IPlayableCard>(GalaxyDiscard.BaseList);
+                    GalaxyDiscard = new CastedList<ICard, IPlayableCard>(new List<IPlayableCard>());
                     GalaxyDeck.Shuffle();
                     foreach (PlayableCard c in GalaxyDeck) 
                     {
@@ -68,7 +69,7 @@ namespace SWDB.Game
                         c.CardList = GalaxyDeck;
                     };
                 }
-                PlayableCard card = GalaxyDeck.BaseList.Pop();
+                ICard card = GalaxyDeck.Pop();
                 GalaxyRow.Add(card);
                 card.Location = CardLocation.GalaxyRow;
                 card.CardList = GalaxyRow;
@@ -112,10 +113,10 @@ namespace SWDB.Game
             int remainingDamage = damageDealt;
             if (player.ShipsInPlay.Any()) 
             {
-                IEnumerable<CapitalShip> temp = player.ShipsInPlay.BaseList.OrderBy(s => s.GetRemainingHealth()).Reverse();
+                IEnumerable<ICapitalShip> temp = player.ShipsInPlay.BaseList.OrderBy(s => s.GetRemainingHealth()).Reverse();
                 for (int i = temp.Count() - 1; i >= 0; i--)
                 {
-                    CapitalShip ship = temp.ElementAt(i);
+                    ICapitalShip ship = temp.ElementAt(i);
                     if (ship.GetRemainingHealth() <= remainingDamage) 
                     {
                         remainingDamage -= ship.GetRemainingHealth();

@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Units;
@@ -10,7 +11,7 @@ namespace GameTest.Cards.Rebellion.Units
     [TestFixture]
     public class MillenniumFalconTest : RebelTargetableCardTest, IHasAbilityCardTest
     {
-        private PlayableCard? unique;
+        private IPlayableCard? unique;
 
         public override int Id => 72;
 
@@ -31,7 +32,7 @@ namespace GameTest.Cards.Rebellion.Units
             // check that I can buy for free
             That(Game.Empire.Resources, Is.EqualTo(0));
 
-            PlayableCard darth = MoveToGalaxyRow(typeof(DarthVader)).ElementAt(0);
+            IPlayableCard darth = MoveToGalaxyRow(typeof(DarthVader)).ElementAt(0);
 
             // Try to buy
             Game.ApplyAction(Action.PurchaseCard, darth.Id);
@@ -62,7 +63,7 @@ namespace GameTest.Cards.Rebellion.Units
         {
             unique = MoveToInPlay(typeof(HanSolo), GetPlayer()).ElementAt(0);
             unique?.MoveToDiscard();
-            PlayableCard nonUnique = MoveToInPlay(typeof(BWing), GetPlayer()).ElementAt(0);
+            IPlayableCard nonUnique = MoveToInPlay(typeof(BWing), GetPlayer()).ElementAt(0);
             nonUnique.MoveToDiscard();
 
             ((IHasAbilityCardTest) this).UseCardAbility(Game, Card);

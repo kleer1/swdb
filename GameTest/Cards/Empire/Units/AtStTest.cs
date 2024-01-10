@@ -1,5 +1,6 @@
 
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
@@ -15,7 +16,7 @@ namespace GameTest.Cards.Empire.Units
 
         public void SetupAbility() 
         {
-            PlayableCard luke = (PlayableCard) Game.CardMap[LUKE_ID];
+            IPlayableCard luke = (IPlayableCard) Game.CardMap[LUKE_ID];
             luke.MoveToGalaxyRow();
         }
 
@@ -31,9 +32,9 @@ namespace GameTest.Cards.Empire.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.ExileCard));
 
-            PlayableCard card1 = (PlayableCard) Game.CardMap[REBEL_CARD_ID_1];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[REBEL_CARD_ID_1];
             card1.MoveToDiscard();
-            PlayableCard card2 = (PlayableCard) Game.CardMap[REBEL_CARD_Id_2];
+            IPlayableCard card2 = (IPlayableCard) Game.CardMap[REBEL_CARD_Id_2];
             card2.MoveToHand();
 
             Game.ApplyAction(Action.ExileCard, REBEL_CARD_ID_1);
@@ -55,7 +56,7 @@ namespace GameTest.Cards.Empire.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.DiscardCardFromCenter));
             Game.ApplyAction(Action.DiscardCardFromCenter, LUKE_ID);
-            PlayableCard luke = (PlayableCard) Game.CardMap[LUKE_ID];
+            IPlayableCard luke = (IPlayableCard) Game.CardMap[LUKE_ID];
             That(luke.Location, Is.EqualTo(CardLocation.GalaxyDiscard));
             That(luke.Owner, Is.Null);
             That(luke.CardList, Is.EqualTo(Game.GalaxyDiscard));

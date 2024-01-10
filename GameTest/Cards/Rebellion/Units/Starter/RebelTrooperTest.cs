@@ -1,7 +1,7 @@
 namespace GameTest.Cards.Rebellion.Units.Starter
 {
     [TestFixture]
-    public class RebelTrooperTest : RebelPlayableCardTest
+    public class RebelTrooperTest : RebelIPlayableCardTest
     {
         public override int Id => 47;
 

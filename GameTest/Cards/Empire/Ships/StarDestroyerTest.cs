@@ -1,6 +1,6 @@
 namespace GameTest.Cards.Empire.Ships
 {
-    public class StarDestroyerTest : EmpirePlayableCardTest
+    public class StarDestroyerTest : EmpireIPlayableCardTest
     {
         public override int Id => 39;
 

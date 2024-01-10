@@ -1,11 +1,12 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class LandoCalrissianTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class LandoCalrissianTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
         public override int Id => 110;
 
@@ -28,7 +29,7 @@ namespace GameTest.Cards.Neutral.Units
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.DiscardFromHand));
             That(Game.CurrentPlayersAction, Is.EqualTo(Faction.rebellion));
 
-            PlayableCard card1 = Game.Rebel.Hand.BaseList.ElementAt(0);
+            IPlayableCard card1 = Game.Rebel.Hand.BaseList.ElementAt(0);
 
             Game.ApplyAction(Action.DiscardFromHand, card1.Id);
 
@@ -40,7 +41,7 @@ namespace GameTest.Cards.Neutral.Units
         [Test]
         public void TestForceIsNotWithYou() 
         {
-            PlayableCard card1 = GetPlayer().Deck.BaseList.ElementAt(0);
+            IPlayableCard card1 = GetPlayer().Deck.BaseList.ElementAt(0);
 
             ((IHasAbilityCardTest) this).UseCardAbility(Game, Card);
             That(GetPlayer().Hand, Has.Count.EqualTo(6));

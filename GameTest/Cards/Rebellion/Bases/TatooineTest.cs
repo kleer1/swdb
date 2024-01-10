@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Rebellion.Units;
@@ -8,7 +9,7 @@ namespace GameTest.Cards.Rebellion.Bases
     [TestFixture]
     public class TatooineTest : RebelAvailableBaseTest, IHasOnRevealTest
     {
-        private PlayableCard? rebel;
+        private IPlayableCard? rebel;
 
         public override int Id => 138;
 
@@ -28,7 +29,7 @@ namespace GameTest.Cards.Rebellion.Bases
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.ANewHope2));
 
-            PlayableCard rowCard = Game.GalaxyRow.BaseList.ElementAt(0);
+            IPlayableCard rowCard = Game.GalaxyRow.BaseList.ElementAt(0);
             Game.ApplyAction(Action.ANewHope2, rowCard.Id);
 
             That(rebel?.Location, Is.EqualTo(CardLocation.GalaxyRow));

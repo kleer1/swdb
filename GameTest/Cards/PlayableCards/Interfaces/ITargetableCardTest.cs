@@ -4,9 +4,9 @@ using SWDB.Game.Cards.Empire.Ships;
 using SWDB.Game.Cards.Rebellion.Units;
 using SWDB.Game.Common;
 
-namespace GameTest.Cards.PlayableCards.Interfaces
+namespace GameTest.Cards.IPlayableCards.Interfaces
 {
-    public interface ITargetableCardTest : IBasePlayableCard
+    public interface ITargetableCardTest : IBaseIPlayableCard
     {
         [Test]
         void TestAttackedInCenterRow() 

@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Common.Models.Interface;
 using SWDB.Game.Common;
@@ -17,7 +18,7 @@ namespace SWDB.Game.Cards.Empire.Units
         public override void ApplyAbility() 
         {
             base.ApplyAbility();
-            PlayableCard card = Game.GalaxyDeck.BaseList[0];
+            IPlayableCard card = Game.GalaxyDeck.BaseList[0];
             Game.RevealTopCardOfDeck();
             if (card.Faction == Faction.empire) 
             {

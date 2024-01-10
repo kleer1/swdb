@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -14,7 +15,7 @@ namespace GameTest.Cards.Empire.Units
 
         public void SetupAbility() 
         {
-        PlayableCard stormtooper = (PlayableCard) Game.CardMap[TROOPER_ID];
+        IPlayableCard stormtooper = (IPlayableCard) Game.CardMap[TROOPER_ID];
             stormtooper.MoveToDiscard();
         }
 
@@ -36,7 +37,7 @@ namespace GameTest.Cards.Empire.Units
             That(Game.Rebel.Resources, Is.EqualTo(0));
 
             // Move Luke to buy row
-            PlayableCard luke = (PlayableCard) Game.CardMap[LUKE_ID];
+            IPlayableCard luke = (IPlayableCard) Game.CardMap[LUKE_ID];
             luke.MoveToGalaxyRow();
 
             // Try to buy
@@ -53,7 +54,7 @@ namespace GameTest.Cards.Empire.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.ReturnCardToHand));
             Game.ApplyAction(Action.ReturnCardToHand, TROOPER_ID);
-            PlayableCard stormtooper = (PlayableCard) Game.CardMap[TROOPER_ID];
+            IPlayableCard stormtooper = (IPlayableCard) Game.CardMap[TROOPER_ID];
             That(stormtooper.Location, Is.EqualTo(CardLocation.EmpireHand));
         }
     }

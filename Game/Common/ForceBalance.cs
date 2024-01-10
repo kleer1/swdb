@@ -16,12 +16,12 @@ namespace SWDB.Game.Common
             if (Position > 6) Position = 6;
         }
 
-        public bool LightSideHasTheForce() 
+        public virtual bool LightSideHasTheForce() 
         {
             return Position > 3;
         }
 
-        public bool DarkSideHasTheForce() 
+        public virtual bool DarkSideHasTheForce() 
         {
             return Position < 3;
         }

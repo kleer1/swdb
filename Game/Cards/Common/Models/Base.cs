@@ -1,15 +1,15 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Common;
-using SWDB.Game.Utils;
 
 namespace SWDB.Game.Cards.Common.Models
 {
-    public class Base : Card
+    public class Base : Card, IBase
     {
         public int HitPoints { get; protected set; }
         public int CurrentDamage { get; set; }
 
         protected Base(int id, Faction faction, string title, CardLocation location,
-                IList<Card>? cardList, SWDBGame game, Player owner, int hitPoints) :
+                IList<ICard>? cardList, SWDBGame game, Player owner, int hitPoints) :
                 base(id, faction, title, true, location, cardList, game, owner) 
         {
             HitPoints = hitPoints;

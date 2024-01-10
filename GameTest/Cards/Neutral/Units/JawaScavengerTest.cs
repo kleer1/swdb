@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -6,12 +7,12 @@ using SWDB.Game.Common;
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class JawaScavengerTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class JawaScavengerTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
-        private PlayableCard? neutral;
-        private PlayableCard? empire;
-        private PlayableCard? rebel;
-        private PlayableCard? empire2;
+        private IPlayableCard? neutral;
+        private IPlayableCard? empire;
+        private IPlayableCard? rebel;
+        private IPlayableCard? empire2;
         int startingResources = 2;
 
         public override int Id => 92;
@@ -25,13 +26,13 @@ namespace GameTest.Cards.Neutral.Units
 
         public void SetupAbility() 
         {
-            neutral = (PlayableCard) Game.CardMap[NEUTRAL_GALAXY_CARD];
+            neutral = (IPlayableCard) Game.CardMap[NEUTRAL_GALAXY_CARD];
             neutral.MoveToGalaxyDiscard();
-            empire = (PlayableCard) Game.CardMap[EMPIRE_GALAXY_CARD];
+            empire = (IPlayableCard) Game.CardMap[EMPIRE_GALAXY_CARD];
             empire.MoveToGalaxyDiscard();
-            rebel = (PlayableCard) Game.CardMap[REBEL_GALAXY_CARD];
+            rebel = (IPlayableCard) Game.CardMap[REBEL_GALAXY_CARD];
             rebel.MoveToGalaxyDiscard();
-            empire2 = (PlayableCard) Game.CardMap[EMPIRE_GALAXY_CARD + 1];
+            empire2 = (IPlayableCard) Game.CardMap[EMPIRE_GALAXY_CARD + 1];
             empire2.MoveToGalaxyRow();
         }
 
@@ -130,7 +131,7 @@ namespace GameTest.Cards.Neutral.Units
         [Test]
         public void TestNotActive() 
         {
-            rebel = (PlayableCard) Game.CardMap[REBEL_GALAXY_CARD];
+            rebel = (IPlayableCard) Game.CardMap[REBEL_GALAXY_CARD];
             rebel.MoveToGalaxyDiscard();
             ((IHasAbilityCardTest) this).UseCardAbility(Game, Card);
             That(Game.PendingActions, Has.Count.EqualTo(0));

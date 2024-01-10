@@ -1,11 +1,12 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class QuarrenMercenaryTest : NeutralPlayableCardTest, IHasOnPurchaseTest
+    public class QuarrenMercenaryTest : NeutralIPlayableCardTest, IHasOnPurchaseTest
     {
         public override int Id => 104;
 
@@ -28,7 +29,7 @@ namespace GameTest.Cards.Neutral.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.ExileCard));
 
-            PlayableCard card1 = Game.Empire.Hand.BaseList.ElementAt(0);
+            IPlayableCard card1 = Game.Empire.Hand.BaseList.ElementAt(0);
             Game.ApplyAction(Action.ExileCard, card1.Id);
 
             That(card1.Location, Is.EqualTo(CardLocation.Exile));

@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -20,7 +21,7 @@ namespace GameTest.Cards.Rebellion.Bases
                 StaticEffect.BuyNextNeutralToHand
             }));
 
-            PlayableCard ywing = MoveToGalaxyRow(typeof(YWing)).ElementAt(0);
+            IPlayableCard ywing = MoveToGalaxyRow(typeof(YWing)).ElementAt(0);
 
             GetPlayer().AddResources(1);
 
@@ -34,7 +35,7 @@ namespace GameTest.Cards.Rebellion.Bases
                 StaticEffect.BuyNextNeutralToHand
             }));
 
-            PlayableCard z95 = MoveToGalaxyRow(typeof(Z95Headhunter)).ElementAt(0);
+            IPlayableCard z95 = MoveToGalaxyRow(typeof(Z95Headhunter)).ElementAt(0);
             GetPlayer().AddResources(1);
 
             Game.ApplyAction(Action.PurchaseCard, z95.Id);
@@ -56,7 +57,7 @@ namespace GameTest.Cards.Rebellion.Bases
                 StaticEffect.BuyNextNeutralToHand
             }));
 
-            PlayableCard z95 = MoveToGalaxyRow(typeof(Z95Headhunter)).ElementAt(0);
+            IPlayableCard z95 = MoveToGalaxyRow(typeof(Z95Headhunter)).ElementAt(0);
             GetPlayer().AddResources(1);
 
             Game.ApplyAction(Action.PurchaseCard, z95.Id);

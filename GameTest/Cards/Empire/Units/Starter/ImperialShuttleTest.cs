@@ -1,7 +1,7 @@
 namespace GameTest.Cards.Empire.Units.Starter
 {
     [TestFixture]
-    public class ImperialShuttleTest : EmpirePlayableCardTest
+    public class ImperialShuttleTest : EmpireIPlayableCardTest
     {
         public override int Id => 0;
 

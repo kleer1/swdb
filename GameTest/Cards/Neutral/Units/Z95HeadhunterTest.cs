@@ -1,11 +1,11 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Empire.Ships;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class Z95HeadhunterTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class Z95HeadhunterTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
         public override int Id => 90;
 

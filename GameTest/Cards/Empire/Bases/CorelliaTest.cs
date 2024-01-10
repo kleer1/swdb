@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -25,7 +26,7 @@ namespace GameTest.Cards.Empire.Bases
            
 
             var card = Game.GalaxyRow.BaseList.First();
-            var empire = (PlayableCard) Game.CardMap[BaseTest.EMPIRE_GALAXY_CARD];
+            var empire = (IPlayableCard) Game.CardMap[BaseTest.EMPIRE_GALAXY_CARD];
             if (empire.Location != CardLocation.GalaxyRow)
             {
                 card.MoveToTopOfGalaxyDeck();
@@ -55,7 +56,7 @@ namespace GameTest.Cards.Empire.Bases
             That(Game.PendingActions.First().Action, Is.EqualTo(SWDB.Game.Actions.Action.PurchaseCard));
 
             var card = Game.GalaxyRow.BaseList.First();
-            var neutral = (PlayableCard)Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD];
+            var neutral = (IPlayableCard)Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD];
             if (neutral.Location != CardLocation.GalaxyRow)
             {
                 card.MoveToTopOfGalaxyDeck();

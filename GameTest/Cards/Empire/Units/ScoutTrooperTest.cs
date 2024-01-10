@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
@@ -23,7 +24,7 @@ namespace GameTest.Cards.Empire.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.ExileCard));
 
-            PlayableCard card1 = (PlayableCard) Game.CardMap[REBEL_CARD_Id];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[REBEL_CARD_Id];
             card1.MoveToDiscard();
 
             Game.ApplyAction(Action.ExileCard, REBEL_CARD_Id);
@@ -34,7 +35,7 @@ namespace GameTest.Cards.Empire.Units
         }
 
         public void SetupAbility() {
-            PlayableCard card1 = (PlayableCard) Game.CardMap[28];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[28];
             card1.MoveToTopOfGalaxyDeck();
         }
 
@@ -48,7 +49,7 @@ namespace GameTest.Cards.Empire.Units
         [Test]
         public void testRebelCardOnTop() 
         {
-            PlayableCard card1 = (PlayableCard) Game.CardMap[50];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[50];
             card1.MoveToTopOfGalaxyDeck();
             ((IHasAbilityCardTest) this).UseCardAbility(Game, Card);
             That(card1.Location, Is.EqualTo(CardLocation.GalaxyDiscard));
@@ -60,7 +61,7 @@ namespace GameTest.Cards.Empire.Units
         [Test]
         public void testNeutralCardOnTop() 
         {
-            PlayableCard card1 = (PlayableCard) Game.CardMap[90];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[90];
             card1.MoveToTopOfGalaxyDeck();
             ((IHasAbilityCardTest) this).UseCardAbility(Game, Card);
             That(card1.Location, Is.EqualTo(CardLocation.GalaxyDeck));

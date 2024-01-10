@@ -1,24 +1,25 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
-namespace GameTest.Cards.PlayableCards.Interfaces
+namespace GameTest.Cards.IPlayableCards.Interfaces
 {
-    public interface IBountyHunterCardTest : IBasePlayableCard
+    public interface IBountyHunterCardTest : IBaseIPlayableCard
     {
         [Test]
         void TestBountyHunterReward() 
         {
             Card.MoveToInPlay();
-            PlayableCard target;
+            IPlayableCard target;
             if (Game.CurrentPlayersAction == Faction.empire) 
             {
                 // add y-wing id = 50
-                target = (PlayableCard) Game.CardMap[50];
+                target = (IPlayableCard) Game.CardMap[50];
             } else 
             {
                 // add tie fighter id = 10
-                target = (PlayableCard) Game.CardMap[10];
+                target = (IPlayableCard) Game.CardMap[10];
             }
             target.MoveToGalaxyRow();
             VerifyPreBounty();

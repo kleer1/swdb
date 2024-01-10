@@ -5,7 +5,7 @@ using SWDB.Game.Common;
 namespace GameTest.Cards.Rebellion.Units.Starter
 {
     [TestFixture]
-    public class TempleGuardianTest : RebelPlayableCardTest
+    public class TempleGuardianTest : RebelIPlayableCardTest
     {
         public override int Id => 49;
 

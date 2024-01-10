@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using GameTest.Cards.Empire.Bases;
 using SWDB.Game;
@@ -23,12 +24,12 @@ namespace GameTest.Cards.Empire.BasesThat
             That(Game.StaticEffects.ElementAt(0), Is.EqualTo(StaticEffect.DrawOnFirstNeutralCard));
 
             // play a neutral card
-            PlayableCard neutral = (PlayableCard) Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD];
+            IPlayableCard neutral = (IPlayableCard) Game.CardMap[BaseTest.NEUTRAL_GALAXY_CARD];
             neutral.BuyToHand(GetPlayer());
             GetPlayer().DrawCards(1);
             That(GetPlayer().Hand, Has.Count.EqualTo(7));
 
-            PlayableCard topCard = GetPlayer().Deck.BaseList.ElementAt(0);
+            IPlayableCard topCard = GetPlayer().Deck.BaseList.ElementAt(0);
 
             Game.ApplyAction(Action.PlayCard, neutral.Id);
             That(GetPlayer().Hand, Has.Count.EqualTo(7));

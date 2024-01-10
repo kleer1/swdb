@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Ships;
@@ -23,7 +24,7 @@ namespace GameTest.Cards.Empire.Bases
             That(Base.AbilityActive(), Is.EqualTo(false));
             GetPlayer().AddResources(4);
             That(Base.AbilityActive(), Is.EqualTo(false));
-            PlayableCard monCal = MoveToInPlay(typeof(MonCalamariCruiser), player.Opponent).ElementAt(0);
+            IPlayableCard monCal = MoveToInPlay(typeof(MonCalamariCruiser), player.Opponent).ElementAt(0);
             That(Base.AbilityActive(), Is.EqualTo(true));
             monCal.MoveToGalaxyRow();
             That(Base.AbilityActive(), Is.EqualTo(true));
@@ -47,7 +48,7 @@ namespace GameTest.Cards.Empire.Bases
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.FireWhenReady));
 
-            PlayableCard? monCal = GetPlayer().Opponent?.ShipsInPlay.BaseList.ElementAt(0);
+            IPlayableCard? monCal = GetPlayer().Opponent?.ShipsInPlay.BaseList.ElementAt(0);
             Game.ApplyAction(Action.FireWhenReady, monCal?.Id);
 
             That(Game.PendingActions, Has.Count.EqualTo(0));
@@ -65,7 +66,7 @@ namespace GameTest.Cards.Empire.Bases
 
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.FireWhenReady));
-            PlayableCard ssd = Game.GalaxyRow.BaseList.ElementAt(0);
+            IPlayableCard ssd = Game.GalaxyRow.BaseList.ElementAt(0);
             Game.ApplyAction(Action.FireWhenReady, ssd.Id);
 
             That(Game.PendingActions, Has.Count.EqualTo(0));

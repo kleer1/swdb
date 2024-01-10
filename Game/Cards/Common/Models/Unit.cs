@@ -1,11 +1,12 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Common;
 
 namespace SWDB.Game.Cards.Common.Models
 {
-    public class Unit : PlayableCard
+    public class Unit : PlayableCard, IUnit
     {
         protected Unit(int id, int cost, int attack, int resources, int force, Faction faction, string title, IList<Trait> traits,
-            bool isUnique, Player? owner, CardLocation location, IList<Card> cardList, SWDBGame game) :
+            bool isUnique, Player? owner, CardLocation location, IList<ICard> cardList, SWDBGame game) :
                 base(id, faction, title, isUnique, location, cardList, game, owner, cost, attack, resources, force, traits){ }
         
         public override void MoveToInPlay() 

@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Units;
 using SWDB.Game.Cards.Empire.Units.Starter;
@@ -7,10 +8,10 @@ using SWDB.Game.Common;
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class JabbasSailBargeTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class JabbasSailBargeTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
-        private PlayableCard? bounty;
-        private PlayableCard? nonBounty;
+        private IPlayableCard? bounty;
+        private IPlayableCard? nonBounty;
 
         public override int Id => 111;
 

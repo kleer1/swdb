@@ -1,4 +1,4 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 
 namespace GameTest.Cards.Rebellion.Units
 {

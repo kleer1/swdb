@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Rebellion.Units;
 using SWDB.Game.Common;
@@ -5,7 +6,7 @@ using SWDB.Game.Common;
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class RodianGunslingerTest : NeutralPlayableCardTest
+    public class RodianGunslingerTest : NeutralIPlayableCardTest
     {
         public override int Id => 94;
 
@@ -15,7 +16,7 @@ namespace GameTest.Cards.Neutral.Units
             AssertGameState(Game.Rebel, 0, 0);
             AssertNoForceChange();
 
-            PlayableCard uwing = MoveToGalaxyRow(typeof(UWing)).ElementAt(0);
+            IPlayableCard uwing = MoveToGalaxyRow(typeof(UWing)).ElementAt(0);
 
             Game.ApplyAction(Action.AttackCenterRow, uwing.Id);
             AssertGameState(Game.Empire, 4, 0);

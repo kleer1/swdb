@@ -1,11 +1,12 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Ships
 {
     [TestFixture]
-    public class CrocCruiserTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class CrocCruiserTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
         public override int Id => 113;
 
@@ -27,7 +28,7 @@ namespace GameTest.Cards.Neutral.Ships
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.DiscardFromHand));
             That(GetPlayer().CurrentBase?.CurrentDamage, Is.EqualTo(4));
 
-            PlayableCard card1 = GetPlayer().Hand.BaseList.ElementAt(0);
+            IPlayableCard card1 = GetPlayer().Hand.BaseList.ElementAt(0);
             Game.ApplyAction(Action.DiscardFromHand, card1.Id);
 
             That(Game.PendingActions, Has.Count.EqualTo(0));

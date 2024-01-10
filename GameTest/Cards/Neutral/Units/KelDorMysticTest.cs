@@ -1,10 +1,10 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class KelDorMysticTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class KelDorMysticTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
         public override int Id => 96;
 

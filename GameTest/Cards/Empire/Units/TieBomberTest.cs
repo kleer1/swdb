@@ -1,4 +1,5 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
@@ -23,7 +24,7 @@ namespace GameTest.Cards.Empire.Units
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.ExileCard));
 
-            PlayableCard card1 = (PlayableCard) Game.CardMap[40];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[40];
             card1.MoveToDiscard();
 
             Game.ApplyAction(Action.ExileCard, 40);
@@ -44,7 +45,7 @@ namespace GameTest.Cards.Empire.Units
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.DiscardCardFromCenter));
             That(Game.GalaxyRow, Has.Count.EqualTo(6));
             Game.ApplyAction(Action.DiscardCardFromCenter, rowCard);
-            PlayableCard card1 = (PlayableCard) Game.CardMap[rowCard];
+            IPlayableCard card1 = (IPlayableCard) Game.CardMap[rowCard];
             That(card1.Location, Is.EqualTo(CardLocation.GalaxyDiscard));
             That(Game.GalaxyRow, Has.Count.EqualTo(6));
         }

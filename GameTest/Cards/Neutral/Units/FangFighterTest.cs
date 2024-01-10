@@ -1,13 +1,14 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using Game.Cards.Common.Models.Interface;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Units
 {
     [TestFixture]
-    public class FangFighterTest : NeutralPlayableCardTest, IHasOnPurchaseTest
+    public class FangFighterTest : NeutralIPlayableCardTest, IHasOnPurchaseTest
     {
-        private PlayableCard? topCard;
+        private IPlayableCard? topCard;
 
         public override int Id => 100;
 

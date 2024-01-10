@@ -2,10 +2,11 @@ using SWDB.Game.Cards.Common.Models.Interface;
 using SWDB.Game.Common;
 using SWDB.Game.Actions;
 using Action = SWDB.Game.Actions.Action;
+using Game.Cards.Common.Models.Interface;
 
 namespace SWDB.Game.Cards.Common.Models
 {
-    public class Card
+    public class Card : ICard
     {
         public int Id { get; private set; }
         public Faction Faction { get; private set; }
@@ -14,11 +15,11 @@ namespace SWDB.Game.Cards.Common.Models
         public Player? Owner { get; set; }
         public SWDBGame Game { get; private set; }
         public CardLocation Location { get; set; }
-        public IList<Card>? CardList { get; set; }
+        public IList<ICard>? CardList { get; set; }
         protected bool AbilityUsed { get; set; }
 
         protected Card (int id, Faction faction, string title, bool isUnique, CardLocation location, 
-            IList<Card>? cardList, SWDBGame game, Player? owner)
+            IList<ICard>? cardList, SWDBGame game, Player? owner)
         {
             Id = id;
             Faction = faction;

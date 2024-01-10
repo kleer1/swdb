@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Utils;
 using static SWDB.Game.Utils.ListExtension;
@@ -7,17 +8,17 @@ namespace SWDB.Game.Common
     public class Player
     {
         public Faction Faction { get; private set; }
-        public CastedList<Card, PlayableCard> Hand { get; } = new  CastedList<Card, PlayableCard>();
-        public CastedList<Card, PlayableCard> Deck { get; private set; } = new  CastedList<Card, PlayableCard>();
-        public CastedList<Card, PlayableCard> Discard { get; private set; } = new  CastedList<Card, PlayableCard>();
+        public CastedList<ICard, IPlayableCard> Hand { get; set; } = new  CastedList<ICard, IPlayableCard>();
+        public CastedList<ICard, IPlayableCard> Deck { get; set; } = new  CastedList<ICard, IPlayableCard>();
+        public CastedList<ICard, IPlayableCard> Discard { get; set; } = new  CastedList<ICard, IPlayableCard>();
         public Base? CurrentBase { get; set; }
-        public CastedList<Card, Base> AvailableBases { get; } = new CastedList<Card, Base>();
-        public CastedList<Card, Base> DestroyedBases { get; } = new CastedList<Card, Base>();
-        public CastedList<Card, Unit> UnitsInPlay { get; } = new CastedList<Card, Unit>();
-        public CastedList<Card, CapitalShip> ShipsInPlay { get; internal set; } = new CastedList<Card, CapitalShip>();
-        public int Resources { get; internal set; } = 0;
-        public Player? Opponent { get; internal set; }
-        public SWDBGame? Game { get; internal set; }
+        public CastedList<ICard, IBase> AvailableBases { get; set; } = new CastedList<ICard, IBase>();
+        public CastedList<ICard, IBase> DestroyedBases { get; set; } = new CastedList<ICard, IBase>();
+        public CastedList<ICard, IUnit> UnitsInPlay { get; set; } = new CastedList<ICard, IUnit>();
+        public CastedList<ICard, ICapitalShip> ShipsInPlay { get; set; } = new CastedList<ICard, ICapitalShip>();
+        public int Resources { get; set; } = 0;
+        public Player? Opponent { get; set; }
+        public SWDBGame? Game { get; set; }
 
         public Player(Faction faction) 
         {
@@ -49,7 +50,7 @@ namespace SWDB.Game.Common
                 if (Deck.Count == 0) 
                 {
                     Deck = Discard;
-                    Discard = new CastedList<Card, PlayableCard>();
+                    Discard = new CastedList<ICard, IPlayableCard>();
                     Deck.Shuffle();
                 }
                 Deck.BaseList.First().MoveToHand();
@@ -69,10 +70,10 @@ namespace SWDB.Game.Common
         public int GetAvailableAttack() 
         {
             int attack = 0;
-            foreach (Unit card in UnitsInPlay) {
+            foreach (IUnit card in UnitsInPlay) {
                 if (card.AbleToAttack()) attack += card.Attack;
             }
-            foreach (CapitalShip card in ShipsInPlay) {
+            foreach (ICapitalShip card in ShipsInPlay) {
                 if (card.AbleToAttack()) attack += card.Attack;
             }
             return attack;
@@ -123,7 +124,7 @@ namespace SWDB.Game.Common
                     "\n}";
         }
 
-        private static void DiscardList<T>(IList<T> list) where T : PlayableCard
+        private static void DiscardList<T>(IList<T> list) where T : IPlayableCard
         {
             for (int i = list.Count - 1; i >= 0; i--) 
             {

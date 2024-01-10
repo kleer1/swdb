@@ -1,21 +1,22 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 
-namespace GameTest.Cards.PlayableCards
+namespace GameTest.Cards.IPlayableCards
 {
-    public abstract class PlayableCardTest : BaseTest, IBasePlayableCard
+    public abstract class IPlayableCardTest : BaseTest, IBaseIPlayableCard
     {
         public virtual int Id => throw new NotImplementedException();
         public abstract Player GetPlayer();
         public abstract void AssertAfterPlay();
 
-        public  PlayableCard Card { get; private set; }
+        public  IPlayableCard Card { get; private set; }
 
         [SetUp]
         public void Setup()
         {
-            Card = (PlayableCard) Game.CardMap[Id];
+            Card = (IPlayableCard) Game.CardMap[Id];
             // Set force to neutral
             Game.Empire.AddForce(3);
             Player player = GetPlayer();

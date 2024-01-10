@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -27,19 +28,19 @@ namespace GameTest.Cards
             Game = new SWDBGame();
         }
 
-        public IList<PlayableCard> MoveToInPlay(Type type, Player? player) 
+        public IList<IPlayableCard> MoveToInPlay(Type type, Player? player) 
         {
             return MoveToInPlay(type, player, 1);
         }
 
-        public IList<PlayableCard> MoveToInPlay(Type type, Player? player, int amount) 
+        public IList<IPlayableCard> MoveToInPlay(Type type, Player? player, int amount) 
         {
-            if (player == null) return new List<PlayableCard>();
+            if (player == null) return new List<IPlayableCard>();
 
-            IList<PlayableCard> cards = new List<PlayableCard>();
+            IList<IPlayableCard> cards = new List<IPlayableCard>();
             foreach (Card card in Game.CardMap.Values) 
             {
-                if (card is PlayableCard playableCard) 
+                if (card is IPlayableCard playableCard) 
                 {
                     if (playableCard.GetType() == type) 
                     {
@@ -62,23 +63,23 @@ namespace GameTest.Cards
         {
             for (int i = Game.GalaxyRow.Count - 1; i >= 0; i--)
             {
-                PlayableCard card = Game.GalaxyRow.BaseList[i];
+                IPlayableCard card = Game.GalaxyRow.BaseList[i];
                 Game.GalaxyRow.RemoveAt(i);
                 card.MoveToTopOfGalaxyDeck();
             }
         }
 
-        protected IList<PlayableCard> MoveToGalaxyRow(Type type) 
+        protected IList<IPlayableCard> MoveToGalaxyRow(Type type) 
         {
             return MoveToGalaxyRow(type, 1);
         }
 
-        protected IList<PlayableCard> MoveToGalaxyRow(Type type, int amount) 
+        protected IList<IPlayableCard> MoveToGalaxyRow(Type type, int amount) 
         {
-            IList<PlayableCard> cards = new List<PlayableCard>();
+            IList<IPlayableCard> cards = new List<IPlayableCard>();
             foreach (Card card in Game.CardMap.Values) 
             {
-                if (card is PlayableCard playableCard) 
+                if (card is IPlayableCard playableCard) 
                 {
                     if (playableCard.GetType() == type) 
                     {

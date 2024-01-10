@@ -1,10 +1,10 @@
-using GameTest.Cards.PlayableCards.Interfaces;
+using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Common;
 
 namespace GameTest.Cards.Neutral.Ships
 {
     [TestFixture]
-    public class NebulonBFrigateTest : NeutralPlayableCardTest, IHasAbilityCardTest
+    public class NebulonBFrigateTest : NeutralIPlayableCardTest, IHasAbilityCardTest
     {
         public override int Id => 118;
 
