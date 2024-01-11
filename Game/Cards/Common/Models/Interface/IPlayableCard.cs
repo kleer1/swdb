@@ -1,20 +1,14 @@
-using SWDB.Game.Cards.Common.Models;
+using Game.Common.Interfaces;
 using SWDB.Game.Common;
 
 namespace Game.Cards.Common.Models.Interface
 {
-    public interface IPlayableCard : ICard
+    public interface IPlayableCard : IBasePlayableCard, ICard
     {
-        int Cost { get; }
-        int Attack { get; }
-        int Resources { get; }
-        int Force { get; }
-        IList<Trait> Traits { get; }
-        bool AbleToAttack();
         void SetAttacked();
-        void Buy(Player newOwner);
-        void BuyToTopOfDeck(Player newOwner);
-        void BuyToHand(Player newOwner);
+        void Buy(IPlayer newOwner);
+        void BuyToTopOfDeck(IPlayer newOwner);
+        void BuyToHand(IPlayer newOwner);
         void MoveToDiscard();
         void MoveToTopOfDeck();
         void MoveToHand();

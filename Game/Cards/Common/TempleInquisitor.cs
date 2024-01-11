@@ -4,6 +4,7 @@ using SWDB.Game.Common;
 using SWDB.Game.Actions;
 using Action = SWDB.Game.Actions.Action;
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 
 namespace SWDB.Game.Cards.Common
 {
@@ -11,7 +12,7 @@ namespace SWDB.Game.Cards.Common
     {
         public Stats? Choice { get; protected set; } = null;
 
-        public TempleInquisitor(int id, Faction faction, string title, IList<Trait> traits, Player owner,
+        public TempleInquisitor(int id, Faction faction, string title, IList<Trait> traits, IPlayer owner,
             CardLocation location, IList<ICard> cardList, SWDBGame game) :
             base(id, 0, 0, 0, 0, faction, title, traits, false, owner, location, cardList, game) {}
         

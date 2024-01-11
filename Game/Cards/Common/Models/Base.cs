@@ -1,4 +1,5 @@
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 using SWDB.Game.Common;
 
 namespace SWDB.Game.Cards.Common.Models
@@ -9,13 +10,13 @@ namespace SWDB.Game.Cards.Common.Models
         public int CurrentDamage { get; set; }
 
         protected Base(int id, Faction faction, string title, CardLocation location,
-                IList<ICard>? cardList, SWDBGame game, Player owner, int hitPoints) :
+                IList<ICard>? cardList, SWDBGame game, IPlayer owner, int hitPoints) :
                 base(id, faction, title, true, location, cardList, game, owner) 
         {
             HitPoints = hitPoints;
         }
 
-        public int HetRemainingHealth() 
+        public int GetRemainingHealth() 
         {
             return HitPoints - CurrentDamage;
         }

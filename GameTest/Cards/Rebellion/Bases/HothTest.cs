@@ -1,4 +1,5 @@
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Units;
@@ -14,7 +15,7 @@ namespace GameTest.Cards.Rebellion.Bases
 
         public void AssertAfterStartOfTurn()
         {
-            Player player = GetPlayer();
+            IPlayer player = GetPlayer();
             IPlayableCard rebelTransport = MoveToInPlay(typeof(RebelTransport), player).ElementAt(0);
             Game.ApplyAction(Action.PassTurn);
 

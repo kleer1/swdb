@@ -1,3 +1,4 @@
+using Game.Common.Interfaces;
 using GameTest.Cards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -8,7 +9,7 @@ namespace GameTest.Cards.Bases
     {
         public virtual int Id => throw new NotImplementedException();
 
-        public abstract Player GetPlayer();
+        public abstract IPlayer GetPlayer();
 
         [Test]
         public void TestStartingBase()

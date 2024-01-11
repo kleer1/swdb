@@ -1,19 +1,13 @@
+using Game.Common.Interfaces;
 using SWDB.Game;
-using SWDB.Game.Common;
 
 namespace Game.Cards.Common.Models.Interface
 {
-    public interface ICard
+    public interface ICard : IBaseCard
     {
-        int Id { get; }
-        Faction Faction { get; }
-        string Title { get; }
-        bool IsUnique { get; }
-        Player? Owner { get; set; }
+        IPlayer? Owner { get; set; }
         SWDBGame Game { get; }
-        CardLocation Location { get; set; }
         IList<ICard>? CardList { get; set; }
-        bool AbilityActive();
         void ApplyAbility();
     }
 }

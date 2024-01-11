@@ -7,12 +7,52 @@ using SWDB.Game.Common;
 using Action = SWDB.Game.Actions.Action;
 using static SWDB.Game.Actions.Action;
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
+using Game.Actions;
 
 namespace Game.Utils
 {
     internal static class ValidActionUtil
     {
-        internal static bool IsValidAction(Action action, Card? card, SWDBGame game, Stats? stats, ResourceOrRepair? resourceOrRepair) 
+        internal static IList<GameAction> GetValidGameActions(SWDBGame game)
+        {
+            IList<GameAction> validActions = new List<GameAction>();
+            foreach (ICard card in game.CardMap.Values)
+            {
+                CardLocation location = card.Location;
+                foreach (Action action in GameActions.GetDefaultActionsByLocation(location))
+                {
+                    if (IsValidAction(action, game, card: card))
+                    {
+                        validActions.Add(new GameAction(action, card.Id));
+                    }
+                }
+                foreach (Action action in GameActions.GetPendingActionsByLocation(location))
+                {
+                    if (IsValidAction(action, game, card: card))
+                    {
+                        validActions.Add(new GameAction(action, card.Id));
+                    }
+                }
+            }
+
+            foreach (Action action in GameActions.NoChoiceOrCardActions)
+            {
+                if (IsValidAction(action, game))
+                {
+                    validActions.Add(new GameAction(action));
+                }
+            }
+
+            if (IsValidAction(ChooseStatBoost, game, stats: Stats.Attack)) validActions.Add(new GameAction(ChooseStatBoost, Stats.Attack));
+            if (IsValidAction(ChooseStatBoost, game, stats: Stats.Resources)) validActions.Add(new GameAction(ChooseStatBoost, Stats.Resources));
+            if (IsValidAction(ChooseStatBoost, game, stats: Stats.Force)) validActions.Add(new GameAction(ChooseStatBoost, Stats.Force));
+            if (IsValidAction(ChooseResourceOrRepair, game, resourceOrRepair: ResourceOrRepair.Repair)) validActions.Add(new GameAction(ChooseResourceOrRepair, ResourceOrRepair.Repair));
+            if (IsValidAction(ChooseResourceOrRepair, game, resourceOrRepair: ResourceOrRepair.Resources)) validActions.Add(new GameAction(ChooseResourceOrRepair, ResourceOrRepair.Resources));
+            
+            return validActions;
+        }
+        internal static bool IsValidAction(Action action, SWDBGame game, ICard? card = null, Stats? stats = null, ResourceOrRepair? resourceOrRepair = null) 
         {
             if (game.PendingActions.Any()) 
             {
@@ -116,12 +156,12 @@ namespace Game.Utils
 
         private static readonly ISet<Action> DiscardActions = new HashSet<Action>{ Action.BWingDiscard, Action.DiscardFromHand, Action.DurosDiscard };
 
-        private static bool CanPlayCard(Card card, Player player) 
+        private static bool CanPlayCard(ICard card, IPlayer player) 
         {
             return card.Location == CardLocationHelper.GetHand(player.Faction);
         }
 
-        private static bool CanPurchaseCard(Card card, Player player, IList<StaticEffect> staticEffects, Faction currentFaction) 
+        private static bool CanPurchaseCard(ICard card, IPlayer player, IList<StaticEffect> staticEffects, Faction currentFaction) 
         {
             if (card.Faction != player.Faction && card.Faction != Faction.neutral) 
             {
@@ -159,7 +199,7 @@ namespace Game.Utils
             return card.Location == CardLocation.GalaxyRow || card.Location == CardLocation.OuterRimPilots;
         }
 
-        private static bool CanUseCardAbility(Card card, Player player) 
+        private static bool CanUseCardAbility(ICard card, IPlayer player) 
         {
             if (card.Location != CardLocationHelper.GetShipsInPlay(player.Faction) &&
                     card.Location != CardLocationHelper.GetUnitsInPlay(player.Faction) &&
@@ -174,7 +214,7 @@ namespace Game.Utils
             return ((IHasAbility) card).AbilityActive();
         }
 
-        private static bool CanAttackCardInCenter(Card card, Player player, IList<StaticEffect> staticEffects) 
+        private static bool CanAttackCardInCenter(ICard card, IPlayer player, IList<StaticEffect> staticEffects) 
         {
             if (card.Location != CardLocation.GalaxyRow) 
             {
@@ -191,7 +231,7 @@ namespace Game.Utils
                 return false;
             }
 
-            if (card.Faction == Faction.neutral && ((PlayableCard) card).Cost > player.GetAvailableAttack()) 
+            if (card.Faction == Faction.neutral && ((IPlayableCard) card).Cost > player.GetAvailableAttack()) 
             {
                 return false;
             }
@@ -199,19 +239,19 @@ namespace Game.Utils
             return card is ITargetable || (staticEffects.Contains(StaticEffect.CanBountyOneNeutral) && card.Faction == Faction.neutral);
         }
 
-        private static bool CanDiscardFromHand(Card card, Faction faction, IList<PendingAction> pendingActions) 
+        private static bool CanDiscardFromHand(ICard card, Faction faction, IList<PendingAction> pendingActions) 
         {
             return pendingActions.Any() && DiscardActions.Contains(pendingActions.First().Action) &&
                 card.Location == CardLocationHelper.GetHand(faction);
         }
 
-        private static bool CanDiscardFromCenter(Card card, IList<PendingAction> pendingActions) 
+        private static bool CanDiscardFromCenter(ICard card, IList<PendingAction> pendingActions) 
         {
             return pendingActions.Any() && pendingActions.First().Action == Action.DiscardCardFromCenter &&
                 card.Location == CardLocation.GalaxyRow;
         }
 
-        private static bool CanExileCard(Card card, Player player, IList<PendingAction> pendingActions) 
+        private static bool CanExileCard(ICard card, IPlayer player, IList<PendingAction> pendingActions) 
         {
             return CanExileCard(card, new HashSet<CardLocation> {
                 CardLocationHelper.GetHand(player.Faction), 
@@ -219,12 +259,12 @@ namespace Game.Utils
             }, pendingActions);
         }
 
-        private static bool CanExileCardFromHand(Card card, Player player, IList<PendingAction> pendingActions) 
+        private static bool CanExileCardFromHand(ICard card, IPlayer player, IList<PendingAction> pendingActions) 
         {
             return CanExileCard(card, new HashSet<CardLocation>{ CardLocationHelper.GetHand(player.Faction) }, pendingActions);
         }
 
-        private static bool CanExileCard(Card card, ISet<CardLocation> cardLocations, IList<PendingAction> pendingActions) 
+        private static bool CanExileCard(ICard card, ISet<CardLocation> cardLocations, IList<PendingAction> pendingActions) 
         {
             if (!pendingActions.Any() || (pendingActions.First().Action != Action.ExileCard) &&
                 pendingActions.First().Action != Action.JabbaExile) 
@@ -240,13 +280,13 @@ namespace Game.Utils
             return cardLocations.Contains(card.Location);
         }
 
-        private static bool CanChooseNewBase(Card card, Player player, IList<PendingAction> pendingActions) 
+        private static bool CanChooseNewBase(ICard card, IPlayer player, IList<PendingAction> pendingActions) 
         {
             return pendingActions.Any() && pendingActions.First().Action == Action.ChooseNextBase && card is Base &&
                 player.CurrentBase == null && card.Location == CardLocationHelper.GetAvailableBases(player.Faction);
         }
 
-        private static bool CanChooseResourceOrRepair(ResourceOrRepair? choice, Player player, IList<PendingAction> pendingActions) 
+        private static bool CanChooseResourceOrRepair(ResourceOrRepair? choice, IPlayer player, IList<PendingAction> pendingActions) 
         {
             if (!pendingActions.Any() || pendingActions.First().Action != Action.ChooseResourceOrRepair) 
             {
@@ -260,7 +300,7 @@ namespace Game.Utils
             return choice != ResourceOrRepair.Repair || player.CurrentBase?.CurrentDamage != 0;
         }
 
-        private static bool CanReturnCardToHand(Card card, Player player, IList<PendingAction> pendingActions, Card? lastCardActivated) 
+        private static bool CanReturnCardToHand(ICard card, IPlayer player, IList<PendingAction> pendingActions, ICard? lastCardActivated) 
         {
             if (!pendingActions.Any() || pendingActions.First().Action != Action.ReturnCardToHand) 
             {
@@ -285,7 +325,7 @@ namespace Game.Utils
             return ((IHasReturnToHandAbility) lastCardActivated).IsValidTarget((PlayableCard) card);
         }
 
-        private static bool CanSwapTopCardOfDeck(Card card, IList<PendingAction> pendingActions, IList<IPlayableCard> galaxyDeck) 
+        private static bool CanSwapTopCardOfDeck(ICard card, IList<PendingAction> pendingActions, IList<IPlayableCard> galaxyDeck) 
         {
             if (!pendingActions.Any() || pendingActions.First().Action != Action.SwapTopCardOfDeck) 
             {
@@ -300,7 +340,7 @@ namespace Game.Utils
             return galaxyDeck.Any();
         }
 
-        private static bool CanFireWhenReady(Card card, Player player) 
+        private static bool CanFireWhenReady(ICard card, IPlayer player) 
         {
             if (player.Faction != Faction.empire || player.CurrentBase is not DeathStar || player.Resources < 4) 
             {
@@ -315,7 +355,7 @@ namespace Game.Utils
             return card.Location == CardLocation.GalaxyRow || card.Location == CardLocationHelper.GetShipsInPlay(Faction.rebellion);
         }
 
-        private static bool CanGalacticRule(Card card, Player player, IList<IPlayableCard> galaxyDeck) 
+        private static bool CanGalacticRule(ICard card, IPlayer player, IList<IPlayableCard> galaxyDeck) 
         {
             if (player.Faction != Faction.empire || player.CurrentBase is not Coruscant)
             {
@@ -337,7 +377,7 @@ namespace Game.Utils
                 (playableCard.Equals(galaxyDeck.First()) || playableCard.Equals(galaxyDeck.ElementAt(1)));
         }
 
-        private static bool CanHammerHeadAway(Card card, Player player, IList<PendingAction> pendingActions) 
+        private static bool CanHammerHeadAway(ICard card, IPlayer player, IList<PendingAction> pendingActions) 
         {
             if (!pendingActions.Any() || pendingActions.First().Action != Action.HammerHeadAway) 
             {
@@ -353,7 +393,7 @@ namespace Game.Utils
             return card.Location == CardLocation.GalaxyRow || card.Location == CardLocation.EmpireShipInPlay;
         }
 
-        private static bool CanConfirmAttackers(IList<PendingAction> pendingActions, Card? attackTarget, IList<IPlayableCard> attackers) 
+        private static bool CanConfirmAttackers(IList<PendingAction> pendingActions, ICard? attackTarget, IList<IPlayableCard> attackers) 
         {
             if (!pendingActions.Any() || pendingActions.First().Action != Action.SelectAttacker) 
             {

@@ -8,33 +8,38 @@ using Game.Utils;
 using SWDB.Game.Cards.Common.Models.Interface;
 using static SWDB.Game.Utils.ListExtension;
 using Game.Cards.Common.Models.Interface;
+using Game.State;
+using Game.Common.Interfaces;
+using Game.State.Interfaces;
+using Game.Actions;
 
 namespace SWDB.Game
 {
     public class SWDBGame
     {
-        public Player Empire { get; } = new Player(Faction.empire);
-        public Player Rebel { get; } = new Player(Faction.rebellion);
+        public IPlayer Empire { get; } = new Player(Faction.empire);
+        public IPlayer Rebel { get; } = new Player(Faction.rebellion);
         public virtual ForceBalance ForceBalance { get; } = new ForceBalance();
         public CastedList<ICard, IPlayableCard> GalaxyDeck { get; private set; } = new CastedList<ICard, IPlayableCard>();
         public CastedList<ICard, IPlayableCard> GalaxyRow { get; private set; } = new CastedList<ICard, IPlayableCard>();
         public CastedList<ICard, IPlayableCard> GalaxyDiscard { get; private set; } = new CastedList<ICard, IPlayableCard>();
         public CastedList<ICard, IPlayableCard> OuterRimPilots { get; } = new CastedList<ICard, IPlayableCard>();
         public CastedList<ICard, IPlayableCard> ExiledCards { get; } = new CastedList<ICard, IPlayableCard>();
-        public IDictionary<int, Card> CardMap { get; } = new Dictionary<int, Card>();
+        public IDictionary<int, ICard> CardMap { get; } = new Dictionary<int, ICard>();
         public Faction CurrentPlayersAction { get; private set; } = Faction.empire;
         public Faction CurrentPlayersTurn {get; private set; } = Faction.empire;
         public IList<StaticEffect> StaticEffects { get; } = new List<StaticEffect>();
         public IList<PendingAction> PendingActions { get; } = new List<PendingAction>();
-        public Card? LastCardPlayed { get; private set; }
-        public Card? LastCardActivated { get; private set; }
+        public ICard? LastCardPlayed { get; private set; }
+        public ICard? LastCardActivated { get; private set; }
         public IDictionary<Faction, int> KnowsTopCardOfDeck { get; } = new Dictionary<Faction, int>{ {Faction.empire, 0}, {Faction.rebellion, 0} };
         public IList<IPlayableCard> Attackers { get; } = new List<IPlayableCard>();
-        public Card? AttackTarget { get; internal set; }
+        public ICard? AttackTarget { get; internal set; }
         public bool CanSeeOpponentsHand {get; private set; }
         public List<IPlayableCard> ExileAtEndOfTurn { get; } = new List<IPlayableCard>();
         public IPlayableCard? ANewHope1Card { get; private set; } = null;
         public bool IsGameOver { get; private set; } = false;
+        private GameState GameState { get; set; }
 
         public SWDBGame()
         {
@@ -46,9 +51,10 @@ namespace SWDB.Game
             DrawGalaxyCard(6);
             Empire.DrawCards(5);
             Rebel.DrawCards(5);
+            GameState = BuildCurrentGameState();
         }
 
-        public Player GetCurrentPlayer() => CurrentPlayersTurn == Faction.empire ? Empire : Rebel;
+        public IPlayer GetCurrentPlayer() => CurrentPlayersTurn == Faction.empire ? Empire : Rebel;
 
         public void RevealOpponentsHand() => CanSeeOpponentsHand = true;
 
@@ -108,7 +114,7 @@ namespace SWDB.Game
             }
         }
 
-        public void AssignDamageToBase(int damageDealt, Player player) 
+        public void AssignDamageToBase(int damageDealt, IPlayer player) 
         {
             int remainingDamage = damageDealt;
             if (player.ShipsInPlay.Any()) 
@@ -120,7 +126,7 @@ namespace SWDB.Game
                     if (ship.GetRemainingHealth() <= remainingDamage) 
                     {
                         remainingDamage -= ship.GetRemainingHealth();
-                        player.ShipsInPlay.Remove(ship);
+                        player.ShipsInPlay.BaseList.Remove(ship);
                         ship.MoveToDiscard();
                     }
                 }
@@ -144,24 +150,24 @@ namespace SWDB.Game
             IsGameOver = Empire.DestroyedBases.Count >= 4 || Rebel.DestroyedBases.Count >= 4;
         }
 
-        public void ApplyAction(Action action, int? cardId = null, Stats? stats = null, ResourceOrRepair? resourceOrRepair = null)
+        public GameState ApplyAction(Action action, int? cardId = null, Stats? stats = null, ResourceOrRepair? resourceOrRepair = null)
         {
-            if (IsGameOver) return;
+            if (IsGameOver) return GameState;
 
-            Card? card = null;
+            ICard? card = null;
             if (cardId != null && !CardMap.TryGetValue(cardId.Value, out card))
             {
-                return;
+                return GameState;
             }
 
-            if (!ValidActionUtil.IsValidAction(action, card, this, stats, resourceOrRepair))
+            if (!ValidActionUtil.IsValidAction(action, this, card, stats, resourceOrRepair))
             {
-                return;
+                return GameState;
             }
 
             PlayableCard? playableCard = null;
-            Base? _base = null;
-            Player currentPlayer = GetCurrentPlayer();
+            IBase? _base = null;
+            IPlayer currentPlayer = GetCurrentPlayer();
             if (card is PlayableCard card1) 
             {
                 playableCard = card1;
@@ -290,7 +296,8 @@ namespace SWDB.Game
             UpdateGameComplete();
             if (IsGameOver)
             {
-                return;
+                GameState = BuildCurrentGameState();
+                return GameState;
             }
 
             if (endedTurn) 
@@ -308,9 +315,12 @@ namespace SWDB.Game
             {
                 PassCurrentAction();
             }
+
+            GameState = BuildCurrentGameState();
+            return GameState;
         }
 
-        private void EndTurn(Player player) 
+        private void EndTurn(IPlayer player) 
         {
             foreach (PlayableCard card in ExileAtEndOfTurn) 
             {
@@ -332,7 +342,7 @@ namespace SWDB.Game
             LastCardActivated = null;
         }
 
-        private void StartTurn(Player? player) 
+        private void StartTurn(IPlayer? player) 
         {
             if (player == null)
             {
@@ -369,7 +379,7 @@ namespace SWDB.Game
             }
         }
 
-        private void PlayCard(PlayableCard? card, Player currentPlayer)
+        private void PlayCard(PlayableCard? card, IPlayer currentPlayer)
         {
             if (card == null)
             {
@@ -394,7 +404,7 @@ namespace SWDB.Game
             LastCardPlayed = card;
         }
 
-        private void PurchaseCard(PlayableCard? card, Player currentPlayer)
+        private void PurchaseCard(PlayableCard? card, IPlayer currentPlayer)
         {
             if (card == null)
             {
@@ -460,7 +470,7 @@ namespace SWDB.Game
             }
         }
 
-        private void UseCardAbility(Card? card)
+        private void UseCardAbility(ICard? card)
         {
             if (card == null || card is not IHasAbility) 
             {
@@ -497,7 +507,7 @@ namespace SWDB.Game
             }
         }
 
-        private void DiscardCardFromCenter(PlayableCard? card, Player currentPlayer)
+        private void DiscardCardFromCenter(PlayableCard? card, IPlayer currentPlayer)
         {
             if (card == null) 
             {
@@ -508,7 +518,7 @@ namespace SWDB.Game
             DrawGalaxyCard();
         }
 
-        private void FireWhenReady(PlayableCard? card, Player currentPlayer)
+        private void FireWhenReady(PlayableCard? card, IPlayer currentPlayer)
         {
             if (card == null) 
             {
@@ -525,7 +535,7 @@ namespace SWDB.Game
             }
         }
 
-        private void ConfirmAttackers(Player currentPlayer)
+        private void ConfirmAttackers(IPlayer currentPlayer)
         {
             if (AttackTarget is PlayableCard playableCardAttackTarget) 
             {
@@ -563,6 +573,51 @@ namespace SWDB.Game
                 }
                 AttackTarget = null;
                 Attackers.Clear();
+        }
+
+        private GameState BuildCurrentGameState()
+        {
+            return new GameState {
+                Empire = BuildPublicPlayer(Empire),
+                Rebel = BuildPublicPlayer(Rebel),
+                IsGameOver = IsGameOver,
+                TopOfGalaxyDeck = KnowsTopCardOfDeck[CurrentPlayersAction] > 0 ? (IBasePlayableCard) GalaxyDeck.First() : null,
+                GalaxyRow = CastList<IBasePlayableCard, IPlayableCard>(GalaxyRow.BaseList),
+                GalaxyDiscard = CastList<IBasePlayableCard, IPlayableCard>(GalaxyDiscard.BaseList),
+                ExiledCards = CastList<IBasePlayableCard, IPlayableCard>(ExiledCards.BaseList),
+                OuterRimPilots = CastList<IBasePlayableCard, IPlayableCard>(OuterRimPilots.BaseList),
+                CurrentPlayersAction = CurrentPlayersAction,
+                CurrentPlayersTurn = CurrentPlayersTurn,
+                ValidActions = (IReadOnlyCollection<GameAction>)ValidActionUtil.GetValidGameActions(this)
+            };
+        }
+
+        private IPublicPlayer BuildPublicPlayer(IPlayer player)
+        {
+            PublicPlayer publicPlayer = new PublicPlayer
+            {
+                Hand = CurrentPlayersAction == player.Faction || CanSeeOpponentsHand ?
+                    CastList<IBasePlayableCard, IPlayableCard>(player.Hand.BaseList) : new List<IBasePlayableCard>(),
+                Deck = CurrentPlayersAction == player.Faction ?
+                    CastList<IBasePlayableCard, IPlayableCard>(player.Deck.BaseList) : new List<IBasePlayableCard>(),
+                Discard = CastList<IBasePlayableCard, IPlayableCard>(player.Discard.BaseList),
+                AvailableBases = CastList<IPublicBase, IBase>(player.AvailableBases.BaseList),
+                DestroyedBases = CastList<IPublicBase, IBase>(player.DestroyedBases.BaseList),
+                UnitsInPlay = CastList<IBaseUnit, IUnit>(player.UnitsInPlay.BaseList),
+                ShipsInPlay = CastList<IBaseCapitalShip, ICapitalShip>(player.ShipsInPlay.BaseList),
+                CurrentBase = player.CurrentBase
+            };
+            return publicPlayer;
+        }
+
+        private IReadOnlyCollection<T> CastList<T, U>(IList<U> list) where U : T
+        {
+            IList<T> newList = new List<T>();
+            foreach (U u in list)
+            {
+                newList.Add((T)u);
+            }
+            return (IReadOnlyCollection<T>)newList;
         }
     }
 }

@@ -1,3 +1,4 @@
+using Game.Common.Interfaces;
 using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Empire.Ships;
 using SWDB.Game.Common;
@@ -18,7 +19,7 @@ namespace GameTest.Cards.Neutral.Units
 
         public void SetupAbility() 
         {
-            Player player = GetPlayer();
+            IPlayer player = GetPlayer();
             if (player.Opponent == null) return;
             MoveToInPlay(typeof(StarDestroyer), player.Opponent);
         }

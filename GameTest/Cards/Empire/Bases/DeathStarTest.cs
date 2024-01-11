@@ -1,4 +1,5 @@
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Ships;
@@ -19,7 +20,7 @@ namespace GameTest.Cards.Empire.Bases
 
         public void AssertAfterChooseBase() 
         {
-            Player player = GetPlayer();
+            IPlayer player = GetPlayer();
             if (player == null || player.Opponent == null) return;
             That(Base.AbilityActive(), Is.EqualTo(false));
             GetPlayer().AddResources(4);
@@ -34,7 +35,7 @@ namespace GameTest.Cards.Empire.Bases
 
         public void SetupAbility() 
         {
-            Player player = GetPlayer();
+            IPlayer player = GetPlayer();
             if (player == null || player.Opponent == null) return;
             EmptyGalaxyRow();
             MoveToInPlay(typeof(MonCalamariCruiser), player.Opponent);
@@ -43,7 +44,7 @@ namespace GameTest.Cards.Empire.Bases
 
         public void VerifyAbility() 
         {
-            Player player = GetPlayer();
+            IPlayer player = GetPlayer();
             if (player == null || player.Opponent == null) return;
             That(Game.PendingActions, Has.Count.EqualTo(1));
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.FireWhenReady));

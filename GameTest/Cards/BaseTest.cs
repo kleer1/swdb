@@ -1,4 +1,5 @@
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 using GameTest.Cards.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
@@ -28,12 +29,12 @@ namespace GameTest.Cards
             Game = new SWDBGame();
         }
 
-        public IList<IPlayableCard> MoveToInPlay(Type type, Player? player) 
+        public IList<IPlayableCard> MoveToInPlay(Type type, IPlayer? player) 
         {
             return MoveToInPlay(type, player, 1);
         }
 
-        public IList<IPlayableCard> MoveToInPlay(Type type, Player? player, int amount) 
+        public IList<IPlayableCard> MoveToInPlay(Type type, IPlayer? player, int amount) 
         {
             if (player == null) return new List<IPlayableCard>();
 

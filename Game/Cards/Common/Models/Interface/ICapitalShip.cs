@@ -1,11 +1,9 @@
 namespace Game.Cards.Common.Models.Interface
 {
-    public interface ICapitalShip : IPlayableCard
+    public interface ICapitalShip : IPlayableCard , IBaseCapitalShip
     {
-        int HitPoints { get; }
-        int CurrentDamage { get; set; }
+        new int CurrentDamage { get; set; }
         void AddDamage(int damage);
-        int GetRemainingHealth();
 
     }
 }

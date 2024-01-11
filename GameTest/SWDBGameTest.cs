@@ -1,6 +1,6 @@
-using System.Reflection.Metadata.Ecma335;
 using Game.Cards;
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Bases;
@@ -56,6 +56,33 @@ namespace GameTest
             That(game.ANewHope1Card, Is.Null);
         }
 
+        private static IPlayableCard? GetCardAndMoveToInPlay(Type type, SWDBGame game) 
+        {
+            IPlayableCard? card = GetFromCardMap(type, game.CardMap);
+            if (card == null) {
+                throw new ArgumentException("Card not in map");
+            }
+            MoveCardToInPlay(card, game);
+            return card;
+        }
+
+        private static void MoveCardToInPlay(IPlayableCard card, SWDBGame game) {
+            card.BuyToHand(game.GetCurrentPlayer());
+            card.MoveToInPlay();
+        }
+
+        private static IPlayableCard? GetFromCardMap(Type type, IDictionary<int, ICard> cardMap) 
+        {
+            ICard? card = cardMap.Values.Where(c => c.GetType() == type).First();
+            if (card == null) {
+                return null;
+            }
+            if (card is IPlayableCard playableCard) {
+                return playableCard;
+            }
+            return null;
+        }
+
         private int CountByType(IList<ICard> cardList, Type type) 
         {
             return cardList.Where(c => c.GetType() == type).Count();
@@ -78,7 +105,7 @@ namespace GameTest
             return joinedList;
         }
 
-        private void AssertStartingDeckSizes(Player player) 
+        private void AssertStartingDeckSizes(IPlayer player) 
         {
             That(player.Hand, Has.Count.EqualTo(5));
             That(player.Deck, Has.Count.EqualTo(5));
@@ -89,7 +116,7 @@ namespace GameTest
 
         private void AssertEmpireStartState() 
         {
-            Player player = game.Empire;
+            IPlayer player = game.Empire;
             That(player.Faction, Is.EqualTo(Faction.empire));
             AssertStartingDeckSizes(player);
             foreach (IPlayableCard card in player.Hand) 
@@ -116,7 +143,7 @@ namespace GameTest
             int numInq = CountByType(JoinLists(player.Hand, player.Deck), typeof(Inquisitor));
             That(numInq, Is.EqualTo(1));
 
-            Base? currentBase = player.CurrentBase;
+            IBase? currentBase = player.CurrentBase;
             That(currentBase, Is.Not.Null);
             That(currentBase, Is.TypeOf(typeof(Lothal)));
             That(currentBase?.Location, Is.EqualTo(CardLocation.EmpireCurrentBase));
@@ -148,7 +175,7 @@ namespace GameTest
 
         private void AssertRebelStartState() 
         {
-            Player player = game.Rebel;
+            IPlayer player = game.Rebel;
             That(player.Faction, Is.EqualTo(Faction.rebellion));
             AssertStartingDeckSizes(player);
             foreach (PlayableCard card in player.Hand) 
@@ -175,7 +202,7 @@ namespace GameTest
             int numGuard = CountByType(JoinLists(player.Hand, player.Deck), typeof(TempleGuardian));
             That(numGuard, Is.EqualTo(1));
 
-            Base? currentBase = player.CurrentBase;
+            IBase? currentBase = player.CurrentBase;
             That(currentBase, Is.Not.Null);
             That(currentBase, Is.TypeOf(typeof(Dantooine)));
             That(currentBase?.Location, Is.EqualTo(CardLocation.RebelCurrentBase));

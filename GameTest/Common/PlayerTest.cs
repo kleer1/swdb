@@ -3,6 +3,7 @@ using SWDB.Game;
 using SWDB.Game.Common;
 using static SWDB.Game.Utils.ListExtension;
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 
 namespace GameTest.Common
 {
@@ -141,17 +142,17 @@ namespace GameTest.Common
             That(player.GetAvailableAttack(), Is.EqualTo(2));
         }
 
-        private Player BuildImperialPlayer()
+        private IPlayer BuildImperialPlayer()
         {
             return BuildPlayer(Faction.empire, 0, 0, 0, 0, 0);
         }
 
-        private Player BuildRebelPlayer()
+        private IPlayer BuildRebelPlayer()
         {
             return BuildPlayer(Faction.rebellion, 0, 0, 0, 0, 0);
         }
 
-        private Player BuildPlayer(Faction faction, int deckSize, int discardSize, int handSize, int unitsInPlay, int shipsInPlay)
+        private IPlayer BuildPlayer(Faction faction, int deckSize, int discardSize, int handSize, int unitsInPlay, int shipsInPlay)
         {
             var player = new Player(faction);
             player.Game = game.Object;
@@ -163,7 +164,7 @@ namespace GameTest.Common
             return player;
         }
 
-        private CastedList<ICard, IUnit> BuildUnitList(int amount, Player player)
+        private CastedList<ICard, IUnit> BuildUnitList(int amount, IPlayer player)
         {
             var units = new CastedList<ICard, IUnit>();
             for (int i = 0; i < amount; i++)
@@ -171,8 +172,8 @@ namespace GameTest.Common
                 var unit = new Mock<IUnit>();
                 unit.Setup(u => u.MoveToDiscard()).Callback(() =>
                 {
-                    units.Remove(unit.Object);
-                    player.Discard.Add(unit.Object);
+                    units.BaseList.Remove(unit.Object);
+                    player.Discard.BaseList.Add(unit.Object);
                 });
                 unit.Setup(u => u.Attack).Returns(i);
                 unit.Setup(u => u.AbleToAttack()).Returns(true);
@@ -194,7 +195,7 @@ namespace GameTest.Common
             return ships;
         }
 
-        private CastedList<ICard, IPlayableCard> BuildCardList(int amount, Player player)
+        private CastedList<ICard, IPlayableCard> BuildCardList(int amount, IPlayer player)
         {
             var cards = new CastedList<ICard, IPlayableCard>();
             for (int i = 0; i < amount; i++)
@@ -215,7 +216,7 @@ namespace GameTest.Common
             return cards;
         }
 
-        private void AssertAllSizes(Player player, int deckSize, int discardSize, int handSize, int unitsInPlay, int shipsInPlay)
+        private void AssertAllSizes(IPlayer player, int deckSize, int discardSize, int handSize, int unitsInPlay, int shipsInPlay)
         {
             That(player.Deck, Has.Count.EqualTo(deckSize));
             That(player.Discard, Has.Count.EqualTo(discardSize));

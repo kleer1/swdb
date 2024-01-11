@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Bases;
@@ -28,10 +29,10 @@ namespace SWDB.Cards.Utils
     public static class SetupUtils
     {
         private delegate Card CardBuilder();
-        public static IDictionary<int, Card> Setup(SWDBGame game)
+        public static IDictionary<int, ICard> Setup(SWDBGame game)
         {
             Counter counter = new();
-            IDictionary<int, Card> cardMap = new Dictionary<int, Card>();
+            IDictionary<int, ICard> cardMap = new Dictionary<int, ICard>();
             BuildImperialDeck(counter, cardMap, game);
             BuildImperialCards(counter, cardMap, game);
             BuildRebelDeck(counter, cardMap, game);
@@ -44,7 +45,7 @@ namespace SWDB.Cards.Utils
             return cardMap;
         }
 
-        private static void BuildImperialDeck(Counter counter, IDictionary<int, Card> cardMap, SWDBGame game) {
+        private static void BuildImperialDeck(Counter counter, IDictionary<int, ICard> cardMap, SWDBGame game) {
             // Add Shuttles
             BuildCards(7, cardMap, () => new ImperialShuttle(counter.GetAndIncrement(), game));
             // Add troopers
@@ -54,7 +55,7 @@ namespace SWDB.Cards.Utils
             game.Empire.Deck.Shuffle();
         }
 
-        private static void BuildImperialBases(Counter counter, IDictionary<int, Card> cardMap, SWDBGame game) {
+        private static void BuildImperialBases(Counter counter, IDictionary<int, ICard> cardMap, SWDBGame game) {
             BuildCards(1, cardMap, () => new Lothal(counter.GetAndIncrement(), game));
             BuildCards(1, cardMap, () => new DeathStar(counter.GetAndIncrement(), game));
             BuildCards(1, cardMap, () => new Mustafar(counter.GetAndIncrement(), game));
@@ -67,7 +68,7 @@ namespace SWDB.Cards.Utils
             BuildCards(1, cardMap, () => new Coruscant(counter.GetAndIncrement(), game));
         }
 
-        private static void BuildRebelBases(Counter counter, IDictionary<int, Card> cardMap, SWDBGame game) {
+        private static void BuildRebelBases(Counter counter, IDictionary<int, ICard> cardMap, SWDBGame game) {
             BuildCards(1, cardMap, () => new Dantooine(counter.GetAndIncrement(), game));
             BuildCards(1, cardMap, () => new Hoth(counter.GetAndIncrement(), game));
             BuildCards(1, cardMap, () => new MonCala(counter.GetAndIncrement(), game));
@@ -80,7 +81,7 @@ namespace SWDB.Cards.Utils
             BuildCards(1, cardMap, () => new Yavin4(counter.GetAndIncrement(), game));
         }
 
-        private static void BuildRebelDeck(Counter counter, IDictionary<int, Card> cardMap, SWDBGame game) {
+        private static void BuildRebelDeck(Counter counter, IDictionary<int, ICard> cardMap, SWDBGame game) {
             // Add Shuttles
             BuildCards(7, cardMap, () => new AllianceShuttle(counter.GetAndIncrement(), game));
             // Add troopers
@@ -90,11 +91,11 @@ namespace SWDB.Cards.Utils
             game.Rebel.Deck.Shuffle();
         }
 
-        private static void BuildOuterRimPilots(Counter counter, IDictionary<int, Card> cardMap, SWDBGame game) {
+        private static void BuildOuterRimPilots(Counter counter, IDictionary<int, ICard> cardMap, SWDBGame game) {
             BuildCards(10, cardMap, () => new OuterRimPilot(counter.GetAndIncrement(), game));
         }
 
-        private static void BuildImperialCards(Counter counter, IDictionary<int, Card> cardMap, SWDBGame game) {
+        private static void BuildImperialCards(Counter counter, IDictionary<int, ICard> cardMap, SWDBGame game) {
             BuildCards(3, cardMap, () => new TieFighter(counter.GetAndIncrement(), game));
             BuildCards(2, cardMap, () => new DeathTrooper(counter.GetAndIncrement(), game));
             BuildCards(2, cardMap, () => new TieBomber(counter.GetAndIncrement(), game));
@@ -115,7 +116,7 @@ namespace SWDB.Cards.Utils
             BuildCards(2, cardMap, () => new StarDestroyer(counter.GetAndIncrement(), game));
         }
 
-        private static void BuildRebelCards(Counter counter, IDictionary<int, Card> cardMap, SWDBGame game) {
+        private static void BuildRebelCards(Counter counter, IDictionary<int, ICard> cardMap, SWDBGame game) {
             BuildCards(2, cardMap, () => new YWing(counter.GetAndIncrement(), game));
             BuildCards(2, cardMap, () => new Snowspeeder(counter.GetAndIncrement(), game));
             BuildCards(2, cardMap, () => new DurosSpy(counter.GetAndIncrement(), game));
@@ -137,7 +138,7 @@ namespace SWDB.Cards.Utils
             BuildCards(2, cardMap, () => new MonCalamariCruiser(counter.GetAndIncrement(), game));
         }
 
-        private static void BuildNeutralCards(Counter counter, IDictionary<int, Card> cardMap, SWDBGame game) {
+        private static void BuildNeutralCards(Counter counter, IDictionary<int, ICard> cardMap, SWDBGame game) {
             BuildCards(2, cardMap, () => new Z95Headhunter(counter.GetAndIncrement(), game));
             BuildCards(2, cardMap, () => new JawaScavenger(counter.GetAndIncrement(), game));
             BuildCards(2, cardMap, () => new RodianGunslinger(counter.GetAndIncrement(), game));
@@ -158,7 +159,7 @@ namespace SWDB.Cards.Utils
             BuildCards(2, cardMap, () => new NebulonBFrigate(counter.GetAndIncrement(), game));
         }
 
-        private static void BuildCards(int number, IDictionary<int, Card> cardMap, CardBuilder cardBuilder) {
+        private static void BuildCards(int number, IDictionary<int, ICard> cardMap, CardBuilder cardBuilder) {
             for (int i = 0; i < number; i++) {
                 Card card = cardBuilder.Invoke();
                 cardMap[card.Id] = card;

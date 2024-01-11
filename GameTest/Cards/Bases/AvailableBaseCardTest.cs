@@ -1,3 +1,4 @@
+using Game.Common.Interfaces;
 using GameTest.Cards.Bases.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -7,14 +8,14 @@ namespace GameTest.Cards.Bases
     public abstract class AvailableBaseCardTest : BaseTest, IAvailableBaseCard
     {
         public virtual int Id => throw new NotImplementedException();
-        public abstract Player GetPlayer();
+        public abstract IPlayer GetPlayer();
         public Base Base { get; set; }
 
 
         [SetUp]
         public void SetUp()
         {
-            Player player = GetPlayer();
+            IPlayer player = GetPlayer();
             Faction faction = player.Faction;
             Base = (Base) Game.CardMap[Id];
             Game.Empire.AddForce(3);

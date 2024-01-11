@@ -1,4 +1,5 @@
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 using GameTest.Cards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -8,7 +9,7 @@ namespace GameTest.Cards.IPlayableCards
     public abstract class IPlayableCardTest : BaseTest, IBaseIPlayableCard
     {
         public virtual int Id => throw new NotImplementedException();
-        public abstract Player GetPlayer();
+        public abstract IPlayer GetPlayer();
         public abstract void AssertAfterPlay();
 
         public  IPlayableCard Card { get; private set; }
@@ -19,7 +20,7 @@ namespace GameTest.Cards.IPlayableCards
             Card = (IPlayableCard) Game.CardMap[Id];
             // Set force to neutral
             Game.Empire.AddForce(3);
-            Player player = GetPlayer();
+            IPlayer player = GetPlayer();
             Faction faction = player.Faction;
             if (faction == Faction.rebellion) 
             {
@@ -47,7 +48,7 @@ namespace GameTest.Cards.IPlayableCards
         public void TestPlay() 
         {
             PrePlaySetup();
-            Player player = GetPlayer();
+            IPlayer player = GetPlayer();
             Faction faction = player.Faction;
             Game.ApplyAction(Action.PlayCard, Id);
             if (Card is CapitalShip)
@@ -72,7 +73,7 @@ namespace GameTest.Cards.IPlayableCards
             AssertAfterPlay();
         }
 
-        protected static void AssertGameState(Player player, int attack, int resource)
+        protected static void AssertGameState(IPlayer player, int attack, int resource)
         {
             Assert.Multiple(() =>
             {

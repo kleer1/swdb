@@ -1,3 +1,4 @@
+using Game.Cards.Common.Models.Interface;
 using GameTest.Cards.IPlayableCards.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
@@ -40,10 +41,10 @@ namespace GameTest.Cards.Empire.Ships
             That(Game.PendingActions.ElementAt(0).Action, Is.EqualTo(Action.DiscardFromHand));
 
             Game.ApplyAction(Action.DiscardFromHand, handCard);
-            Card card1 = Game.CardMap[handCard];
+            ICard card1 = Game.CardMap[handCard];
             That(card1.Location, Is.EqualTo(CardLocation.EmpireDiscard));
 
-            Card card2 = Game.CardMap[deckCard];
+            ICard card2 = Game.CardMap[deckCard];
             That(card2.Location, Is.EqualTo(CardLocation.EmpireHand));
 
             That(GetPlayer().Hand, Has.Count.EqualTo(5));

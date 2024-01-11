@@ -3,6 +3,7 @@ using SWDB.Game.Common;
 using SWDB.Game.Actions;
 using Action = SWDB.Game.Actions.Action;
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 
 namespace SWDB.Game.Cards.Common.Models
 {
@@ -12,14 +13,14 @@ namespace SWDB.Game.Cards.Common.Models
         public Faction Faction { get; private set; }
         public string Title { get; private set; }
         public bool IsUnique { get; private set; }
-        public Player? Owner { get; set; }
+        public IPlayer? Owner { get; set; }
         public SWDBGame Game { get; private set; }
         public CardLocation Location { get; set; }
         public IList<ICard>? CardList { get; set; }
         protected bool AbilityUsed { get; set; }
 
         protected Card (int id, Faction faction, string title, bool isUnique, CardLocation location, 
-            IList<ICard>? cardList, SWDBGame game, Player? owner)
+            IList<ICard>? cardList, SWDBGame game, IPlayer? owner)
         {
             Id = id;
             Faction = faction;
@@ -58,7 +59,7 @@ namespace SWDB.Game.Cards.Common.Models
 
         public override int GetHashCode() => HashCode.Combine(Id);
 
-        private int MaxNumExileAbility(Player player) 
+        private int MaxNumExileAbility(IPlayer player) 
         {
             if (player == null) 
             {
@@ -67,7 +68,7 @@ namespace SWDB.Game.Cards.Common.Models
             return player.Hand.Count + player.Discard.Count;
         }
 
-        protected void AddExilePendingAction(Player player, int depth) 
+        protected void AddExilePendingAction(IPlayer player, int depth) 
         {
             depth = Math.Min(depth, MaxNumExileAbility(player));
             if (depth < 1) 

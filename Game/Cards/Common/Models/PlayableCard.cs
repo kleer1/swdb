@@ -1,4 +1,5 @@
 using Game.Cards.Common.Models.Interface;
+using Game.Common.Interfaces;
 using SWDB.Game.Common;
 
 namespace SWDB.Game.Cards.Common.Models
@@ -13,7 +14,7 @@ namespace SWDB.Game.Cards.Common.Models
         protected bool CanAttack { get; set; } = true;
 
         protected PlayableCard(int id, Faction faction, string title, bool isUnique, CardLocation location,
-            IList<ICard> cardList, SWDBGame game, Player? owner, int cost, int attack, int resources,
+            IList<ICard> cardList, SWDBGame game, IPlayer? owner, int cost, int attack, int resources,
             int force, IList<Trait> traits) : base(id, faction, title, isUnique, location, cardList, game, owner)
         {
             Cost = cost;
@@ -33,19 +34,19 @@ namespace SWDB.Game.Cards.Common.Models
             CanAttack = false;
         }
 
-        public void Buy(Player newOwner) 
+        public void Buy(IPlayer newOwner) 
         {
             Owner = newOwner;
             MoveToDiscard();
         }
 
-        public void BuyToTopOfDeck(Player newOwner) 
+        public void BuyToTopOfDeck(IPlayer newOwner) 
         {
             Owner = newOwner;
             MoveToTopOfDeck();
         }
 
-        public void BuyToHand(Player newOwner) 
+        public void BuyToHand(IPlayer newOwner) 
         {
             Owner = newOwner;
             MoveToHand();
