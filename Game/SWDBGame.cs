@@ -26,14 +26,14 @@ namespace SWDB.Game
         public Faction CurrentPlayersTurn {get; private set; } = Faction.empire;
         public IList<StaticEffect> StaticEffects { get; } = new List<StaticEffect>();
         public IList<PendingAction> PendingActions { get; } = new List<PendingAction>();
-        private Card? LastCardPlayed { get; set; }
-        internal Card? LastCardActivated { get; private set; }
+        public Card? LastCardPlayed { get; private set; }
+        public Card? LastCardActivated { get; private set; }
         public IDictionary<Faction, int> KnowsTopCardOfDeck { get; } = new Dictionary<Faction, int>{ {Faction.empire, 0}, {Faction.rebellion, 0} };
-        internal IList<IPlayableCard> Attackers { get; } = new List<IPlayableCard>();
-        internal Card? AttackTarget { get; set; }
+        public IList<IPlayableCard> Attackers { get; } = new List<IPlayableCard>();
+        public Card? AttackTarget { get; internal set; }
         public bool CanSeeOpponentsHand {get; private set; }
-        private List<IPlayableCard> ExileAtEndOfTurn { get; } = new List<IPlayableCard>();
-        internal IPlayableCard? ANewHope1Card { get; private set; } = null;
+        public List<IPlayableCard> ExileAtEndOfTurn { get; } = new List<IPlayableCard>();
+        public IPlayableCard? ANewHope1Card { get; private set; } = null;
         public bool IsGameOver { get; private set; } = false;
 
         public SWDBGame()

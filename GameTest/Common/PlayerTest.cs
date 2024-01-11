@@ -1,7 +1,6 @@
 using Moq;
 using SWDB.Game;
 using SWDB.Game.Common;
-using SWDB.Game.Cards.Common.Models;
 using static SWDB.Game.Utils.ListExtension;
 using Game.Cards.Common.Models.Interface;
 
