@@ -165,28 +165,6 @@ namespace GameTest
             Console.WriteLine("Max actions: " + actionCounts.Max());
         }
 
-        //[Test]
-        //public void TestRandomActions()
-        //{
-        //    SWDBGame game = new();
-        //    // Start by playing the first card
-        //    IGameState gameState = game.ApplyAction(Action.PlayCard, game.GetCurrentPlayer().Hand.First().Id);
-        //    while(!game.IsGameOver)
-        //    {
-        //        IList<GameAction> notPass = gameState.ValidActions.Where(ga => ga.Action != Action.PassTurn).ToList();
-        //        GameAction gameAction;
-        //        if (notPass.Any()) 
-        //        {
-        //            gameAction = notPass.ElementAt(Random.Shared.Next(notPass.Count));
-        //        } else
-        //        {
-        //            gameAction = new(Action.PassTurn);
-        //        }
-        //        Console.WriteLine(gameAction);
-        //        gameState = game.ApplyAction(gameAction);
-        //    }
-        //}
-
         private static IPlayableCard? GetCardAndMoveToInPlay(Type type, SWDBGame game) 
         {
             IPlayableCard? card = GetFromCardMap(type, game.CardMap);
