@@ -1,4 +1,5 @@
 using Game.Actions;
+using Game.Actions.Interfaces;
 using Game.Cards.Common.Models.Interface;
 using Game.State.Interfaces;
 using SWDB.Game.Common;
@@ -17,6 +18,6 @@ namespace Game.State
         public required IReadOnlyCollection<IBasePlayableCard> OuterRimPilots { get; set; }
         public required Faction CurrentPlayersAction { get; set; }
         public required Faction CurrentPlayersTurn {get; set; }
-        public required IReadOnlyCollection<GameAction> ValidActions { get; set; }
+        public required IReadOnlyCollection<IGameAction> ValidActions { get; set; }
     }
 }

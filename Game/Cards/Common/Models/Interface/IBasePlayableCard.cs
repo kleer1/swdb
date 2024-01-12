@@ -8,7 +8,7 @@ namespace Game.Cards.Common.Models.Interface
         int Attack { get; }
         int Resources { get; }
         int Force { get; }
-        IList<Trait> Traits { get; }
+        IReadOnlyCollection<Trait> Traits { get; }
         bool AbleToAttack();
     }
 }

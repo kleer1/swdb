@@ -9,6 +9,7 @@ using static SWDB.Game.Actions.Action;
 using Game.Cards.Common.Models.Interface;
 using Game.Common.Interfaces;
 using Game.Actions;
+using Game.Actions.Interfaces;
 
 namespace Game.Utils
 {
@@ -59,7 +60,7 @@ namespace Game.Utils
             
             return validActions;
         }
-        internal static bool IsValidAction(SWDBGame game, GameAction gameAction, ICard? card = null) 
+        internal static bool IsValidAction(SWDBGame game, IGameAction gameAction, ICard? card = null) 
         {
             if (game.PendingActions.Any()) 
             {

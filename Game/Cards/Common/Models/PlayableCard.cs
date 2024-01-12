@@ -10,12 +10,12 @@ namespace SWDB.Game.Cards.Common.Models
         public virtual int Attack { get; protected set; }
         public virtual int Resources { get; protected set; }
         public virtual int Force { get; protected set; }
-        public IList<Trait> Traits { get; protected set; }
+        public IReadOnlyCollection<Trait> Traits { get; protected set; }
         protected bool CanAttack { get; set; } = true;
 
         protected PlayableCard(int id, Faction faction, string title, bool isUnique, CardLocation location,
             IList<ICard> cardList, SWDBGame game, IPlayer? owner, int cost, int attack, int resources,
-            int force, IList<Trait> traits) : base(id, faction, title, isUnique, location, cardList, game, owner)
+            int force, IReadOnlyCollection<Trait> traits) : base(id, faction, title, isUnique, location, cardList, game, owner)
         {
             Cost = cost;
             Attack = attack;

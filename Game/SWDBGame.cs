@@ -12,6 +12,7 @@ using Game.State;
 using Game.Common.Interfaces;
 using Game.State.Interfaces;
 using Game.Actions;
+using Game.Actions.Interfaces;
 
 namespace SWDB.Game
 {
@@ -39,7 +40,7 @@ namespace SWDB.Game
         public List<IPlayableCard> ExileAtEndOfTurn { get; } = new List<IPlayableCard>();
         public IPlayableCard? ANewHope1Card { get; private set; } = null;
         public bool IsGameOver { get; private set; } = false;
-        private GameState GameState { get; set; }
+        public IGameState GameState { get; private set; }
 
         public SWDBGame()
         {
@@ -155,7 +156,7 @@ namespace SWDB.Game
             return ApplyAction(new GameAction(action, cardId, stats, resourceOrRepair));
         }
 
-        public IGameState ApplyAction(GameAction gameAction)
+        public IGameState ApplyAction(IGameAction gameAction)
         {
             if (IsGameOver) return GameState;
 

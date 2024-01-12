@@ -12,7 +12,7 @@ namespace SWDB.Game.Cards.Common
     {
         public Stats? Choice { get; protected set; } = null;
 
-        public TempleInquisitor(int id, Faction faction, string title, IList<Trait> traits, IPlayer owner,
+        public TempleInquisitor(int id, Faction faction, string title, IReadOnlyCollection<Trait> traits, IPlayer owner,
             CardLocation location, IList<ICard> cardList, SWDBGame game) :
             base(id, 0, 0, 0, 0, faction, title, traits, false, owner, location, cardList, game) {}
         

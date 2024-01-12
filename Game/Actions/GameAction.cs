@@ -1,10 +1,11 @@
+using Game.Actions.Interfaces;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Common;
 using Action = SWDB.Game.Actions.Action;
 
 namespace Game.Actions
 {
-    public class GameAction
+    public class GameAction : IGameAction
     {
         public Action Action { get; private set; }
         public int? CardId { get; private set; } = null;

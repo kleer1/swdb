@@ -1,4 +1,5 @@
 ﻿using Game.Actions;
+using Game.Actions.Interfaces;
 using Game.Cards.Common.Models.Interface;
 using SWDB.Game.Common;
 
@@ -16,6 +17,6 @@ namespace Game.State.Interfaces
         IReadOnlyCollection<IBasePlayableCard> OuterRimPilots { get; }
         Faction CurrentPlayersAction { get; }
         Faction CurrentPlayersTurn { get; }
-        IReadOnlyCollection<GameAction> ValidActions { get; }
+        IReadOnlyCollection<IGameAction> ValidActions { get; }
     }
 }

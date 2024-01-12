@@ -6,7 +6,7 @@ namespace SWDB.Game.Cards.Common.Models
 {
     public class Unit : PlayableCard, IUnit
     {
-        protected Unit(int id, int cost, int attack, int resources, int force, Faction faction, string title, IList<Trait> traits,
+        protected Unit(int id, int cost, int attack, int resources, int force, Faction faction, string title, IReadOnlyCollection<Trait> traits,
             bool isUnique, IPlayer? owner, CardLocation location, IList<ICard> cardList, SWDBGame game) :
                 base(id, faction, title, isUnique, location, cardList, game, owner, cost, attack, resources, force, traits){ }
         
