@@ -150,17 +150,22 @@ namespace SWDB.Game
             IsGameOver = Empire.DestroyedBases.Count >= 4 || Rebel.DestroyedBases.Count >= 4;
         }
 
-        public GameState ApplyAction(Action action, int? cardId = null, Stats? stats = null, ResourceOrRepair? resourceOrRepair = null)
+        public IGameState ApplyAction(Action action, int? cardId = null, Stats? stats = null, ResourceOrRepair? resourceOrRepair = null)
+        {
+            return ApplyAction(new GameAction(action, cardId, stats, resourceOrRepair));
+        }
+
+        public IGameState ApplyAction(GameAction gameAction)
         {
             if (IsGameOver) return GameState;
 
             ICard? card = null;
-            if (cardId != null && !CardMap.TryGetValue(cardId.Value, out card))
+            if (gameAction.CardId != null && !CardMap.TryGetValue(gameAction.CardId.Value, out card))
             {
                 return GameState;
             }
 
-            if (!ValidActionUtil.IsValidAction(action, this, card, stats, resourceOrRepair))
+            if (!ValidActionUtil.IsValidAction(this, gameAction, card))
             {
                 return GameState;
             }
@@ -178,7 +183,7 @@ namespace SWDB.Game
             bool isPendingAction = PendingActions.Any();
             bool endedTurn = false;
 
-            switch(action)
+            switch(gameAction.Action)
             {
                 case Action.PlayCard:
                     PlayCard(playableCard, currentPlayer);
@@ -264,15 +269,15 @@ namespace SWDB.Game
                     // To Nothing
                     break;
                 case Action.ChooseStatBoost:
-                    if (LastCardPlayed is IHasChooseStats hasChooseStats && stats != null) 
+                    if (LastCardPlayed is IHasChooseStats hasChooseStats && gameAction.Stats != null) 
                     {
-                        hasChooseStats.ApplyChoice(stats.Value);
+                        hasChooseStats.ApplyChoice(gameAction.Stats.Value);
                     }
                     break;
                 case Action.ChooseResourceOrRepair:
-                    if (LastCardActivated is IHasChooseResourceOrRepair hasChooseResourceOrRepair && resourceOrRepair != null) 
+                    if (LastCardActivated is IHasChooseResourceOrRepair hasChooseResourceOrRepair && gameAction.ResourceOrRepair != null) 
                     {
-                        hasChooseResourceOrRepair.ApplyChoice(resourceOrRepair.Value);
+                        hasChooseResourceOrRepair.ApplyChoice(gameAction.ResourceOrRepair.Value);
                     }
                     break;
                 case Action.AttackNeutralCard:
@@ -287,7 +292,7 @@ namespace SWDB.Game
             if (isPendingAction)
             {
                 pendingAction = PendingActions.Pop();
-                if (action != Action.DeclineAction)
+                if (gameAction.Action != Action.DeclineAction)
                 {
                     pendingAction.ExecuteCallback();
                 }

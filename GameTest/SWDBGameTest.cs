@@ -1,6 +1,8 @@
+using Game.Actions;
 using Game.Cards;
 using Game.Cards.Common.Models.Interface;
 using Game.Common.Interfaces;
+using Game.State.Interfaces;
 using SWDB.Game;
 using SWDB.Game.Cards.Common.Models;
 using SWDB.Game.Cards.Empire.Bases;
@@ -14,34 +16,30 @@ using SWDB.Game.Cards.Rebellion.Ships;
 using SWDB.Game.Cards.Rebellion.Units;
 using SWDB.Game.Cards.Rebellion.Units.Starter;
 using SWDB.Game.Common;
+using SWDB.Game.Utils;
+using System.Text;
 
 namespace GameTest
 {
     [TestFixture]
     public class SWDBGameTest
     {
-        private SWDBGame game;
-
-        [SetUp]
-        public void Setup()
-        {
-            game = new SWDBGame();
-        }
 
         [Test]
         public void TestInitialize() 
         {
+            SWDBGame game = new SWDBGame();
             That(game.CurrentPlayersTurn, Is.EqualTo(Faction.empire));
             That(game.ForceBalance.Position, Is.EqualTo(6));
-            AssertGalaxyState();
-            AssertOuterRim();
+            AssertGalaxyState(game);
+            AssertOuterRim(game);
             That(game.ExiledCards, Has.Count.EqualTo(0));
             That(game.CardMap.Count, Is.EqualTo(140));
             That(game.StaticEffects, Has.Count.EqualTo(0));
             That(game.KnowsTopCardOfDeck[Faction.empire], Is.EqualTo(0));
             That(game.KnowsTopCardOfDeck[Faction.rebellion], Is.EqualTo(0));
-            AssertEmpireStartState();
-            AssertRebelStartState();
+            AssertEmpireStartState(game);
+            AssertRebelStartState(game);
             That(game.Empire.Opponent, Is.EqualTo(game.Rebel));
             That(game.Rebel.Opponent, Is.EqualTo(game.Empire));
             That(game.CurrentPlayersAction, Is.EqualTo(Faction.empire));
@@ -55,6 +53,139 @@ namespace GameTest
             That(game.ExileAtEndOfTurn, Has.Count.EqualTo(0));
             That(game.ANewHope1Card, Is.Null);
         }
+
+        [Test]
+        public void TestThatJustAttackingWillEndGame()
+        {
+            SWDBGame game = new SWDBGame();
+            IList<int> actionCounts = new List<int>();
+            int iterations = 10;
+            for (int i = 1; i <= iterations; i++)
+            {
+                game = new SWDBGame();
+                int numActions = 0;
+                while (!game.IsGameOver)
+                {
+                    Faction faction = game.CurrentPlayersTurn;
+                    IBase? _base = game.GetCurrentPlayer().Opponent?.CurrentBase;
+                    // play ever card in hand
+                    IList<int> cardIds = game.GetCurrentPlayer().Hand.Select(c => c.Id).ToList();
+                    foreach (int id in cardIds)
+                    {
+                        game.ApplyAction(Action.PlayCard, id);
+                        numActions++;
+                        if (game.PendingActions.Any())
+                        {
+                            // always choose attack
+                            numActions++;
+                            game.ApplyAction(Action.ChooseStatBoost, stats: Stats.Attack);
+                        }
+                    }
+                    LogCardList(game.GetCurrentPlayer().UnitsInPlay, CardLocationHelper.GetUnitsInPlay(game.CurrentPlayersTurn));
+
+                    if (game.GetCurrentPlayer().GetAvailableAttack() > 0 && _base != null)
+                    {
+                        numActions++;
+                        game.ApplyAction(Action.AttackBase, _base.Id);
+                        // System.out.println("Attacking " + game.getAttackTarget().getTitle());
+
+                        // select all attackers
+                        cardIds = game.GetCurrentPlayer().UnitsInPlay.Select(c => c.Id).ToList();
+                        cardIds.AddRange(game.GetCurrentPlayer().ShipsInPlay.Select(c => c.Id).ToList());
+                        foreach (int id in cardIds)
+                        {
+                            numActions++;
+                            game.ApplyAction(Action.SelectAttacker, id);
+                        }
+                        // logCardList(game.getAttackers(), CardLocation.getUnitsInPlay(game.getCurrentPlayersTurn()));
+                        // confirm attack
+                        numActions++;
+                        game.ApplyAction(Action.ConfirmAttackers);
+                        _base = game.GetCurrentPlayer().Opponent?.CurrentBase;
+                        if (_base != null)
+                        {
+                            Console.WriteLine(game.GetCurrentPlayer().Opponent?.Faction + " base has " +
+                                    _base.GetRemainingHealth() + " remaining health");
+                        }
+                        else
+                        {
+                            Console.WriteLine(game.CurrentPlayersTurn + " destroyed opponents base");
+                        }
+                    }
+
+                    // try to buy cards with attack starting with highest
+                    cardIds = game.GalaxyRow.BaseList
+                        .Where(c => c.Attack > 0 && new HashSet<Faction> { game.CurrentPlayersTurn, Faction.neutral}.Contains(c.Faction))
+                        .OrderBy(c => c.Attack).Reverse().Select(c => c.Id).ToList();
+
+                    foreach (int id in cardIds)
+                    {
+                        numActions++;
+                        game.ApplyAction(Action.PurchaseCard, id);
+                        if (game.PendingActions.Any())
+                        {
+                            numActions++;
+                            game.ApplyAction(Action.DeclineAction);
+                        }
+                    }
+                    LogCardList(game.GetCurrentPlayer().Discard, CardLocationHelper.GetDiscard(game.CurrentPlayersTurn));
+
+
+                    // pass turn after attack
+                    Console.WriteLine(faction + " passing turn");
+                    numActions++;
+                    game.ApplyAction(Action.PassTurn);
+
+                    // check if new base needs to be selected
+                    if (game.PendingActions.Any())
+                    {
+                        IList<IBase> availableBases = game.GetCurrentPlayer().AvailableBases.BaseList;
+                        IBase newBase = availableBases[Random.Shared.Next(availableBases.Count)];
+                        numActions++;
+                        game.ApplyAction(Action.ChooseNextBase, newBase.Id);
+                       Console.WriteLine(game.CurrentPlayersTurn + " choose new base: " + newBase.Title);
+                        // decline if the base has an ability
+                        if (game.PendingActions.Any())
+                        {
+                            numActions++;
+                            game.ApplyAction(Action.DeclineAction);
+                        }
+                        // galactic rule can't be declined
+                        if (game.PendingActions.Any())
+                        {
+                            numActions++;
+                            game.ApplyAction(Action.GalacticRule, game.GalaxyDeck.First().Id);
+                        }
+                    }
+                }
+                actionCounts.Add(numActions);
+                Console.WriteLine("Game " + i + " complete");
+            }
+            Console.WriteLine("Average number of actions in game: " + (actionCounts.Sum() / (double)iterations));
+            Console.WriteLine("Max actions: " + actionCounts.Max());
+        }
+
+        //[Test]
+        //public void TestRandomActions()
+        //{
+        //    SWDBGame game = new();
+        //    // Start by playing the first card
+        //    IGameState gameState = game.ApplyAction(Action.PlayCard, game.GetCurrentPlayer().Hand.First().Id);
+        //    while(!game.IsGameOver)
+        //    {
+        //        IList<GameAction> notPass = gameState.ValidActions.Where(ga => ga.Action != Action.PassTurn).ToList();
+        //        GameAction gameAction;
+        //        if (notPass.Any()) 
+        //        {
+        //            gameAction = notPass.ElementAt(Random.Shared.Next(notPass.Count));
+        //        } else
+        //        {
+        //            gameAction = new(Action.PassTurn);
+        //        }
+        //        Console.WriteLine(gameAction);
+        //        gameState = game.ApplyAction(gameAction);
+        //    }
+        //}
 
         private static IPlayableCard? GetCardAndMoveToInPlay(Type type, SWDBGame game) 
         {
@@ -114,7 +245,7 @@ namespace GameTest
             That(player.UnitsInPlay, Has.Count.EqualTo(0));
         }
 
-        private void AssertEmpireStartState() 
+        private void AssertEmpireStartState(SWDBGame game) 
         {
             IPlayer player = game.Empire;
             That(player.Faction, Is.EqualTo(Faction.empire));
@@ -173,7 +304,7 @@ namespace GameTest
             That(player.Resources, Is.EqualTo(0));
         }
 
-        private void AssertRebelStartState() 
+        private void AssertRebelStartState(SWDBGame game) 
         {
             IPlayer player = game.Rebel;
             That(player.Faction, Is.EqualTo(Faction.rebellion));
@@ -231,7 +362,7 @@ namespace GameTest
             That(player.Resources, Is.EqualTo(0));
         }
 
-        private void AssertGalaxyState() 
+        private void AssertGalaxyState(SWDBGame game) 
         {
             That(game.GalaxyDeck, Has.Count.EqualTo(84));
             That(game.GalaxyRow, Has.Count.EqualTo(6));
@@ -321,7 +452,7 @@ namespace GameTest
             That(CountByType(joinedList, typeof(DeathTrooper)), Is.EqualTo(2));
         }
 
-        private void AssertOuterRim() {
+        private void AssertOuterRim(SWDBGame game) {
             That(game.OuterRimPilots, Has.Count.EqualTo(10));
             foreach (PlayableCard card in game.OuterRimPilots) {
                 That(card.Id, Is.InRange(CardMapping.NeutralOuterRimCards.MinRange(), CardMapping.NeutralOuterRimCards.MaxRange()));
@@ -331,6 +462,24 @@ namespace GameTest
                 That(card.CardList, Is.EqualTo(game.OuterRimPilots));
             }
             That(CountByType(game.OuterRimPilots, typeof(OuterRimPilot)), Is.EqualTo(10));
+        }
+
+        private static void LogCardList<T>(IList<T> cards, CardLocation cardLocation) where T : ICard
+        {
+            StringBuilder builder = new();
+            builder.Append("Location: ")
+                    .Append(cardLocation)
+                    .Append(" has [");
+            foreach (T card in cards)
+            {
+                builder.Append("{")
+                        .Append(card.Id)
+                        .Append(", ")
+                        .Append(card.Title)
+                        .Append("},");
+            }
+            builder.Append("]");
+            Console.WriteLine(builder);
         }
 
     }

@@ -22,50 +22,57 @@ namespace Game.Utils
                 CardLocation location = card.Location;
                 foreach (Action action in GameActions.GetDefaultActionsByLocation(location))
                 {
-                    if (IsValidAction(action, game, card: card))
+                    var gameAction1 = new GameAction(action, card.Id);
+                    if (IsValidAction(game, gameAction1, card: card))
                     {
-                        validActions.Add(new GameAction(action, card.Id));
+                        validActions.Add(gameAction1);
                     }
                 }
                 foreach (Action action in GameActions.GetPendingActionsByLocation(location))
                 {
-                    if (IsValidAction(action, game, card: card))
+                    GameAction gameAction2 = new GameAction(action, card.Id);
+                    if (IsValidAction(game, gameAction2, card: card))
                     {
-                        validActions.Add(new GameAction(action, card.Id));
+                        validActions.Add(gameAction2);
                     }
                 }
             }
 
             foreach (Action action in GameActions.NoChoiceOrCardActions)
             {
-                if (IsValidAction(action, game))
+                var gameAction3 = new GameAction(action);
+                if (IsValidAction(game, gameAction3))
                 {
                     validActions.Add(new GameAction(action));
                 }
             }
-
-            if (IsValidAction(ChooseStatBoost, game, stats: Stats.Attack)) validActions.Add(new GameAction(ChooseStatBoost, Stats.Attack));
-            if (IsValidAction(ChooseStatBoost, game, stats: Stats.Resources)) validActions.Add(new GameAction(ChooseStatBoost, Stats.Resources));
-            if (IsValidAction(ChooseStatBoost, game, stats: Stats.Force)) validActions.Add(new GameAction(ChooseStatBoost, Stats.Force));
-            if (IsValidAction(ChooseResourceOrRepair, game, resourceOrRepair: ResourceOrRepair.Repair)) validActions.Add(new GameAction(ChooseResourceOrRepair, ResourceOrRepair.Repair));
-            if (IsValidAction(ChooseResourceOrRepair, game, resourceOrRepair: ResourceOrRepair.Resources)) validActions.Add(new GameAction(ChooseResourceOrRepair, ResourceOrRepair.Resources));
+            var gameAction = new GameAction(ChooseStatBoost, stats: Stats.Attack);
+            if (IsValidAction(game, gameAction)) validActions.Add(gameAction);
+            gameAction = new GameAction(ChooseStatBoost, stats: Stats.Resources);
+            if (IsValidAction(game, gameAction)) validActions.Add(gameAction);
+            gameAction = new GameAction(ChooseStatBoost, stats: Stats.Force);
+            if (IsValidAction(game, gameAction)) validActions.Add(gameAction);
+            gameAction = new GameAction(ChooseStatBoost, resourceOrRepair: ResourceOrRepair.Repair);
+            if (IsValidAction(game, gameAction)) validActions.Add(gameAction);
+            gameAction = new GameAction(ChooseStatBoost, resourceOrRepair: ResourceOrRepair.Resources);
+            if (IsValidAction(game, gameAction)) validActions.Add(gameAction);
             
             return validActions;
         }
-        internal static bool IsValidAction(Action action, SWDBGame game, ICard? card = null, Stats? stats = null, ResourceOrRepair? resourceOrRepair = null) 
+        internal static bool IsValidAction(SWDBGame game, GameAction gameAction, ICard? card = null) 
         {
             if (game.PendingActions.Any()) 
             {
                 Action pendingAction = game.PendingActions.First().Action;
-                bool actionMatchesPending = action == pendingAction;
-                bool pendingActionIsDeclinable = pendingAction.IsDeclinable() && action == Action.DeclineAction;
-                bool confirmingAttackers = pendingAction == Action.SelectAttacker && action == Action.ConfirmAttackers;
+                bool actionMatchesPending = gameAction.Action == pendingAction;
+                bool pendingActionIsDeclinable = pendingAction.IsDeclinable() && gameAction.Action == Action.DeclineAction;
+                bool confirmingAttackers = pendingAction == Action.SelectAttacker && gameAction.Action == Action.ConfirmAttackers;
                 if (!actionMatchesPending && ! pendingActionIsDeclinable && ! confirmingAttackers) 
                 {
                     return false;
                 }
             }
-            switch (action) 
+            switch (gameAction.Action) 
             {
                 case PlayCard:
                     return card != null && CanPlayCard(card, game.GetCurrentPlayer());
@@ -137,9 +144,9 @@ namespace Game.Utils
                 case DeclineAction:
                     return game.PendingActions.Any() && game.PendingActions.First().Action.IsDeclinable();
                 case ChooseStatBoost:
-                    return game.PendingActions.Any() && game.PendingActions.First().Action == Action.ChooseStatBoost && stats != null;
+                    return game.PendingActions.Any() && game.PendingActions.First().Action == Action.ChooseStatBoost && gameAction.Stats != null;
                 case ChooseResourceOrRepair:
-                    return CanChooseResourceOrRepair(resourceOrRepair, game.GetCurrentPlayer(), game.PendingActions);
+                    return CanChooseResourceOrRepair(gameAction.ResourceOrRepair, game.GetCurrentPlayer(), game.PendingActions);
                 case AttackNeutralCard:
                     if (game.PendingActions.Any() || !game.StaticEffects.Contains(StaticEffect.CanBountyOneNeutral)) 
                     {

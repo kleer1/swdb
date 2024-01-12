@@ -41,5 +41,10 @@ namespace Game.Actions
         {
             Action = action;        
         }
+
+        public override string ToString()
+        {
+            return "{ Action: " + Action + ", CardID: " + CardId + ", Stats: " + Stats + ", ResourceOrRepair: " + ResourceOrRepair + " }";
+        }
     }
 }

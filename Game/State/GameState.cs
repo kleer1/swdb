@@ -5,22 +5,18 @@ using SWDB.Game.Common;
 
 namespace Game.State
 {
-    public class GameState
+    public class GameState : IGameState
     {
-        public GameState()
-        {
-        }
-
-        public IPublicPlayer Empire { get; internal set; }
-        public IPublicPlayer Rebel { get; internal set; }
-        public bool IsGameOver { get; internal set; } = false;
-        public IBasePlayableCard? TopOfGalaxyDeck { get; internal set; }
-        public IReadOnlyCollection<IBasePlayableCard> GalaxyRow { get; internal set; }
-        public IReadOnlyCollection<IBasePlayableCard> GalaxyDiscard { get; internal set; }
-        public IReadOnlyCollection<IBasePlayableCard> ExiledCards { get; internal set; }
-        public IReadOnlyCollection<IBasePlayableCard> OuterRimPilots { get; internal set; }
-        public Faction CurrentPlayersAction { get; internal set; }
-        public Faction CurrentPlayersTurn {get; internal set; }
-        public IReadOnlyCollection<GameAction> ValidActions { get; internal set; }
+        public required IPublicPlayer Empire { get; set; }
+        public required IPublicPlayer Rebel { get; set; }
+        public required bool IsGameOver { get; set; } = false;
+        public required IBasePlayableCard? TopOfGalaxyDeck { get; set; }
+        public required IReadOnlyCollection<IBasePlayableCard> GalaxyRow { get; set; }
+        public required IReadOnlyCollection<IBasePlayableCard> GalaxyDiscard { get; set; }
+        public required IReadOnlyCollection<IBasePlayableCard> ExiledCards { get; set; }
+        public required IReadOnlyCollection<IBasePlayableCard> OuterRimPilots { get; set; }
+        public required Faction CurrentPlayersAction { get; set; }
+        public required Faction CurrentPlayersTurn {get; set; }
+        public required IReadOnlyCollection<GameAction> ValidActions { get; set; }
     }
 }
