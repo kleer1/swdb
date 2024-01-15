@@ -9,7 +9,7 @@ using System.Text;
 using System;
 using Microsoft.AspNetCore.Connections;
 
-namespace Agents
+namespace Agents.DotnetAgents
 {
     public class WebSocketAgent : IAgent, IDisposable
     {
@@ -37,13 +37,14 @@ namespace Agents
 
         private bool _shouldShutdown = false;
 
-        public WebSocketAgent(int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer, 
+        public WebSocketAgent(int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer,
             IGameActionConverter gameActionConverter)
         {
             _host = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://localhost:" + port)
-                .Configure(app => {
+                .Configure(app =>
+                {
                     app.UseWebSockets();
                     app.Run(HandleWebSocketAsync);
                 })
@@ -63,7 +64,7 @@ namespace Agents
         {
             _rewardCompletionSource.SetResult(_rewardGenerator.GenerateReward(oldState, newState));
             LockAndSet(_postProcessingLock, ref _isPostProcesingCalled);
-            while(!CheckLockedBoolCalled(_postProcessingCompleteLock, ref _isPostProcesingComplete)) 
+            while (!CheckLockedBoolCalled(_postProcessingCompleteLock, ref _isPostProcesingComplete))
             {
                 await Task.Delay(10);
             }
@@ -187,9 +188,9 @@ namespace Agents
 
         private static async Task SendWebSocketMessageAsync(WebSocket webSocket, string message)
         {
-                var buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(message));
-                await webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
-            
+            var buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(message));
+            await webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+
         }
 
         private static async Task<string> ReceiveWebSocketMessageAsync(WebSocket webSocket)
@@ -216,7 +217,7 @@ namespace Agents
                 Console.WriteLine(ex.ToString());
                 throw ex;
             }
-               
+
 
         }
 
@@ -236,7 +237,8 @@ namespace Agents
 
         private static void LockAndSet(object objectLock, ref bool toSet)
         {
-            lock (objectLock) { 
+            lock (objectLock)
+            {
                 toSet = true;
             }
         }

@@ -1,10 +1,10 @@
-﻿using Agents;
+﻿using Agents.DotnetAgents;
 using Agents.Interfaces;
 using Game.Actions;
 using Game.State.Interfaces;
 using Moq;
 
-namespace BotsTest
+namespace AgentsTest.DotnetAgents
 {
     [TestFixture]
     public class PythonAgentIntegrationTest

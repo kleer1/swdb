@@ -4,7 +4,7 @@ using Game.Actions.Interfaces;
 using Game.State.Interfaces;
 using SWDB.Game;
 
-namespace BotsTest.DotnetAgents
+namespace AgentsTest.DotnetAgents
 {
     [TestFixture]
     public class BasicPythonAgentTest

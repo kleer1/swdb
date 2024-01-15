@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Agents
+namespace Agents.DotnetAgents
 {
     public class PythonAgent : WebSocketAgent
     {
@@ -12,8 +12,8 @@ namespace Agents
         private readonly string pythonScriptsPath;
         private readonly IList<string> commandsToExecute;
 
-        public PythonAgent(int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer, 
-            IGameActionConverter gameActionConverter, string pythonScriptName) : 
+        public PythonAgent(int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer,
+            IGameActionConverter gameActionConverter, string pythonScriptName) :
                 base(port, rewardGenerator, gameStateTranformer, gameActionConverter)
         {
             basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) ?? string.Empty;
@@ -44,7 +44,7 @@ namespace Agents
 
         public async override Task InitializeAsync()
         {
-            
+
             await base.InitializeAsync();
 
             if (_process == null)
@@ -86,11 +86,11 @@ namespace Agents
                 _process?.WaitForExit();
                 _process?.Dispose();
             }
-            catch(InvalidOperationException e) when (e.Message == "No process is associated with this object.")
+            catch (InvalidOperationException e) when (e.Message == "No process is associated with this object.")
             {
                 // means process already closed. just continue
             }
-            
+
             return Task.CompletedTask;
         }
     }

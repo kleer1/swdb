@@ -1,12 +1,12 @@
-using Agents;
 using Agents.Interfaces;
 using Moq;
 using System.Net.WebSockets;
 using Game.State.Interfaces;
 using Game.Actions;
 using System.Text;
+using Agents.DotnetAgents;
 
-namespace BotsTest
+namespace AgentsTest.DotnetAgents
 {
     [TestFixture]
     public class WebSocketAgentIntegrationTest
@@ -209,7 +209,7 @@ namespace BotsTest
             if (shouldStop)
             {
                 await SendMessage(clientWebSocket, "Yes");
-            } 
+            }
             else
             {
                 await SendMessage(clientWebSocket, "NO");
@@ -231,7 +231,7 @@ namespace BotsTest
 
         private async Task SendMessage(ClientWebSocket clientWebSocket, string message)
         {
-            
+
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
             await clientWebSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
         }
