@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameTest", "GameTest\GameTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameRunner", "GameRunner\GameRunner.csproj", "{DB91AEB4-575F-4E6C-AB21-872D0C1FAED2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bots", "Bots\Bots.csproj", "{188E6C45-8BA4-43E7-9730-30AEE1DBE488}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agents", "Agents\Agents.csproj", "{188E6C45-8BA4-43E7-9730-30AEE1DBE488}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotsTest", "BotsTest\BotsTest.csproj", "{ECF43E44-D612-4D20-B9A9-1884BE5E796C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentsTest", "AgentsTest\AgentsTest.csproj", "{ECF43E44-D612-4D20-B9A9-1884BE5E796C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{554E631C-E3E2-4DE2-8CDF-DC9A694649AA}"
 	ProjectSection(SolutionItems) = preProject

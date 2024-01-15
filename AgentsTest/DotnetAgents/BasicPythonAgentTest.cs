@@ -1,16 +1,15 @@
-﻿using Bots.DotnetAgents.BasicAgents;
+﻿using Agents.DotnetAgents.BasicAgents;
 using Game.Actions;
 using Game.Actions.Interfaces;
 using Game.State.Interfaces;
 using SWDB.Game;
-using System.Linq.Expressions;
 
 namespace BotsTest.DotnetAgents
 {
     [TestFixture]
-    public class BasicAgentTest
+    public class BasicPythonAgentTest
     {
-        private BasicAgent agent;
+        private BasicPythonAgent agent;
 
         private PortManager portManager = new PortManager();
 
@@ -18,7 +17,7 @@ namespace BotsTest.DotnetAgents
         public async Task SetUp() 
         { 
             int port = portManager.GetNextPort();
-            agent = new BasicAgent(port);
+            agent = new BasicPythonAgent(port);
             await agent.InitializeAsync();
         }
 

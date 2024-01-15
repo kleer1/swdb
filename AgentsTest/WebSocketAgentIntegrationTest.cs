@@ -1,5 +1,5 @@
-using Bots;
-using Bots.Interfaces;
+using Agents;
+using Agents.Interfaces;
 using Moq;
 using System.Net.WebSockets;
 using Game.State.Interfaces;

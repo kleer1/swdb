@@ -1,4 +1,4 @@
-﻿using Bots.Interfaces;
+﻿using Agents.Interfaces;
 using Game.Actions.Interfaces;
 using Game.State.Interfaces;
 using System.Net.WebSockets;
@@ -9,7 +9,7 @@ using System.Text;
 using System;
 using Microsoft.AspNetCore.Connections;
 
-namespace Bots
+namespace Agents
 {
     public class WebSocketAgent : IAgent, IDisposable
     {

@@ -1,9 +1,9 @@
-﻿using Bots.Interfaces;
+﻿using Agents.Interfaces;
 using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Bots
+namespace Agents
 {
     public class PythonAgent : WebSocketAgent
     {

@@ -1,9 +1,9 @@
-﻿using Bots.Interfaces;
+﻿using Agents.Interfaces;
 using Game.Actions.Interfaces;
 using Game.State.Interfaces;
 using Newtonsoft.Json;
 
-namespace Bots.DotnetAgents.BasicAgents
+namespace Agents.DotnetAgents.BasicAgents
 {
     public class BasicGameStateTransformer : IGameStateTranformer
     {

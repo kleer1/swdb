@@ -1,7 +1,7 @@
-﻿using Bots.Interfaces;
+﻿using Agents.Interfaces;
 using Game.State.Interfaces;
 
-namespace Bots.DotnetAgents.BasicAgents
+namespace Agents.DotnetAgents.BasicAgents
 {
     internal class BasicRewardGenerator : IRewardGenerator
     {

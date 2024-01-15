@@ -1,6 +1,6 @@
 ﻿using Game.Actions.Interfaces;
 
-namespace Bots.Interfaces
+namespace Agents.Interfaces
 {
     public interface IGameActionConverter
     {

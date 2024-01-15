@@ -1,5 +1,5 @@
-﻿using Bots;
-using Bots.Interfaces;
+﻿using Agents;
+using Agents.Interfaces;
 using Game.Actions;
 using Game.State.Interfaces;
 using Moq;

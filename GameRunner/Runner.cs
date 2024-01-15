@@ -1,4 +1,4 @@
-﻿using Bots.Interfaces;
+﻿using Agents.Interfaces;
 using Game.Actions.Interfaces;
 using Game.State.Interfaces;
 using SWDB.Game;

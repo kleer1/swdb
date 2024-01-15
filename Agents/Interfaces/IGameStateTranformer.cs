@@ -1,6 +1,6 @@
 ﻿using Game.State.Interfaces;
 
-namespace Bots.Interfaces
+namespace Agents.Interfaces
 {
     public interface IGameStateTranformer
     {

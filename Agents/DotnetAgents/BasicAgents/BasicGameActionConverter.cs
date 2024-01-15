@@ -1,9 +1,9 @@
-﻿using Bots.Interfaces;
+﻿using Agents.Interfaces;
 using Game.Actions;
 using Game.Actions.Interfaces;
 using Newtonsoft.Json;
 
-namespace Bots.DotnetAgents.BasicAgents
+namespace Agents.DotnetAgents.BasicAgents
 {
     internal class BasicGameActionConverter : IGameActionConverter
     {
