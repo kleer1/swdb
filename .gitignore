@@ -264,3 +264,6 @@ FakesAssemblies/
 
 ### VS Code ###
 .vscode/
+.editorconfig
+.venv
+.idea

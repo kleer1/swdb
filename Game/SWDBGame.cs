@@ -55,6 +55,17 @@ namespace SWDB.Game
             GameState = BuildCurrentGameState();
         }
 
+        public Faction GetWinner()
+        {
+            if (!IsGameOver) return Faction.neutral;
+
+            if (Empire.DestroyedBases.Count >= 4) return Faction.empire;
+
+            if (Rebel.DestroyedBases.Count >= 4) return Faction.rebellion;
+
+            return Faction.neutral;
+        }
+
         public IPlayer GetCurrentPlayer() => CurrentPlayersTurn == Faction.empire ? Empire : Rebel;
 
         public void RevealOpponentsHand() => CanSeeOpponentsHand = true;
