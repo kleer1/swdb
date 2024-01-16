@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Builder;
 using System.Text;
 using System;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.Extensions.Logging;
 
 namespace Agents.DotnetAgents
 {
     public class WebSocketAgent : IAgent, IDisposable
     {
-        private static readonly string Delim = "!";
+        protected readonly ILogger<WebSocketAgent> _logger;
 
         private IWebHost _host;
         private WebSocket _webSocket;
@@ -37,7 +38,8 @@ namespace Agents.DotnetAgents
 
         private bool _shouldShutdown = false;
 
-        public WebSocketAgent(int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer,
+
+        public WebSocketAgent(ILogger<WebSocketAgent> logger, int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer,
             IGameActionConverter gameActionConverter)
         {
             _host = new WebHostBuilder()
@@ -52,6 +54,7 @@ namespace Agents.DotnetAgents
             _rewardGenerator = rewardGenerator;
             _gameStateTranformer = gameStateTranformer;
             _gameActionConverter = gameActionConverter;
+            _logger = logger;
         }
 
         public virtual async Task InitializeAsync()
@@ -167,16 +170,12 @@ namespace Agents.DotnetAgents
                             {
                                 _stopGameCompletionSource.SetResult(true);
                             }
-                            else
-                            {
-                                throw new Exception("Unexpected ShouldStop response received: " + msg);
-                            }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    _logger.LogError(ex.ToString());
                 }
 
             }
@@ -193,7 +192,7 @@ namespace Agents.DotnetAgents
 
         }
 
-        private static async Task<string> ReceiveWebSocketMessageAsync(WebSocket webSocket)
+        private async Task<string> ReceiveWebSocketMessageAsync(WebSocket webSocket)
         {
             try
             {
@@ -210,12 +209,16 @@ namespace Agents.DotnetAgents
                 {
                     return Encoding.UTF8.GetString(ms.ToArray());
                 }
+                else if (result.MessageType == WebSocketMessageType.Close)
+                {
+                    await CloseWebSocket();
+                }
                 return "Could not find message";
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                throw ex;
+                _logger.LogError(ex.ToString());
+                return "Could not parse message";
             }
 
 

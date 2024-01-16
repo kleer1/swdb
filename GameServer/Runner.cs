@@ -1,31 +1,40 @@
 ﻿using Agents.Interfaces;
 using Game.Actions.Interfaces;
 using Game.State.Interfaces;
+using GameServer;
+using Serilog.Context;
 using SWDB.Game;
 using SWDB.Game.Common;
 
 namespace GameRunner
 {
-    public class Runner
+    public class Runner : IRunner
     {
+        private readonly ILogger<Runner> _logger;
+
         private SWDBGame Game {  get; set; }
-        private IAgent Empire { get; set; }
-        private IAgent Rebel { get; set; }
+        public IAgent? Empire { get; set; }
+        public IAgent? Rebel { get; set; }
         private bool ShouldExit { get; set; } = false;
 
-        public Runner(IAgent empire, IAgent rebel)
+        public Runner(ILogger<Runner> logger)
         {
-            Empire = empire;
-            Rebel = rebel;
             Game = new SWDBGame();
+            _logger = logger;
         }
 
-        public async void RunAsync()
+        public async Task RunAsync()
         {
+            if (Empire == null || Rebel == null)
+            {
+                _logger.LogWarning("Could not run game. At least one of the agents was null. {Empire}, {Rebel}", Empire, Rebel);
+                return;
+            }
+
             IGameState gameState = Game.GameState;
             await Empire.InitializeAsync();
             await Rebel.InitializeAsync();
-            Console.WriteLine(gameState);
+            //_logger.LogInformation("{GameState}", gameState);
             // Empire goes first
             while (!Game.IsGameOver) 
             {
@@ -38,18 +47,24 @@ namespace GameRunner
                     currentAgent = Rebel;
                 } else
                 {
-                    throw new Exception("Current players action is neither empire or rebel");
+                    _logger.LogError("Current players action is neither empire or rebel");
+                    return;
                 }
-                gameState = await ApplyActionAsync(currentAgent, gameState);
-                if (await currentAgent.ShouldStopGameAsync())
+                using (LogContext.PushProperty("Faction {Faction}", currentAgent == Empire ? "Empire" : "Rebel"))
                 {
-                    ShouldExit = true;
+                    gameState = await ApplyActionAsync(currentAgent, gameState);
                 }
-                Console.WriteLine(gameState);
+                //_logger.LogInformation("Current game state: {GameState}", gameState);
                 if (ShouldExit) break;
+            }
+            if (Game.IsGameOver)
+            {
+                _logger.LogInformation("Winner was {Winner}", Game.GetWinner());
             }
             await Empire.ShutdownAsync();
             await Rebel.ShutdownAsync();
+            Empire.Dispose();
+            Rebel.Dispose();
         }
 
         private async Task<IGameState> ApplyActionAsync(IAgent agent, IGameState gameState)

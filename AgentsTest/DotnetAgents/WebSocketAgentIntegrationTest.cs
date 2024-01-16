@@ -5,6 +5,8 @@ using Game.State.Interfaces;
 using Game.Actions;
 using System.Text;
 using Agents.DotnetAgents;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AgentsTest.DotnetAgents
 {
@@ -23,19 +25,29 @@ namespace AgentsTest.DotnetAgents
 
         private WebSocketAgent _agent;
 
+        private ILogger<WebSocketAgent> logger;
+
         [SetUp]
         public void Setup()
         {
             _gameStateTranformerMock = new Mock<IGameStateTranformer>();
             _actionConverterMock = new Mock<IGameActionConverter>();
             _rewardGeneratorMock = new Mock<IRewardGenerator>();
+
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            var factory = serviceProvider.GetService<ILoggerFactory>();
+
+            logger = factory.CreateLogger<WebSocketAgent>();
         }
 
         [Test]
         public async Task TestSelectAction()
         {
             var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
+            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
             await _agent.InitializeAsync();
 
             var expectedAction = new GameAction(Action.PassTurn);
@@ -58,7 +70,7 @@ namespace AgentsTest.DotnetAgents
         public async Task TestPostProcessing()
         {
             var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
+            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
             await _agent.InitializeAsync();
 
             var gameStateMock = new Mock<IGameState>();
@@ -78,7 +90,7 @@ namespace AgentsTest.DotnetAgents
         public async Task TestShouldStopGame()
         {
             var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
+            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
             await _agent.InitializeAsync();
 
             using var clientWebSocket = await BuildWebSocket(port);
@@ -96,7 +108,7 @@ namespace AgentsTest.DotnetAgents
         public async Task TestShouldNotStopGame()
         {
             var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
+            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
             await _agent.InitializeAsync();
 
             using var clientWebSocket = await BuildWebSocket(port);
@@ -114,7 +126,7 @@ namespace AgentsTest.DotnetAgents
         public async Task TestEntireFlow()
         {
             var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
+            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
             await _agent.InitializeAsync();
 
             var expectedAction = new GameAction(Action.DeclineAction);
@@ -143,7 +155,7 @@ namespace AgentsTest.DotnetAgents
         public async Task TestEntireFlowTwice()
         {
             var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
+            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
             await _agent.InitializeAsync();
 
             var expectedAction1 = new GameAction(Action.DeclineAction);

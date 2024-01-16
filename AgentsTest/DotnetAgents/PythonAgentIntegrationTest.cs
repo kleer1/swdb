@@ -2,6 +2,8 @@
 using Agents.Interfaces;
 using Game.Actions;
 using Game.State.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace AgentsTest.DotnetAgents
@@ -22,12 +24,22 @@ namespace AgentsTest.DotnetAgents
 
         private PythonAgent _agent;
 
+        private ILogger<PythonAgent> logger;
+
         [SetUp]
         public void Setup()
         {
             _gameStateTranformerMock = new Mock<IGameStateTranformer>();
             _actionConverterMock = new Mock<IGameActionConverter>();
             _rewardGeneratorMock = new Mock<IRewardGenerator>();
+
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            var factory = serviceProvider.GetService<ILoggerFactory>();
+
+            logger = factory.CreateLogger<PythonAgent>();
         }
 
         [Test]
@@ -35,7 +47,7 @@ namespace AgentsTest.DotnetAgents
         {
             Console.Write(GameActionMsg);
             var port = _portManager.GetNextPort();
-            _agent = new PythonAgent(port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object, PythonScript);
+            _agent = new PythonAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object, PythonScript);
             await _agent.InitializeAsync();
 
             var expectedAction = new GameAction(Action.DeclineAction);

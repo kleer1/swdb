@@ -1,0 +1,5 @@
+@GameServer_HostAddress = http://localhost:5054
+
+###
+POST {{GameServer_HostAddress}}/game/start_game
+Accept: application/json

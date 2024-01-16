@@ -1,4 +1,5 @@
 ﻿using Agents.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -12,9 +13,9 @@ namespace Agents.DotnetAgents
         private readonly string pythonScriptsPath;
         private readonly IList<string> commandsToExecute;
 
-        public PythonAgent(int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer,
+        public PythonAgent(ILogger<PythonAgent> logger, int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer,
             IGameActionConverter gameActionConverter, string pythonScriptName) :
-                base(port, rewardGenerator, gameStateTranformer, gameActionConverter)
+                base(logger, port, rewardGenerator, gameStateTranformer, gameActionConverter)
         {
             basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) ?? string.Empty;
             pythonScriptsPath = Path.Combine(basePath, "PythonScripts\\");
@@ -52,8 +53,8 @@ namespace Agents.DotnetAgents
 
             _process.Start();
 
-            _process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data); // Event handler for stdout
-            _process.ErrorDataReceived += (sender, e) => Console.WriteLine($"Error: {e.Data}"); // Event handler for stderr
+            _process.OutputDataReceived += (sender, e) => _logger.LogInformation(e.Data); // Event handler for stdout
+            _process.ErrorDataReceived += (sender, e) => _logger.LogError("Error: {Data}", e.Data); // Event handler for stderr
 
             // Begin asynchronous reading of stdout and stderr
             _process.BeginOutputReadLine();

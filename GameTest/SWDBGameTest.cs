@@ -81,7 +81,7 @@ namespace GameTest
                             game.ApplyAction(Action.ChooseStatBoost, stats: Stats.Attack);
                         }
                     }
-                    LogCardList(game.GetCurrentPlayer().UnitsInPlay, CardLocationHelper.GetUnitsInPlay(game.CurrentPlayersTurn));
+                    //LogCardList(game.GetCurrentPlayer().UnitsInPlay, CardLocationHelper.GetUnitsInPlay(game.CurrentPlayersTurn));
 
                     if (game.GetCurrentPlayer().GetAvailableAttack() > 0 && _base != null)
                     {
@@ -102,15 +102,15 @@ namespace GameTest
                         numActions++;
                         game.ApplyAction(Action.ConfirmAttackers);
                         _base = game.GetCurrentPlayer().Opponent?.CurrentBase;
-                        if (_base != null)
-                        {
-                            Console.WriteLine(game.GetCurrentPlayer().Opponent?.Faction + " base has " +
-                                    _base.GetRemainingHealth() + " remaining health");
-                        }
-                        else
-                        {
-                            Console.WriteLine(game.CurrentPlayersTurn + " destroyed opponents base");
-                        }
+                        //if (_base != null)
+                        //{
+                        //    Console.WriteLine(game.GetCurrentPlayer().Opponent?.Faction + " base has " +
+                        //            _base.GetRemainingHealth() + " remaining health");
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine(game.CurrentPlayersTurn + " destroyed opponents base");
+                        //}
                     }
 
                     // try to buy cards with attack starting with highest
@@ -128,11 +128,11 @@ namespace GameTest
                             game.ApplyAction(Action.DeclineAction);
                         }
                     }
-                    LogCardList(game.GetCurrentPlayer().Discard, CardLocationHelper.GetDiscard(game.CurrentPlayersTurn));
+                    //LogCardList(game.GetCurrentPlayer().Discard, CardLocationHelper.GetDiscard(game.CurrentPlayersTurn));
 
 
                     // pass turn after attack
-                    Console.WriteLine(faction + " passing turn");
+                    //Console.WriteLine(faction + " passing turn");
                     numActions++;
                     game.ApplyAction(Action.PassTurn);
 
@@ -143,7 +143,7 @@ namespace GameTest
                         IBase newBase = availableBases[Random.Shared.Next(availableBases.Count)];
                         numActions++;
                         game.ApplyAction(Action.ChooseNextBase, newBase.Id);
-                       Console.WriteLine(game.CurrentPlayersTurn + " choose new base: " + newBase.Title);
+                        //Console.WriteLine(game.CurrentPlayersTurn + " choose new base: " + newBase.Title);
                         // decline if the base has an ability
                         if (game.PendingActions.Any())
                         {

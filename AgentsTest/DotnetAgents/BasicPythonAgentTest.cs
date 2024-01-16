@@ -2,6 +2,8 @@
 using Game.Actions;
 using Game.Actions.Interfaces;
 using Game.State.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SWDB.Game;
 
 namespace AgentsTest.DotnetAgents
@@ -15,10 +17,19 @@ namespace AgentsTest.DotnetAgents
 
         [SetUp] 
         public async Task SetUp() 
-        { 
+        {
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            var factory = serviceProvider.GetService<ILoggerFactory>();
+
+            var logger = factory.CreateLogger<BasicPythonAgent>();
+
             int port = portManager.GetNextPort();
-            agent = new BasicPythonAgent(port);
+            agent = new BasicPythonAgent(logger, port);
             await agent.InitializeAsync();
+
         }
 
         [Test]

@@ -22,6 +22,7 @@ async def connect_to_dotnet_server(port):
                 purchase_card = obj.get("PurchaseCard", [])
                 decline = obj.get("DeclineAction", [])
                 pass_turn = obj.get("PassTurn", [])
+                choose_base = obj.get("ChooseNextBase", [])
                 if len(play_card) > 0:
                     msg = json.dumps(play_card[0])
                     await websocket.send(msg)
@@ -50,10 +51,30 @@ async def connect_to_dotnet_server(port):
                     msg = json.dumps(pass_turn[0])
                     await websocket.send(msg)
                     print(f"Sent message to .NET server: {msg}")
+                elif len(choose_base) > 0:
+                    msg = json.dumps(choose_base[0])
+                    await websocket.send(msg)
+                    print(f"Sent message to .NET server: {msg}")
                 else:
                     msg = "Could not decide what action to take"
                     await websocket.send(msg)
                     print(f"Sent message to .NET server: {msg}")
+
+                time.sleep(10 / 1000)
+                # Get reward and ignore
+                response_from_dotnet = await websocket.recv()
+                print(f"Received response from .NET server: {response_from_dotnet}")
+
+                time.sleep(10 / 1000)
+                # Get should shutdown
+                response_from_dotnet = await websocket.recv()
+                print(f"Received response from .NET server: {response_from_dotnet}")
+
+                time.sleep(10 / 1000)
+                # send back no
+                msg = "no"
+                await websocket.send(msg)
+                print(f"Sent message to .NET server: {msg}")
 
                 time.sleep(10 / 1000)
         except websockets.exceptions.ConnectionClosedOK:
