@@ -15,6 +15,9 @@ async def connect_to_dotnet_server(port):
                 response_from_dotnet = await websocket.recv()
                 print(f"Received response from .NET server: {response_from_dotnet}")
                 obj = json.loads(response_from_dotnet)
+                if obj["Done"] == True:
+                    break;
+                obj = obj["Observation"]
                 play_card = obj.get("PlayCard", [])
                 attack_base = obj.get("AttackBase", [])
                 select_attacker = obj.get("SelectAttacker", [])
@@ -59,22 +62,6 @@ async def connect_to_dotnet_server(port):
                     msg = "Could not decide what action to take"
                     await websocket.send(msg)
                     print(f"Sent message to .NET server: {msg}")
-
-                time.sleep(10 / 1000)
-                # Get reward and ignore
-                response_from_dotnet = await websocket.recv()
-                print(f"Received response from .NET server: {response_from_dotnet}")
-
-                time.sleep(10 / 1000)
-                # Get should shutdown
-                response_from_dotnet = await websocket.recv()
-                print(f"Received response from .NET server: {response_from_dotnet}")
-
-                time.sleep(10 / 1000)
-                # send back no
-                msg = "no"
-                await websocket.send(msg)
-                print(f"Sent message to .NET server: {msg}")
 
                 time.sleep(10 / 1000)
         except websockets.exceptions.ConnectionClosedOK:

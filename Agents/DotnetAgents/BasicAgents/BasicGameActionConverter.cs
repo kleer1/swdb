@@ -7,7 +7,7 @@ namespace Agents.DotnetAgents.BasicAgents
 {
     internal class BasicGameActionConverter : IGameActionConverter
     {
-        public IGameAction ConvertToGameACtion(string action)
+        public IGameAction ConvertToGameAction(string action)
         {
             return JsonConvert.DeserializeObject<GameAction>(action) ?? throw new Exception("Could not deserialize action");
         }

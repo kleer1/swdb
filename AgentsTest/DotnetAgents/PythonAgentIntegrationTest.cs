@@ -5,6 +5,7 @@ using Game.State.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Serilog;
 
 namespace AgentsTest.DotnetAgents
 {
@@ -33,8 +34,14 @@ namespace AgentsTest.DotnetAgents
             _actionConverterMock = new Mock<IGameActionConverter>();
             _rewardGeneratorMock = new Mock<IRewardGenerator>();
 
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Trace()
+                .CreateLogger();
+
             var serviceProvider = new ServiceCollection()
-                .AddLogging()
+                .AddLogging(builder => {
+                    builder.AddSerilog(dispose: true);
+                })
                 .BuildServiceProvider();
 
             var factory = serviceProvider.GetService<ILoggerFactory>();
@@ -53,16 +60,12 @@ namespace AgentsTest.DotnetAgents
             var expectedAction = new GameAction(Action.DeclineAction);
             var gameStateMock = new Mock<IGameState>();
             _gameStateTranformerMock.Setup(x => x.TransformGameState(gameStateMock.Object)).Returns(GameStateMsg);
-            _actionConverterMock.Setup(x => x.ConvertToGameACtion(GameActionMsg)).Returns(expectedAction);
+            _actionConverterMock.Setup(x => x.ConvertToGameAction(GameActionMsg)).Returns(expectedAction);
             _rewardGeneratorMock.Setup(x => x.GenerateReward(gameStateMock.Object, gameStateMock.Object)).Returns(10);
+            gameStateMock.Setup(x => x.IsGameOver).Returns(true);
 
             var action = await _agent.SelectActionAsync(gameStateMock.Object);
             That(action, Is.EqualTo(expectedAction));
-
-            await _agent.PostActionProcessingAsync(gameStateMock.Object, gameStateMock.Object);
-
-            bool resp = await _agent.ShouldStopGameAsync();
-            That(resp, Is.False);
 
             await _agent.ShutdownAsync();
             _agent.Dispose();

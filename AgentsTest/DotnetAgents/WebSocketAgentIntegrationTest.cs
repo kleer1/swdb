@@ -7,6 +7,7 @@ using System.Text;
 using Agents.DotnetAgents;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace AgentsTest.DotnetAgents
 {
@@ -53,10 +54,12 @@ namespace AgentsTest.DotnetAgents
             var expectedAction = new GameAction(Action.PassTurn);
             var gameStateMock = new Mock<IGameState>();
             _gameStateTranformerMock.Setup(x => x.TransformGameState(gameStateMock.Object)).Returns(GameStateMsg);
-            _actionConverterMock.Setup(x => x.ConvertToGameACtion(GameActionMsg)).Returns(expectedAction);
+            _actionConverterMock.Setup(x => x.ConvertToGameAction(GameActionMsg)).Returns(expectedAction);
+            //_rewardGeneratorMock.Setup(x => x.GenerateReward(It.IsAny<IGameState>(), It.IsAny<IGameState>())).Returns(5);
+            gameStateMock.Setup(x => x.IsGameOver).Returns(true);
 
             using var clientWebSocket = await BuildWebSocket(port);
-            SelectActionAsync(clientWebSocket);
+            SelectActionAsync(clientWebSocket, true);
 
             var action = await _agent.SelectActionAsync(gameStateMock.Object);
             That(action, Is.EqualTo(expectedAction));
@@ -67,122 +70,27 @@ namespace AgentsTest.DotnetAgents
         }
 
         [Test]
-        public async Task TestPostProcessing()
+        public async Task TestSelectActionTwice()
         {
             var port = _portManager.GetNextPort();
             _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
             await _agent.InitializeAsync();
 
-            var gameStateMock = new Mock<IGameState>();
-            _rewardGeneratorMock.Setup(x => x.GenerateReward(gameStateMock.Object, gameStateMock.Object)).Returns(5);
-
-            using var clientWebSocket = await BuildWebSocket(port);
-            PostProcessingAsync(clientWebSocket, "Reward: 5");
-
-            await _agent.PostActionProcessingAsync(gameStateMock.Object, gameStateMock.Object);
-
-            clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", CancellationToken.None);
-
-            await _agent.ShutdownAsync();
-        }
-
-        [Test]
-        public async Task TestShouldStopGame()
-        {
-            var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
-            await _agent.InitializeAsync();
-
-            using var clientWebSocket = await BuildWebSocket(port);
-            ShouldStopGameAsync(clientWebSocket, true);
-
-            bool resp = await _agent.ShouldStopGameAsync();
-            That(resp, Is.True);
-
-            _agent.ShutdownAsync();
-
-            await clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", CancellationToken.None);
-        }
-
-        [Test]
-        public async Task TestShouldNotStopGame()
-        {
-            var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
-            await _agent.InitializeAsync();
-
-            using var clientWebSocket = await BuildWebSocket(port);
-            ShouldStopGameAsync(clientWebSocket, false);
-
-            bool resp = await _agent.ShouldStopGameAsync();
-            That(resp, Is.False);
-
-            _agent.ShutdownAsync();
-
-            await clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", CancellationToken.None);
-        }
-
-        [Test]
-        public async Task TestEntireFlow()
-        {
-            var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
-            await _agent.InitializeAsync();
-
-            var expectedAction = new GameAction(Action.DeclineAction);
+            var expectedAction = new GameAction(Action.PassTurn);
             var gameStateMock = new Mock<IGameState>();
             _gameStateTranformerMock.Setup(x => x.TransformGameState(gameStateMock.Object)).Returns(GameStateMsg);
-            _actionConverterMock.Setup(x => x.ConvertToGameACtion(GameActionMsg)).Returns(expectedAction);
-            _rewardGeneratorMock.Setup(x => x.GenerateReward(gameStateMock.Object, gameStateMock.Object)).Returns(10);
+            _actionConverterMock.Setup(x => x.ConvertToGameAction(GameActionMsg)).Returns(expectedAction);
+            _rewardGeneratorMock.Setup(x => x.GenerateReward(It.IsAny<IGameState>(), It.IsAny<IGameState>())).Returns(5);
+            gameStateMock.Setup(x => x.IsGameOver).Returns(true);
 
             using var clientWebSocket = await BuildWebSocket(port);
-            RunAll(clientWebSocket, "Reward: 10", true);
+            SelectActionTwiceAsync(clientWebSocket, 5, true);
 
             var action = await _agent.SelectActionAsync(gameStateMock.Object);
             That(action, Is.EqualTo(expectedAction));
-
-            await _agent.PostActionProcessingAsync(gameStateMock.Object, gameStateMock.Object);
-
-            bool resp = await _agent.ShouldStopGameAsync();
-            That(resp, Is.True);
-
-            _agent.ShutdownAsync();
-
-            await clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", CancellationToken.None);
-        }
-
-        [Test]
-        public async Task TestEntireFlowTwice()
-        {
-            var port = _portManager.GetNextPort();
-            _agent = new WebSocketAgent(logger, port, _rewardGeneratorMock.Object, _gameStateTranformerMock.Object, _actionConverterMock.Object);
-            await _agent.InitializeAsync();
-
-            var expectedAction1 = new GameAction(Action.DeclineAction);
-            var expectedAction2 = new GameAction(Action.PlayCard, 1);
-            var gameStateMock = new Mock<IGameState>();
-            _gameStateTranformerMock.Setup(x => x.TransformGameState(gameStateMock.Object)).Returns(GameStateMsg);
-            _actionConverterMock.SetupSequence(x => x.ConvertToGameACtion(GameActionMsg)).Returns(expectedAction1).Returns(expectedAction2);
-            _rewardGeneratorMock.SetupSequence(x => x.GenerateReward(gameStateMock.Object, gameStateMock.Object)).Returns(50).Returns(0);
-
-            using var clientWebSocket = await BuildWebSocket(port);
-            RunAllTwice(clientWebSocket, "Reward: 50", false, "Reward: 0", true);
-
-            var action = await _agent.SelectActionAsync(gameStateMock.Object);
-            That(action, Is.EqualTo(expectedAction1));
-
-            await _agent.PostActionProcessingAsync(gameStateMock.Object, gameStateMock.Object);
-
-            bool resp = await _agent.ShouldStopGameAsync();
-            That(resp, Is.False);
 
             action = await _agent.SelectActionAsync(gameStateMock.Object);
-            That(action, Is.EqualTo(expectedAction2));
-
-            await _agent.PostActionProcessingAsync(gameStateMock.Object, gameStateMock.Object);
-
-            resp = await _agent.ShouldStopGameAsync();
-            That(resp, Is.True);
+            That(action, Is.EqualTo(expectedAction));
 
             _agent.ShutdownAsync();
 
@@ -196,49 +104,26 @@ namespace AgentsTest.DotnetAgents
             return clientWebSocket;
         }
 
-        private async Task SelectActionAsync(ClientWebSocket clientWebSocket)
+        private async Task SelectActionAsync(ClientWebSocket clientWebSocket, bool done)
+        {
+            await SelectActionAsync(clientWebSocket, 0, done);
+        }
+        private async Task SelectActionAsync(ClientWebSocket clientWebSocket, int reward, bool done)
         {
             await Task.Delay(10);
             string msg = await ReceiveMessage(clientWebSocket);
-            That(msg, Is.EqualTo(GameStateMsg));
+            GameResponse? response = JsonConvert.DeserializeObject<GameResponse>(msg);
+            That(response?.Observation, Is.EqualTo(GameStateMsg));
+            That(response?.Reward, Is.EqualTo(reward));
+            That(response?.Done, Is.EqualTo(done));
 
             await SendMessage(clientWebSocket, GameActionMsg);
         }
 
-        private async Task PostProcessingAsync(ClientWebSocket clientWebSocket, string expectedMsg)
+        private async Task SelectActionTwiceAsync(ClientWebSocket clientWebSocket, int reward, bool done)
         {
-            await Task.Delay(10);
-            string msg = await ReceiveMessage(clientWebSocket);
-            That(msg, Is.EqualTo(expectedMsg));
-        }
-
-        private async Task ShouldStopGameAsync(ClientWebSocket clientWebSocket, bool shouldStop)
-        {
-            await Task.Delay(10);
-            string msg = await ReceiveMessage(clientWebSocket);
-            That(msg, Is.EqualTo("Should stop"));
-
-            if (shouldStop)
-            {
-                await SendMessage(clientWebSocket, "Yes");
-            }
-            else
-            {
-                await SendMessage(clientWebSocket, "NO");
-            }
-        }
-
-        private async Task RunAll(ClientWebSocket clientWebSocket, string expectedMsg, bool shouldStop)
-        {
-            await SelectActionAsync(clientWebSocket);
-            await PostProcessingAsync(clientWebSocket, expectedMsg);
-            await ShouldStopGameAsync(clientWebSocket, shouldStop);
-        }
-
-        private async void RunAllTwice(ClientWebSocket clientWebSocket, string expectedMsg1, bool shouldStop1, string expectedMsg2, bool shouldStop2)
-        {
-            await RunAll(clientWebSocket, expectedMsg1, shouldStop1);
-            await RunAll(clientWebSocket, expectedMsg2, shouldStop2);
+            await SelectActionAsync(clientWebSocket, 0, done);
+            await SelectActionAsync(clientWebSocket, reward, done);
         }
 
         private async Task SendMessage(ClientWebSocket clientWebSocket, string message)

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using System.Text;
-using System;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Agents.DotnetAgents
 {
@@ -24,17 +24,8 @@ namespace Agents.DotnetAgents
 
         private TaskCompletionSource<IGameAction> _actionCompletionSource = new();
         private TaskCompletionSource<IGameState> _gameStateCompletionSource = new();
-        private TaskCompletionSource<int> _rewardCompletionSource = new();
-        private TaskCompletionSource<bool> _stopGameCompletionSource = new();
-
         private bool _isSelectActionCalled = false;
         private readonly object _selectActionLock = new();
-        private bool _isPostProcesingCalled = false;
-        private readonly object _postProcessingLock = new();
-        private bool _isPostProcesingComplete = false;
-        private readonly object _postProcessingCompleteLock = new();
-        private bool _isShouldShutdownCalled = false;
-        private readonly object _shouldShutdownLock = new();
 
         private bool _shouldShutdown = false;
 
@@ -63,17 +54,6 @@ namespace Agents.DotnetAgents
             await _host.StartAsync();
         }
 
-        public async Task PostActionProcessingAsync(IGameState oldState, IGameState newState)
-        {
-            _rewardCompletionSource.SetResult(_rewardGenerator.GenerateReward(oldState, newState));
-            LockAndSet(_postProcessingLock, ref _isPostProcesingCalled);
-            while (!CheckLockedBoolCalled(_postProcessingCompleteLock, ref _isPostProcesingComplete))
-            {
-                await Task.Delay(10);
-            }
-            return;
-        }
-
         public async Task<IGameAction> SelectActionAsync(IGameState gameState)
         {
             _gameStateCompletionSource.SetResult(gameState);
@@ -82,14 +62,6 @@ namespace Agents.DotnetAgents
             IGameAction action = await _actionCompletionSource.Task;
             _actionCompletionSource = new TaskCompletionSource<IGameAction>();
             return action;
-        }
-
-        public async Task<bool> ShouldStopGameAsync()
-        {
-            LockAndSet(_shouldShutdownLock, ref _isShouldShutdownCalled);
-            bool shutdown = await _stopGameCompletionSource.Task;
-            _stopGameCompletionSource = new TaskCompletionSource<bool>();
-            return shutdown;
         }
 
         public virtual async Task ShutdownAsync()
@@ -125,51 +97,45 @@ namespace Agents.DotnetAgents
             _host?.Dispose();
         }
 
+        private GameResponse BuildResponse(IGameState currentState, IGameState previousState)
+        {
+            return new GameResponse
+            {
+                Observation = _gameStateTranformer.TransformGameState(currentState),
+                Reward = _rewardGenerator.GenerateReward(previousState, currentState),
+                Done = currentState.IsGameOver
+            };
+        }
+
+        private GameResponse BuildResponse(IGameState currentState)
+        {
+            return new GameResponse
+            {
+                Observation = _gameStateTranformer.TransformGameState(currentState),
+                Reward = 0,
+                Done = currentState.IsGameOver
+            };
+        }
+
         private async Task HandleWebSocketAsync(HttpContext context)
         {
             if (context.WebSockets.IsWebSocketRequest)
             {
                 try
                 {
+                    IGameState? previousState = null;
+
                     _webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    // get first move. there will be no reward for this
+                    previousState = await GetAction(previousState);
+
                     while (!_shouldShutdown && _webSocket.State == WebSocketState.Open)
                     {
 
                         if (CheckLockedBoolCalled(_selectActionLock, ref _isSelectActionCalled))
                         {
-                            IGameState gameState = await _gameStateCompletionSource.Task;
-                            _gameStateCompletionSource = new TaskCompletionSource<IGameState>();
-                            // send game state to python
-                            await SendWebSocketMessageAsync(_webSocket, _gameStateTranformer.TransformGameState(gameState));
-                            await Task.Delay(10);
-                            // get action from python
-                            string action = await ReceiveWebSocketMessageAsync(_webSocket);
-                            _actionCompletionSource.SetResult(_gameActionConverter.ConvertToGameACtion(action));
+                            previousState = await GetAction(previousState);
 
-                        }
-
-                        if (CheckLockedBoolCalled(_postProcessingLock, ref _isPostProcesingCalled))
-                        {
-                            // generate reward value and send to python
-                            int reward = await _rewardCompletionSource.Task;
-                            _rewardCompletionSource = new TaskCompletionSource<int>();
-                            await SendWebSocketMessageAsync(_webSocket, "Reward: " + reward.ToString());
-                            LockAndSet(_postProcessingCompleteLock, ref _isPostProcesingComplete);
-                        }
-
-                        if (CheckLockedBoolCalled(_shouldShutdownLock, ref _isShouldShutdownCalled))
-                        {
-                            // ask python if the training is done for them
-                            await SendWebSocketMessageAsync(_webSocket, "Should stop");
-                            string msg = await ReceiveWebSocketMessageAsync(_webSocket);
-                            if (msg.ToLower() == "no")
-                            {
-                                _stopGameCompletionSource.SetResult(false);
-                            }
-                            else if (msg.ToLower() == "yes")
-                            {
-                                _stopGameCompletionSource.SetResult(true);
-                            }
                         }
                     }
                 }
@@ -183,6 +149,27 @@ namespace Agents.DotnetAgents
             {
                 context.Response.StatusCode = 400;
             }
+        }
+
+        private async Task<IGameState> GetAction(IGameState? previousState)
+        {
+            IGameState currentState = await _gameStateCompletionSource.Task;
+            _gameStateCompletionSource = new TaskCompletionSource<IGameState>();
+            string response;
+            if (previousState == null)
+            {
+                response = JsonConvert.SerializeObject(BuildResponse(currentState));
+            }
+            else
+            {
+                response = JsonConvert.SerializeObject(BuildResponse(currentState, previousState));
+            }
+            await SendWebSocketMessageAsync(_webSocket, response);
+            await Task.Delay(10);
+            // get action from python
+            string action = await ReceiveWebSocketMessageAsync(_webSocket);
+            _actionCompletionSource.SetResult(_gameActionConverter.ConvertToGameAction(action));
+            return currentState;
         }
 
         private static async Task SendWebSocketMessageAsync(WebSocket webSocket, string message)

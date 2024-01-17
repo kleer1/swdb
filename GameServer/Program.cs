@@ -3,7 +3,6 @@ using Agents.Interfaces;
 using GameRunner;
 using GameServer;
 using Serilog;
-using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 

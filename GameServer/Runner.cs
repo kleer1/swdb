@@ -71,8 +71,6 @@ namespace GameRunner
         {
             IGameAction selectedAction = await agent.SelectActionAsync(gameState);
             IGameState nextState = Game.ApplyAction(selectedAction);
-            await agent.PostActionProcessingAsync(gameState, nextState);
-            ShouldExit = await agent.ShouldStopGameAsync();
             return nextState;
         }
     }

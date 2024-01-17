@@ -2,6 +2,7 @@ import asyncio
 import websockets
 import argparse
 import time
+import json
 
 
 async def connect_to_dotnet_server(port):
@@ -10,29 +11,11 @@ async def connect_to_dotnet_server(port):
     async with websockets.connect(uri) as websocket:
         try:
             while True:
-                state_from_dotnet = await websocket.recv()
-                print(f"Received response from .NET server: {state_from_dotnet}")
-                if state_from_dotnet == "This is a game state":
+                response_from_dotnet = await websocket.recv()
+                print(f"Received response from .NET server: {response_from_dotnet}")
+                obj = json.loads(response_from_dotnet)
+                if obj["Observation"] == "This is a game state" and obj["Reward"] == 0 and obj["Done"] == True:
                     message_to_dotnet = "This is a game action"
-                    await websocket.send(message_to_dotnet)
-                    print(f"Sent message to .NET server: {message_to_dotnet}")
-                else:
-                    message_to_dotnet = "did not receive msg"
-                    await websocket.send(message_to_dotnet)
-                    print(f"Sent message to .NET server: {message_to_dotnet}")
-
-                reward_from_dotnet = await websocket.recv()
-                print(f"Received response from .NET server: {reward_from_dotnet}")
-
-                stop_from_dotnet = await websocket.recv()
-                print(f"Received response from .NET server: {stop_from_dotnet}")
-
-                if stop_from_dotnet == "Should stop":
-                    message_to_dotnet = "no"
-                    await websocket.send(message_to_dotnet)
-                    print(f"Sent message to .NET server: {message_to_dotnet}")
-                else:
-                    message_to_dotnet = "bad msg"
                     await websocket.send(message_to_dotnet)
                     print(f"Sent message to .NET server: {message_to_dotnet}")
 

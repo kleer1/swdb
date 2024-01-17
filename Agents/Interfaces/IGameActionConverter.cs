@@ -4,6 +4,6 @@ namespace Agents.Interfaces
 {
     public interface IGameActionConverter
     {
-        IGameAction ConvertToGameACtion(string action);
+        IGameAction ConvertToGameAction(string action);
     }
 }

@@ -26,19 +26,9 @@ namespace Agents.DotnetAgents.Models
             return _agent.InitializeAsync();
         }
 
-        public Task PostActionProcessingAsync(IGameState oldState, IGameState newState)
-        {
-            return _agent.PostActionProcessingAsync(oldState, newState);
-        }
-
         public Task<IGameAction> SelectActionAsync(IGameState gameState)
         {
             return _agent.SelectActionAsync(gameState);
-        }
-
-        public Task<bool> ShouldStopGameAsync()
-        {
-            return _agent.ShouldStopGameAsync();
         }
 
         public Task ShutdownAsync()

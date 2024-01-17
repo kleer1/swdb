@@ -7,8 +7,6 @@ namespace Agents.Interfaces
     {
         Task InitializeAsync();
         Task<IGameAction> SelectActionAsync(IGameState gameState);
-        Task PostActionProcessingAsync(IGameState oldState, IGameState newState);
-        Task<bool> ShouldStopGameAsync();
         Task ShutdownAsync();
     }
 }

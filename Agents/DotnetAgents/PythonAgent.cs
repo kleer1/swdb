@@ -17,7 +17,7 @@ namespace Agents.DotnetAgents
             IGameActionConverter gameActionConverter, string pythonScriptName) :
                 base(logger, port, rewardGenerator, gameStateTranformer, gameActionConverter)
         {
-            basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) ?? string.Empty;
+            basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
             pythonScriptsPath = Path.Combine(basePath, "PythonScripts\\");
             const string cmd = "cmd.exe";
             const string args = "";

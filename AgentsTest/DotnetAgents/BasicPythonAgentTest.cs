@@ -5,6 +5,7 @@ using Game.State.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SWDB.Game;
+using Serilog;
 
 namespace AgentsTest.DotnetAgents
 {
@@ -18,8 +19,12 @@ namespace AgentsTest.DotnetAgents
         [SetUp] 
         public async Task SetUp() 
         {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Trace()
+                .CreateLogger();
+
             var serviceProvider = new ServiceCollection()
-                .AddLogging()
+                .AddLogging(builder => builder.AddSerilog(dispose: true))
                 .BuildServiceProvider();
 
             var factory = serviceProvider.GetService<ILoggerFactory>();
