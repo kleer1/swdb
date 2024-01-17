@@ -6,9 +6,9 @@ import json
 
 
 async def connect_to_dotnet_server(port):
-    uri = f"ws://localhost:{port}"
+    uri = f"ws://127.0.0.1:{port}"
 
-    async with websockets.connect(uri) as websocket:
+    async with websockets.connect(uri, timeout=5) as websocket:
         try:
             while True:
                 # Receive response from the .NET server

@@ -4,6 +4,7 @@ using Serilog.Context;
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 
 namespace Agents.DotnetAgents
 {
@@ -12,7 +13,6 @@ namespace Agents.DotnetAgents
         private readonly Process? _process;
         private readonly string basePath;
         private readonly string pythonScriptsPath;
-        private readonly IList<string> commandsToExecute;
         private readonly Guid scripId;
 
         public PythonAgent(ILogger<PythonAgent> logger, int port, IRewardGenerator rewardGenerator, IGameStateTranformer gameStateTranformer,
@@ -20,26 +20,18 @@ namespace Agents.DotnetAgents
                 base(logger, port, rewardGenerator, gameStateTranformer, gameActionConverter)
         {
             basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
-            pythonScriptsPath = Path.Combine(basePath, "PythonScripts\\");
-            const string cmd = "cmd.exe";
-            const string args = "";
-            commandsToExecute = new List<string>
-            {
-                "python.exe -m venv .venv",
-                ".venv\\Scripts\\activate",
-                "pip install -r requirements.txt",
-                $"python.exe {pythonScriptName} --port {port}"
-            };
+            pythonScriptsPath = Path.Combine(basePath, "PythonScripts");
+            string cmd = "wsl";
+            string args = $"bash -c \"python3 -m venv .venv && source .venv/bin/activate && pip3 install -r requirements.txt && python3 {pythonScriptName} --port {port}\"";
 
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
+                FileName = cmd,
+                Arguments = args,
                 RedirectStandardOutput = true,
-                RedirectStandardInput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
-                CreateNoWindow = false,
-                Arguments = args,
-                FileName = cmd,
+                CreateNoWindow = true,
                 WorkingDirectory = pythonScriptsPath,
             };
             _process = new Process { StartInfo = startInfo };
@@ -75,17 +67,6 @@ namespace Agents.DotnetAgents
             // Begin asynchronous reading of stdout and stderr
             _process.BeginOutputReadLine();
             _process.BeginErrorReadLine();
-
-            using var sw = _process.StandardInput;
-            if (sw.BaseStream.CanWrite)
-            {
-                foreach (var command in commandsToExecute)
-                {
-                    sw.WriteLine(command);
-                }
-                sw.Flush();
-                sw.Close();
-            }
         }
 
         public override void Dispose()

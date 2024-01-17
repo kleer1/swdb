@@ -35,7 +35,7 @@ namespace Agents.DotnetAgents
         {
             _host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://localhost:" + port)
+                .UseUrls("http://127.0.0.1:" + port)
                 .Configure(app =>
                 {
                     app.UseWebSockets();
@@ -50,8 +50,16 @@ namespace Agents.DotnetAgents
 
         public virtual async Task InitializeAsync()
         {
-            // start the host
-            await _host.StartAsync();
+            try
+            {
+                // start the host
+                await _host.StartAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError("Error starting host. {Ex}", ex);
+            }
+            
         }
 
         public async Task<IGameAction> SelectActionAsync(IGameState gameState)

@@ -1,4 +1,7 @@
 asyncio
 websockets
 argparse
-gym tensorflow
+tensorflow[and-cuda]
+tensorflow
+gym
+numpy
