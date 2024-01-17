@@ -30,7 +30,7 @@ namespace GameRunner
                 _logger.LogWarning("Could not run game. At least one of the agents was null. {Empire}, {Rebel}", Empire, Rebel);
                 return;
             }
-
+            using var cxt =  LogContext.PushProperty("Game", Guid.NewGuid());
             IGameState gameState = Game.GameState;
             await Empire.InitializeAsync();
             await Rebel.InitializeAsync();
@@ -50,7 +50,7 @@ namespace GameRunner
                     _logger.LogError("Current players action is neither empire or rebel");
                     return;
                 }
-                using (LogContext.PushProperty("Faction {Faction}", currentAgent == Empire ? "Empire" : "Rebel"))
+                using (LogContext.PushProperty("Faction", currentAgent == Empire ? "Empire" : "Rebel"))
                 {
                     gameState = await ApplyActionAsync(currentAgent, gameState);
                 }

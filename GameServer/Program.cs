@@ -8,8 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.Trace()
+    .WriteTo.Console(outputTemplate:
+    "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Game} {Faction} {ScriptId} - {Message}{NewLine}{Exception}")
+    .WriteTo.Trace(outputTemplate:
+    "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Game} {Faction} {ScriptId} - {Message}{NewLine}{Exception}")
     // Add more Serilog configuration here if needed
     .Enrich.FromLogContext()
     .CreateLogger();

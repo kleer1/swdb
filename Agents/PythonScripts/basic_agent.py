@@ -60,6 +60,7 @@ async def connect_to_dotnet_server(port):
                     print(f"Sent message to .NET server: {msg}")
                 else:
                     msg = "Could not decide what action to take"
+                    print(f"Could not pick from: {obj}")
                     await websocket.send(msg)
                     print(f"Sent message to .NET server: {msg}")
 
